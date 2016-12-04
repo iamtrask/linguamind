@@ -1,0 +1,4 @@
+*.pyc
+*_wrap.c
+*_wrap.cxx
+build
