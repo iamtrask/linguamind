@@ -8,8 +8,8 @@ rm example_wrap.c
 rm example_wrap.cxx
 rm _example.so
 
-# swig -python example.i
-# swig -c++ -python example.i
+swig -python example.i
+swig -c++ -python example.i
 
-# # python setup.py build_ext --inplace
-# sudo python setup.py install
+# python setup.py build_ext --inplace
+sudo python setup.py install
