@@ -6,9 +6,9 @@
 Text::Text(char* raw) {
     
     // this is the raw character data for the text
-    strcpy(this->raw, raw);
     this->raw_size = (unsigned long)strlen(raw)+1;
     this->raw = (char*)malloc(this->raw_size); 
+    strcpy(this->raw, raw);
 
     // segments are BIO markers for regions of text
     // since you have multiple types of segments 
@@ -114,12 +114,32 @@ Vocab::Vocab() {
 
     this->hash_size = 1000000;
     this->hash_table = (int *) malloc(this->hash_size * sizeof(int));
+    for(int i=0; i<this->hash_size; i++) hash_table[i] = -1;
 
 }
 
-// int Vocab::addTerm(char* term) {
+int Vocab::addTerm(char* term) {
 
-// }
+    this->size += 1;
+    
+    Term new_term = this->vocab[this->size - 1];
+    new_term.letters = (char*)malloc(strlen(term)+1);
+    strcpy(new_term.letters, term);
+
+    int hash = this->getTermHash(term);
+    while(this->hash_table[hash] == -1) hash += 1;
+    this->hash_table[hash] = this->size-1;
+
+    return this->size-1;
+}
+
+int Vocab::getTermHash(char* term) {
+    unsigned long long hash = 0;
+    for(int i=0; i<strlen(term); i++) {
+        hash = ((hash + term[i]) * CHAR_VOCAB_SIZE) % this->hash_size;
+    }
+    return (int) hash;
+}
 
 char* Text::getRaw() {
     return this->raw;
