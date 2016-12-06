@@ -8,7 +8,7 @@ from distutils.core import setup, Extension
 
 
 linguamind_module = Extension('_linguamind',
-                           sources=['linguamind_wrap.c', 'linguamind.cpp'],
+                           sources=['linguamind_wrap.cxx', 'linguamind.cpp'],
                            )
 
 setup (name = 'linguamind',
