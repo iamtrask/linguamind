@@ -2,6 +2,40 @@
 %module linguamind
 
 %{
+#include "test.h"
+#include <exception>
+#include <vector>
+%}
+
+%include "test.h"
+%include "std_except.i"
+%include "std_vector.i"
+
+namespace std {
+   %template(vectori) vector<int>;
+   %template(vectord) vector<double>;
+};
+
+%extend wrapped_array {
+  inline size_t __len__() const { return N; }
+
+  inline const Type& __getitem__(size_t i) const throw(std::out_of_range) {
+    if (i >= N)
+      throw std::out_of_range("out of bounds access");
+    return self->data[i];
+  }
+
+  inline void __setitem__(size_t i, const Type& v) throw(std::out_of_range) {
+    if (i >= N)
+      throw std::out_of_range("out of bounds access");
+    self->data[i] = v;
+  }
+}
+
+%template (intArray40) wrapped_array<int, 40>;
+%template (doubleArray15) wrapped_array<double, 15>;
+
+%{
 #define SWIG_FILE_WITH_INIT
 #include "linguamind.h"
 %}
@@ -48,6 +82,7 @@ class Text {
 		unsigned long long hashSegmentKey(char* key);
 		int getKeyIndexAddIfNew(char* key,int segment_length);
 		int addSegmentAndKey(unsigned long long keyHash,int segment_length);
+		std::vector<int> rollupSegmentNewVocab(char* key);
 };
 
 char* fact(char * text);

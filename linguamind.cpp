@@ -1,4 +1,5 @@
 #include "linguamind.h"
+#include "test.h"
 #include <assert.h>
 
 // this is the base "text" object, which can correlate to arbitrary text groupings
@@ -41,34 +42,139 @@ bool Text::addSegmentBIO(char* key, char* bio) {
     
     for(int i=0; i<this->raw_size-1; i++) {
         curr = bio[i];
-        if(curr == 'B') segment[i] = 0;
-        if(curr == 'I') segment[i] = 1;
-        if(curr == 'O') segment[i] = 2;
+        if(curr == 'B') {
+            segment[i] = 0;
+        } else if(curr == 'I')  {
+            segment[i] = 1;
+        } else {
+            segment[i] = 2;
+        }
     }
+
+
     return true;
 }
 
 // takes a segment and rolls it up into a new string of objects
 // for example, character level BIO would roll up into (an array of) unique tokens (ids)
 // which subsequently creates a new vocabulary for token ids as well
-bool Text::rollupSegmentNewVocab(char* key) {
-    
+std::vector<int> Text::rollupSegmentNewVocab(char* key) {
+
+    Vocab* vocab = new Vocab();
+    int segment_index = this->getKeyIndexAddIfNew(key,-1);
+
+    int sequence_buffer_length = this->segment_buffer_sizes[segment_index];
+    int* sequence = (int*)malloc(sequence_buffer_length * sizeof(int));
+    int sequence_length = 0;
+
+    int * segment = this->segments[segment_index];
+
+    char * term;
+    int term_index;
+
+    int start = -1;
+    int end = -1;
+    for(int i=0; i<this->segment_buffer_sizes[segment_index]; i++) {
+        if(start == -1) {
+            if(segment[i] == 0) {
+              start = i;  
+            } 
+        } else {
+            if(segment[i] == 0) {
+                end = i;
+
+                // finish word
+                term = (char*)malloc(end - start);
+                for(int j=start; j < end; j++) term[j-start] = j;
+                term_index = vocab->addTerm(term);
+                free(term);
+                sequence[sequence_length] = term_index;
+                sequence_length++;
+
+                if(sequence_length > sequence_buffer_length - 2) {
+                    sequence_buffer_length *= 2;
+                    sequence = (int*)realloc(sequence,sequence_buffer_length*sizeof(int));
+                }
+
+                // start another
+                start = i;
+            } else if(segment[i] == 1) {
+
+            } else if(segment[i] == 2) {
+                end = i-1;
+
+                // finish word
+                term = (char*)malloc(end - start);
+                for(int j=start; j < end; j++) term[j-start] = j;
+                term_index = vocab->addTerm(term);
+                free(term);
+                sequence[sequence_length] = term_index;
+                sequence_length++;
+
+                if(sequence_length > sequence_buffer_length - 2) {
+                    sequence_buffer_length *= 2;
+                    sequence = (int*)realloc(sequence,sequence_buffer_length*sizeof(int));
+                }
+
+                start = -1;
+            }
+        }
+    }
+
+    if(start != -1) {
+        end = this->segment_buffer_sizes[segment_index]-1;
+
+        // finish word
+        term = (char*)malloc(end - start);
+        for(int j=start; j < end; j++) term[j-start] = j;
+        term_index = vocab->addTerm(term);
+        free(term);
+        sequence[sequence_length] = term_index;
+        sequence_length++;
+
+        if(sequence_length > sequence_buffer_length - 2) {
+            sequence_buffer_length *= 2;
+            sequence = (int*)realloc(sequence,sequence_buffer_length*sizeof(int));
+        }
+    }
+
+    std::vector<int> v;
+    for (int i=0; i<this->segment_buffer_sizes[segment_index]; i++) {
+        v.push_back(segment[i]);
+    }
+    v.push_back(-1);
+    for(int i=0; i<sequence_length; i++) {
+        v.push_back(sequence[i]);
+    }
+
+    // int[] sequence_array = new int[sequence_length];
+    // for(int i=0; i<sequence_length; i++) {
+    //     sequence_array[i] = sequence[i];
+    // }
+    // free(sequence);
+
+    return v;
 }
 
 // figure out which row of this->segment a key corresponds to
 // if the key does not exist, add a new segment row and key
 int Text::getKeyIndexAddIfNew(char* key,int segment_length) {
+    
     unsigned long long keyHash = this->hashSegmentKey(key);
     int keyFoundAtIndex = -1;
+
     for(int i=0; i<this->num_segment_keys; i++) {
         if(this->segment_keys[i] == keyHash) keyFoundAtIndex = i;
     }
+
     if(keyFoundAtIndex != -1) {
         return keyFoundAtIndex;
     } else {
         return this->addSegmentAndKey(keyHash,segment_length);
     }
+
     return this->num_segment_keys - 1;
+
 }
 
 int Text::addSegmentAndKey(unsigned long long keyHash,int segment_length) {
@@ -161,7 +267,7 @@ int Vocab::getTermIndex(char* term) {
 // returns the index of the term (whether it's new or not)
 int Vocab::addTerm(char* term) {
     int index = this->getTermIndex(term);
-    if(index != -1) {
+    if(index == -1) {
         this->size += 1;
 
         this->vocab[this->size - 1].letters = (char*)malloc(strlen(term)+1);

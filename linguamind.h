@@ -1,6 +1,7 @@
 /* File: linguamind.h */
 
 #include <iostream>
+#include <vector>
 
 #define LONGESTKEY 13 // 9,223,372,036,854,775,807 - (26**13)
 #define CHAR_VOCAB_SIZE 256
@@ -42,6 +43,7 @@ class Text {
 		unsigned long long hashSegmentKey(char* key);
 		int getKeyIndexAddIfNew(char* key,int segment_length);
 		int addSegmentAndKey(unsigned long long keyHash,int segment_length);
+		std::vector<int> rollupSegmentNewVocab(char* key);
 };
 
 char* fact(char * text);
