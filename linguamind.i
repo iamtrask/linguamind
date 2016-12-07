@@ -19,8 +19,17 @@ class Vocab {
 	public:
 		Vocab();
 		int size;
+
 		int vocab_buffer_size;
 		Term * vocab;
+
+		int hash_size;
+		int* hash_table;
+
+		int addTerm(char* term);
+		int getTermHash(char* term);
+		Term getTermAtIndex(int i);
+		int getTermIndex(char* term);
 };
 
 class Text {

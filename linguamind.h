@@ -22,6 +22,8 @@ class Vocab {
 
 		int addTerm(char* term);
 		int getTermHash(char* term);
+		Term getTermAtIndex(int i);
+		int getTermIndex(char* term);
 };
 
 class Text {
