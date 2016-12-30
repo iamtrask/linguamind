@@ -7,14 +7,18 @@ setup.py file for SWIG linguamind
 from distutils.core import setup, Extension
 
 
-linguamind_module = Extension('_linguamind',
-                           sources=['linguamind_wrap.cxx', 'linguamind.cpp'],
+nlp_module = Extension('_nlp',
+                           sources=['linguamind/nlp_wrap.cxx', 'linguamind/nlp/text.cpp'],
+                           )
+
+linalg_module = Extension('_linalg',
+                           sources=['linguamind/linalg_wrap.cxx', 'linguamind/linalg/matrix.cpp'],
                            )
 
 setup (name = 'linguamind',
        version = '0.1',
        author      = "SWIG Docs",
        description = """Simple swig linguamind from docs""",
-       ext_modules = [linguamind_module],
-       py_modules = ["linguamind"],
+       ext_modules = [nlp_module, linalg_module],
+       py_modules = ["linguamind.nlp", "linguamind.linalg"],
        )

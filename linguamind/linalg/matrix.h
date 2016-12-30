@@ -1,0 +1,4 @@
+class Matrix{
+	public:
+		Matrix();
+};

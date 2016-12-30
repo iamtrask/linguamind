@@ -2,14 +2,14 @@ export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 
 sudo rm -rf build
-rm linguamind.py
-rm linguamind.pyc
-rm linguamind_wrap.c
-rm linguamind_wrap.cxx
-rm _linguamind.so
+touch linguamind/__init__.py
 
 # swig -python linguamind.i
-swig -c++ -python linguamind.i
+swig -c++ -python linguamind/nlp.i
+swig -c++ -python linguamind/linalg.i
 
 # python setup.py build_ext --inplace
-sudo python setup.py install
+sudo python setup.py clean install
+
+rm -rf linguamind/*.cxx
+rm -rf linguamind/*.py
