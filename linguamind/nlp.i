@@ -14,6 +14,7 @@ namespace std {
 
 %{
 #define SWIG_FILE_WITH_INIT
+#include "nlp/vocab.h"
 #include "nlp/text.h"
 %}
 
@@ -24,11 +25,6 @@ namespace std {
 
 struct Term {
 	char* letters;
-};
-
-class Tokenizer{
-	public:
-		Tokenizer();
 };
 
 class Vocab {

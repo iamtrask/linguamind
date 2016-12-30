@@ -1,40 +1,16 @@
+#ifndef TEXT
+#define TEXT
+
 /* File: text.h */
 
 #include <iostream>
 #include <vector>
 #include <unordered_map>
 
+#include "vocab.h"
+
 #define LONGESTKEY 13 // 9,223,372,036,854,775,807 - (26**13)
 #define CHAR_VOCAB_SIZE 256
-
-class Text;
-
-struct Term {
-	char* letters;
-};
-
-class Tokenizer{
-	public:
-		Tokenizer();
-		void tokenize(Text* text);
-};
-
-class Vocab {
-	public:
-		Vocab();
-		int size;
-
-		int vocab_buffer_size;
-		Term * vocab;
-
-		int hash_size;
-		int* hash_table;
-
-		int addTerm(char* term);
-		int getTermHash(char* term);
-		Term getTermAtIndex(int i);
-		int getTermIndex(char* term);
-};
 
 class Text {
 	public:
@@ -54,3 +30,5 @@ class Text {
 		std::vector<int> getSequence(char* key);
 
 };
+
+#endif
