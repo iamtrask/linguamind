@@ -414,34 +414,91 @@ def charp_frompointer(t):
     return _nn.charp_frompointer(t)
 charp_frompointer = _nn.charp_frompointer
 
-class SparseLinear(_object):
+class SparseLinearInput(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, SparseLinear, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, SparseLinearInput, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, SparseLinear, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, SparseLinearInput, name)
     __repr__ = _swig_repr
 
-    def __init__(self, *args):
-        this = _nn.new_SparseLinear(*args)
+    def __init__(self, arg2, arg3):
+        this = _nn.new_SparseLinearInput(arg2, arg3)
         try:
             self.this.append(this)
         except:
             self.this = this
-    __swig_setmethods__["weights"] = _nn.SparseLinear_weights_set
-    __swig_getmethods__["weights"] = _nn.SparseLinear_weights_get
+    __swig_setmethods__["weights"] = _nn.SparseLinearInput_weights_set
+    __swig_getmethods__["weights"] = _nn.SparseLinearInput_weights_get
     if _newclass:
-        weights = _swig_property(_nn.SparseLinear_weights_get, _nn.SparseLinear_weights_set)
-    __swig_setmethods__["is_output_sparse"] = _nn.SparseLinear_is_output_sparse_set
-    __swig_getmethods__["is_output_sparse"] = _nn.SparseLinear_is_output_sparse_get
+        weights = _swig_property(_nn.SparseLinearInput_weights_get, _nn.SparseLinearInput_weights_set)
+    __swig_setmethods__["output"] = _nn.SparseLinearInput_output_set
+    __swig_getmethods__["output"] = _nn.SparseLinearInput_output_get
     if _newclass:
-        is_output_sparse = _swig_property(_nn.SparseLinear_is_output_sparse_get, _nn.SparseLinear_is_output_sparse_set)
+        output = _swig_property(_nn.SparseLinearInput_output_get, _nn.SparseLinearInput_output_set)
+
+    def init(self, arg2, arg3):
+        return _nn.SparseLinearInput_init(self, arg2, arg3)
+
+    def updateOutput(self, input):
+        return _nn.SparseLinearInput_updateOutput(self, input)
+    __swig_destroy__ = _nn.delete_SparseLinearInput
+    __del__ = lambda self: None
+SparseLinearInput_swigregister = _nn.SparseLinearInput_swigregister
+SparseLinearInput_swigregister(SparseLinearInput)
+
+class SparseLinearOutput(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, SparseLinearOutput, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, SparseLinearOutput, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, arg2, arg3, arg4):
+        this = _nn.new_SparseLinearOutput(arg2, arg3, arg4)
+        try:
+            self.this.append(this)
+        except:
+            self.this = this
+    __swig_setmethods__["weights"] = _nn.SparseLinearOutput_weights_set
+    __swig_getmethods__["weights"] = _nn.SparseLinearOutput_weights_get
+    if _newclass:
+        weights = _swig_property(_nn.SparseLinearOutput_weights_get, _nn.SparseLinearOutput_weights_set)
+    __swig_setmethods__["output"] = _nn.SparseLinearOutput_output_set
+    __swig_getmethods__["output"] = _nn.SparseLinearOutput_output_get
+    if _newclass:
+        output = _swig_property(_nn.SparseLinearOutput_output_get, _nn.SparseLinearOutput_output_set)
+    __swig_setmethods__["output_indices"] = _nn.SparseLinearOutput_output_indices_set
+    __swig_getmethods__["output_indices"] = _nn.SparseLinearOutput_output_indices_get
+    if _newclass:
+        output_indices = _swig_property(_nn.SparseLinearOutput_output_indices_get, _nn.SparseLinearOutput_output_indices_set)
 
     def init(self, arg2, arg3, arg4):
-        return _nn.SparseLinear_init(self, arg2, arg3, arg4)
-    __swig_destroy__ = _nn.delete_SparseLinear
+        return _nn.SparseLinearOutput_init(self, arg2, arg3, arg4)
+
+    def updateOutput(self, input, output_indices):
+        return _nn.SparseLinearOutput_updateOutput(self, input, output_indices)
+    __swig_destroy__ = _nn.delete_SparseLinearOutput
     __del__ = lambda self: None
-SparseLinear_swigregister = _nn.SparseLinear_swigregister
-SparseLinear_swigregister(SparseLinear)
+SparseLinearOutput_swigregister = _nn.SparseLinearOutput_swigregister
+SparseLinearOutput_swigregister(SparseLinearOutput)
+
+class Sequential(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Sequential, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Sequential, name)
+    __repr__ = _swig_repr
+
+    def __init__(self):
+        this = _nn.new_Sequential()
+        try:
+            self.this.append(this)
+        except:
+            self.this = this
+    __swig_destroy__ = _nn.delete_Sequential
+    __del__ = lambda self: None
+Sequential_swigregister = _nn.Sequential_swigregister
+Sequential_swigregister(Sequential)
 
 # This file is compatible with both classic and new-style classes.
 

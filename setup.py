@@ -16,7 +16,7 @@ linalg_module = Extension('_linalg',
                            )
 
 nn_module = Extension('_nn',
-                           sources=['linguamind/nn_wrap.cxx', 'linguamind/nn/sparse_linear.cpp'],
+                           sources=['linguamind/nn_wrap.cxx', 'linguamind/nn/sparse_linear.cpp', 'linguamind/nn/sequential.cpp'],
                            )
 
 setup (name = 'linguamind',

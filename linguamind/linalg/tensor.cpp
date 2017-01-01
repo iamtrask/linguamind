@@ -22,6 +22,21 @@ Tensor::Tensor(std::vector<int> shape) {
 	this->seed = 0;
 }
 
+Tensor Tensor::addRowi(Tensor* a, int index) {
+	for(int i=0; i < this->shape[1]; i++) {
+		this->_data[i] += a->_data[i * this->shape[1] + i];
+	}
+	return *this;
+}
+
+float Tensor::dotRow(Tensor* a, int index) {
+	float out = 0;
+	for(int i=0; i < this->shape[1]; i++) {
+		out += a->_data[i] * this->_data[index * this->shape[1] + i];
+	}
+	return out;
+}
+
 Tensor Tensor::uniform() {
 	for(int i=0; i<this->num_elements; i++) {
 		this->seed = this->seed * (unsigned long long)25214903917 + 11;

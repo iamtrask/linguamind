@@ -1,10 +1,9 @@
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 
-sudo rm -rf build
+# sudo rm -rf build
 touch linguamind/__init__.py
 
-# swig -python linguamind.i
 swig -c++ -python linguamind/nlp.i
 swig -c++ -python linguamind/linalg.i
 swig -c++ -python linguamind/nn.i

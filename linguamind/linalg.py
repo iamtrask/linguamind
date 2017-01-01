@@ -561,6 +561,12 @@ class Tensor(_object):
     if _newclass:
         seed = _swig_property(_linalg.Tensor_seed_get, _linalg.Tensor_seed_set)
 
+    def dotRow(self, a, index):
+        return _linalg.Tensor_dotRow(self, a, index)
+
+    def addRowi(self, a, index):
+        return _linalg.Tensor_addRowi(self, a, index)
+
     def uniform(self):
         return _linalg.Tensor_uniform(self)
 

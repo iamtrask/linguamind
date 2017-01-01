@@ -35,6 +35,9 @@ class Tensor{
 		long num_elements;
 		unsigned long long seed;
 
+		float dotRow(Tensor* a, int index);
+		Tensor addRowi(Tensor* a, int index);
+
 		Tensor uniform();
 		Tensor zero();
 

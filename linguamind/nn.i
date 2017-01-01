@@ -16,6 +16,7 @@ namespace std {
 #define SWIG_FILE_WITH_INIT
 #include "linalg/tensor.h"
 #include "nn/sparse_linear.h"
+#include "nn/sequential.h"
 %}
 
 %include "cpointer.i"
@@ -23,14 +24,37 @@ namespace std {
 /* Wrap a class interface around an "int *" */
 %pointer_class(char, charp);
 
-class SparseLinear{
+class SparseLinearInput {
 
 	public:
-		SparseLinear(int, int);
-		SparseLinear(int, int, bool);
+		SparseLinearInput(int, int);
 
 		Tensor* weights;
-		bool is_output_sparse;
+		Tensor* output;
 
-		void init(int, int, bool);
+		void init(int, int);
+
+		void updateOutput(std::vector<int> input);
 };
+
+class SparseLinearOutput {
+
+	public:
+		SparseLinearOutput(int, int, int);
+
+		Tensor* weights;
+		Tensor* output;
+
+		std::vector<int> output_indices;
+
+		void init(int, int, int);
+
+		void updateOutput(Tensor* input, std::vector<int> output_indices);
+};
+
+class Sequential {
+
+	public:
+		Sequential();
+};
+
