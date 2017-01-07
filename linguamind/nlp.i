@@ -6,7 +6,7 @@
 %}
 
 %include "std_vector.i"
-
+%include "std_unordered_map.i"
 namespace std {
    %template(vectori) vector<int>;
    %template(vectord) vector<double>;

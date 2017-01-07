@@ -6,17 +6,18 @@ SparseLinearInput::SparseLinearInput(int input_dim, int output_dim) {
 
 void SparseLinearInput::init(int input_dim, int output_dim) {
 	
-	std::vector<int> dims;
+	std::vector<int> weight_dims;
 
-	dims.push_back(input_dim);
-	dims.push_back(output_dim);
+	weight_dims.push_back(input_dim);
+	weight_dims.push_back(output_dim);
 	
-	this->weights = new Tensor(dims);	
+	this->weights = new Tensor(weight_dims);	
 
-	dims.clear();
-	dims.push_back(1);
-	dims.push_back(output_dim);
-	this->output = new Tensor(dims);
+	std::vector<int> output_dims;
+
+	output_dims.push_back(1);
+	output_dims.push_back(output_dim);
+	this->output = new Tensor(output_dims);
 }
 
 void SparseLinearInput::updateOutput(std::vector<int> input) {
@@ -38,17 +39,17 @@ SparseLinearOutput::SparseLinearOutput(int input_dim, int output_dim, int output
 
 void SparseLinearOutput::init(int input_dim, int output_dim, int output_sample_size) {
 	
-	std::vector<int> dims;
+	std::vector<int> weight_dims;
 	
-	dims.push_back(output_dim);
-	dims.push_back(input_dim);
+	weight_dims.push_back(output_dim);
+	weight_dims.push_back(input_dim);
 	
-	this->weights = new Tensor(dims);
+	this->weights = new Tensor(weight_dims);
 
-	dims.clear();
-	dims.push_back(1);
-	dims.push_back(output_sample_size);	
-	this->output = new Tensor(dims);
+	std::vector<int> output_dims;
+	output_dims.push_back(1);
+	output_dims.push_back(output_sample_size);	
+	this->output = new Tensor(output_dims);
 }
 
 void SparseLinearOutput::updateOutput(Tensor* input, std::vector<int> output_indices) {

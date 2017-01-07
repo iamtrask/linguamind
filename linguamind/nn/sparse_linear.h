@@ -3,8 +3,9 @@
 
 #include <vector>
 #include "../linalg/tensor.h"
+#include "layer.h"
 
-class SparseLinearInput {
+class SparseLinearInput: public Layer {
 
 	public:
 		SparseLinearInput(int, int);
@@ -17,7 +18,7 @@ class SparseLinearInput {
 		void updateOutput(std::vector<int> input);
 };
 
-class SparseLinearOutput {
+class SparseLinearOutput: public Layer {
 
 	public:
 		SparseLinearOutput(int, int, int);

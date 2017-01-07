@@ -5,7 +5,20 @@ Tensor::Tensor() {
 }
 
 Tensor::Tensor(std::vector<int> shape) {
+	this->init(shape);
+		
+}
+
+Tensor::Tensor(int rows, int cols) {
+	std::vector<int> dims;
+
+	dims.push_back(rows);
+	dims.push_back(cols);
 	
+	this->init(dims);
+}
+
+void Tensor::init(std::vector<int>shape) {
 	// stores the shape of the tensor
 	this->shape = shape;
 
@@ -20,6 +33,13 @@ Tensor::Tensor(std::vector<int> shape) {
 	this->_data = (float*)malloc(this->num_elements * sizeof(float));
 
 	this->seed = 0;
+}
+
+Tensor Tensor::sub(Tensor* a, Tensor* b) {
+	for(int i=0; i < (int)this->num_elements; i++) {
+		this->_data[i] = a->_data[i] - b->_data[i];
+	}
+	return *this;
 }
 
 Tensor Tensor::addRowi(Tensor* a, int index) {
@@ -54,6 +74,10 @@ Tensor Tensor::zero() {
 
 float Tensor::get(int x) {
 	return this->_data[x];
+}
+
+void Tensor::set(int x, float y) {
+	this->_data[x] = y;
 }
 
 Tensor Tensor::operator*=(float x) const {
