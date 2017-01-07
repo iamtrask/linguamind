@@ -20,7 +20,7 @@ class Matrix {
 		Matrix uniform(Seed* seed);
 
 		// std::vector<float> get();
-		// Vector* get(int i);
+		Vector* get(int i);
 		// Vector* set(int i, Vector* x);
 
 		Matrix operator*=(float x) const;

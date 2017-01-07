@@ -1,63 +1,84 @@
 #include "sparse_linear.h"
 
 SparseLinearInput::SparseLinearInput(int input_dim, int output_dim) {
-	this->init(input_dim, output_dim);
-}
 
-void SparseLinearInput::init(int input_dim, int output_dim) {
-	
-	std::vector<int> weight_dims;
+	this->sparse_output = false;
+	this->sparse_input = true;
 
-	weight_dims.push_back(input_dim);
-	weight_dims.push_back(output_dim);
-	
-	this->weights = new Tensor(weight_dims);	
+	this->input_dim = input_dim;
+	this->output_dim = output_dim;
 
-	std::vector<int> output_dims;
+	this->weights = new Matrix(input_dim, output_dim);
 
-	output_dims.push_back(1);
-	output_dims.push_back(output_dim);
-	this->output = new Tensor(output_dims);
-}
-
-void SparseLinearInput::updateOutput(std::vector<int> input) {
-	
+	this->output = new Vector(this->output_dim);
 	this->output->zero();
 
-	for(int i=0; i<input.size(); i++) {
-		this->output->addRowi(this->weights,input[i]);
+	for(int i=0; i<this->output_dim; i++) this->full_output_indices.push_back(i);
+
+}
+
+void SparseLinearInput::updateOutput(Vector* input, std::vector<int> input_indices) {
+	this->input_indices = input_indices;
+
+	this->output->zero();
+	for(int i=0; i< (int)this->input_indices.size(); i++) {
+		this->output->addi(this->weights->get(input_indices[i]));
 	}
+}
+
+void SparseLinearInput::updateInputGrad(Vector* output_grad) {
+	// do nothing
+}
+
+void SparseLinearInput::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
+	for(int i=0; i<(int)this->input_indices.size(); i++) {
+		this->weights->get(this->input_indices[i])->addi(output_grad,-alpha);
+	}
+}
+
+SparseLinearOutput::SparseLinearOutput(int input_dim, int output_dim) {
+
+	this->sparse_output = true;
+	this->sparse_input = false;
+
+	this->input_dim = input_dim; // embedding dim
+	this->output_dim = output_dim; // output vocab
+
+	this->weights = new Matrix(output_dim, input_dim);
+
+	this->input_grad = new Vector(this->input_dim);
+
+	this->output = new Vector(this->output_dim);
+	this->output->zero();
+
+	for(int i=0; i<this->output_dim; i++) this->full_output_indices.push_back(i);
 
 }
 
-//////////////////////// SPARSE LINEAR OUTPUT ////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-SparseLinearOutput::SparseLinearOutput(int input_dim, int output_dim, int output_sample_size) {
-	this->init(input_dim, output_dim, output_sample_size);
-}
-
-void SparseLinearOutput::init(int input_dim, int output_dim, int output_sample_size) {
-	
-	std::vector<int> weight_dims;
-	
-	weight_dims.push_back(output_dim);
-	weight_dims.push_back(input_dim);
-	
-	this->weights = new Tensor(weight_dims);
-
-	std::vector<int> output_dims;
-	output_dims.push_back(1);
-	output_dims.push_back(output_sample_size);	
-	this->output = new Tensor(output_dims);
-}
-
-void SparseLinearOutput::updateOutput(Tensor* input, std::vector<int> output_indices) {
-	
+void SparseLinearOutput::updateOutput(Vector* input, std::vector<int> output_indices) {
 	this->output_indices = output_indices;
-
-	for(int i=0; i<output_indices.size(); i++) {
-		this->output->_data[i] = (this->weights->dotRow(input,output_indices[i]));
+	
+	int index = 0;
+	for(int i=0; i< (int)this->output_indices.size(); i++) {
+		index = this->output_indices[i];
+		this->output->doti(index, input, this->weights->get(index));
 	}
+}
 
+void SparseLinearOutput::updateInputGrad(Vector* output_grad) {
+	
+	int index = this->output_indices[0];
+	this->input_grad->set(this->weights->get(index), output_grad->get(index));
+	for(int i=1; i < (int) this->output_indices.size(); i++) {
+		index = this->output_indices[i];
+		this->input_grad->addi(this->weights->get(index), output_grad->get(index));
+	}
+}
+
+void SparseLinearOutput::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
+	int index;
+	for(int i=0; i<(int)this->output_indices.size(); i++) {
+		index = this->output_indices[i];
+		this->weights->get(index)->addi(input,output_grad->get(index) * -alpha);
+	}
 }

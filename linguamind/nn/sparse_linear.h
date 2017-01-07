@@ -8,28 +8,47 @@
 class SparseLinearInput: public Layer {
 
 	public:
-		SparseLinearInput(int, int);
+		SparseLinearInput(int input_dim, int output_dim);
 
-		Tensor* weights;
-		Tensor* output;
+		bool sparse_output;
+		bool sparse_input;
 
-		void init(int, int);
+		int input_dim;
+		int output_dim;
 
-		void updateOutput(std::vector<int> input);
+		Vector* output;
+		Vector* input_grad;
+
+		Matrix* weights;
+		std::vector<int> input_indices;
+		std::vector<int> full_output_indices;
+
+		void updateOutput(Vector* input, std::vector<int> input_indices);
+		void updateInputGrad(Vector* output_grad);
+		void accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
 
 class SparseLinearOutput: public Layer {
 
 	public:
-		SparseLinearOutput(int, int, int);
+		SparseLinearOutput(int input_dim, int output_dim);
 
-		Tensor* weights;
-		Tensor* output;
+		bool sparse_output;
+		bool sparse_input;
+
+		int input_dim;
+		int output_dim;
+
+		Vector* output;
+		Vector* input_grad;
+
+		Matrix* weights;
 		std::vector<int> output_indices;
+		std::vector<int> full_output_indices;
 
-		void init(int, int, int);
-
-		void updateOutput(Tensor* input, std::vector<int> output_indices);
+		void updateOutput(Vector* input, std::vector<int> output_indices);
+		void updateInputGrad(Vector* output_grad);
+		void accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
 
 #endif

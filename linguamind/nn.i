@@ -14,11 +14,12 @@ namespace std {
 
 %{
 #define SWIG_FILE_WITH_INIT
-#include "linalg/tensor.h"
+#include "linalg/seed.h"
+#include "linalg/vector.h"
+#include "linalg/matrix.h"
 #include "nn/layer.h"
 #include "nn/sparse_linear.h"
-#include "nn/sequential.h"
-#include "nn/criterion.h"
+#include "nn/linear.h"
 %}
 
 %include "cpointer.i"
@@ -29,64 +30,83 @@ namespace std {
 class Layer {
 
 	public:
-		Layer();
+		bool sparse_output;
+		bool sparse_input;
 
-		Tensor* weights;
-		Tensor* output;
+		int input_dim;
+		int output_dim;
+
+		Vector* output;
+		Vector* input_grad;
+
+		std::vector<int> full_output_indices;
 };
 
 class SparseLinearInput: public Layer {
 
 	public:
-		SparseLinearInput(int, int);
+		SparseLinearInput(int input_dim, int output_dim);
 
-		Tensor* weights;
-		Tensor* output;
+		bool sparse_output;
+		bool sparse_input;
 
-		void init(int, int);
+		int input_dim;
+		int output_dim;
 
-		void updateOutput(std::vector<int> input);
+		Vector* output;
+		Vector* input_grad;
+
+		Matrix* weights;
+		std::vector<int> input_indices;
+		std::vector<int> full_output_indices;
+
+		void updateOutput(Vector* input, std::vector<int> input_indices);
+		void updateInputGrad(Vector* output_grad);
+		void accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
 
 class SparseLinearOutput: public Layer {
 
 	public:
-		SparseLinearOutput(int, int, int);
+		SparseLinearOutput(int input_dim, int output_dim);
 
-		Tensor* weights;
-		Tensor* output;
+		bool sparse_output;
+		bool sparse_input;
 
+		int input_dim;
+		int output_dim;
+
+		Vector* output;
+		Vector* input_grad;
+
+		Matrix* weights;
 		std::vector<int> output_indices;
+		std::vector<int> full_output_indices;
 
-		void init(int, int, int);
-
-		void updateOutput(Tensor* input, std::vector<int> output_indices);
+		void updateOutput(Vector* input, std::vector<int> output_indices);
+		void updateInputGrad(Vector* output_grad);
+		void accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
 
-class Sequential  {
+class Linear: public Layer {
 
 	public:
-		Sequential();
+		Linear(int input_dim, int output_dim);
 
-		std::vector<Layer*> layers;
-		Tensor* output;
+		bool sparse_output;
+		bool sparse_input;
 
-		void add(Layer* layer);
-		Tensor* forward(std::vector<int> input_indices,std::vector<int> output_indices);
+		int input_dim;
+		int output_dim;
+
+		Vector* output;
+		Vector* input_grad;
+
+		Matrix* weights;
+
+		std::vector<int> full_output_indices;
+
+		void updateOutput(Vector* input, std::vector<int> not_used);
+		void updateInputGrad(Vector* output_grad);
+		void accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
-
-class MSECriterion {
-
-	public:
-		int batch_size;
-		int dim;
-
-		Tensor* output;
-		Tensor* grad_input;
-	
-		MSECriterion(int batch_size, int dim);
-		
-		void forwards(Tensor* input);
-		Tensor* backwards(Tensor* target);
-};
-

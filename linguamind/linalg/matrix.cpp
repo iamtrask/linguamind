@@ -27,6 +27,13 @@ Matrix Matrix::uniform(Seed* seed) {
 	return *this;
 }
 
+Vector* Matrix::get(int i) {
+	if(i >= this->rows) {
+		throw std::runtime_error("OutOfBounds: Row does not exist.");
+	} 
+	return this->_data[i];
+}
+
 Matrix Matrix::operator*=(float x) const {
 	for(int i=0; i<this->rows; i++) {
 		this->_data[i]->muli(x);

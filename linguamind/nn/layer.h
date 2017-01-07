@@ -1,16 +1,22 @@
 #ifndef LAYER
 #define LAYER
 
-#include "../linalg/tensor.h"
+#include "../linalg/seed.h"
+#include "../linalg/vector.h"
+#include "../linalg/matrix.h"
 
 class Layer {
 
 	public:
-		Layer();
+		bool sparse_output;
+		bool sparse_input;
 
-		Tensor* weights;
-		Tensor* output;
+		int input_dim;
+		int output_dim;
+
+		Vector* output;
+		Vector* input_grad;
+
+		std::vector<int> full_output_indices;
 };
-
-
 #endif
