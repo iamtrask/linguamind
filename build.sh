@@ -13,6 +13,3 @@ sudo python setup.py clean install
 
 rm -rf linguamind/*.cxx
 rm -rf linguamind/*.py
-
-# gcc -c -fpic linguamind/linalg_wrap.cxx
-# gcc -shared linguamind/linalg.o linguamind/linalg_wrap.o -o linalg.so
