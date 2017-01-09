@@ -1,22 +1,41 @@
 #include "criterion.h"
+#include <stdexcept> 
 
-MSECriterion::MSECriterion(int batch_size,int dim) {
+MSECriterion::MSECriterion() {
+	this->grad = new Vector(32);	
+}
 
-	this->batch_size = batch_size;
-	this->dim = dim;
-
-	// this->output = new Tensor(batch_size, dim);
-	this->grad_input = new Tensor(batch_size, dim);
+float MSECriterion::forward(Vector* input, Vector* target, std::vector<int> output_indices) {
 	
+	if(target->size != output_indices.size()) throw std::runtime_error("OutOfBounds: input and output_indices vectors should be of identical length.");
+
+	float error = 0;
+	float tmp;
+	int index;
+
+	for(int i=0; i<(int)output_indices.size(); i++) {
+		index = output_indices[i];
+		tmp = (input->get(index) - target->get(i));
+		error += (tmp * tmp);
+	}
+
+	return error / (float)output_indices.size();
 }
 
-void MSECriterion::forwards(Tensor* input) {
-	this->output = input;
-}
+Vector* MSECriterion::backward(Vector* output, Vector* target, std::vector<int> output_indices) {
+	
+	if(target->size != (int)output_indices.size()) throw std::runtime_error("OutOfBounds: output_indices and target vectors should be of identical length.");
 
-Tensor* MSECriterion::backwards(Tensor* target) {
-	this->grad_input->sub(this->output,target);
-	return this->grad_input;
-}
+	// this->grad be the size of the whole output... 
+	if(this->grad->size != output->size) {
+		this->grad = new Vector(output->size);
+	}
 
-// void MSECriterion::zeroGradinput()
+	int index;
+	for(int i=0; i<(int)output_indices.size(); i++) {
+		index = output_indices[i];
+		this->grad->set(index,output->get(index) - target->get(i));
+	}
+
+	return this->grad;
+}

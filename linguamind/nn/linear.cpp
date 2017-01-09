@@ -20,25 +20,36 @@ Linear::Linear(int input_dim, int output_dim) {
 
 }
 
-void Linear::updateOutput(Vector* input, std::vector<int> not_used) {
+int Linear::updateOutput(Vector* input, std::vector<int> not_used) {
 
 	for(int index=0; index < this->output_dim; index++) {
 		this->output->doti(index, input, this->weights->get(index));
 	}
+	return 0;
 }
 
-void Linear::updateInputGrad(Vector* output_grad) {
+int Linear::updateInputGrad(Vector* output_grad) {
 	
 	int index = 0;
 	this->input_grad->set(this->weights->get(index), output_grad->get(index));
 	for(index=1; index < this->output_dim; index++) {
 		this->input_grad->addi(this->weights->get(index), output_grad->get(index));
 	}
+	return 0;
 }
 
-void Linear::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
+int Linear::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
 	
 	for(int index=0; index < this->output_dim; index++) {
 		this->weights->get(index)->addi(input,output_grad->get(index) * -alpha);
 	}
+	return 0;
 }
+
+int Linear::getInputDim() { return this->input_dim;};
+int Linear::getOutputDim() { return this->output_dim;};
+bool Linear::hasSparseInput() {return this->sparse_input;};
+bool Linear::hasSparseOutput() {return this->sparse_output;}
+Vector* Linear::getOutput() {return this->output;}
+Vector* Linear::getInputGrad() {return this->input_grad;}
+std::vector<int> Linear::getFullOutputIndices() {return this->full_output_indices;}

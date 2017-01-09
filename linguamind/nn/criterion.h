@@ -2,22 +2,19 @@
 #define CRITERION
 
 #include <vector>
-#include "../linalg/tensor.h"
+#include "../linalg/vector.h"
+#include "../linalg/matrix.h"
 #include "layer.h"
 
 class MSECriterion {
 
-	public:
-		int batch_size;
-		int dim;
+	public:	
+		MSECriterion();
 
-		Tensor* output;
-		Tensor* grad_input;
-	
-		MSECriterion(int batch_size, int dim);
+		Vector* grad;
 
-		void forwards(Tensor* input);
-		Tensor* backwards(Tensor* target);
+		float forward(Vector* input, Vector* target, std::vector<int> output_indices);
+		Vector* backward(Vector* output, Vector* target, std::vector<int> output_indices);
 };
 
 #endif

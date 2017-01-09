@@ -17,24 +17,35 @@ SparseLinearInput::SparseLinearInput(int input_dim, int output_dim) {
 
 }
 
-void SparseLinearInput::updateOutput(Vector* input, std::vector<int> input_indices) {
+int SparseLinearInput::updateOutput(Vector* input, std::vector<int> input_indices) {
 	this->input_indices = input_indices;
 
 	this->output->zero();
 	for(int i=0; i< (int)this->input_indices.size(); i++) {
 		this->output->addi(this->weights->get(input_indices[i]));
 	}
+	return 0;
 }
 
-void SparseLinearInput::updateInputGrad(Vector* output_grad) {
+int SparseLinearInput::updateInputGrad(Vector* output_grad) {
 	// do nothing
+	return 0;
 }
 
-void SparseLinearInput::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
+int SparseLinearInput::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
 	for(int i=0; i<(int)this->input_indices.size(); i++) {
 		this->weights->get(this->input_indices[i])->addi(output_grad,-alpha);
 	}
+	return 0;
 }
+
+int SparseLinearInput::getInputDim() { return this->input_dim;};
+int SparseLinearInput::getOutputDim() { return this->output_dim;};
+bool SparseLinearInput::hasSparseInput() {return this->sparse_input;};
+bool SparseLinearInput::hasSparseOutput() {return this->sparse_output;}
+Vector* SparseLinearInput::getOutput() {return this->output;}
+Vector* SparseLinearInput::getInputGrad() {return this->input_grad;}
+std::vector<int> SparseLinearInput::getFullOutputIndices() {return this->full_output_indices;}
 
 SparseLinearOutput::SparseLinearOutput(int input_dim, int output_dim) {
 
@@ -55,7 +66,7 @@ SparseLinearOutput::SparseLinearOutput(int input_dim, int output_dim) {
 
 }
 
-void SparseLinearOutput::updateOutput(Vector* input, std::vector<int> output_indices) {
+int SparseLinearOutput::updateOutput(Vector* input, std::vector<int> output_indices) {
 	this->output_indices = output_indices;
 	
 	int index = 0;
@@ -63,9 +74,10 @@ void SparseLinearOutput::updateOutput(Vector* input, std::vector<int> output_ind
 		index = this->output_indices[i];
 		this->output->doti(index, input, this->weights->get(index));
 	}
+	return 0;
 }
 
-void SparseLinearOutput::updateInputGrad(Vector* output_grad) {
+int SparseLinearOutput::updateInputGrad(Vector* output_grad) {
 	
 	int index = this->output_indices[0];
 	this->input_grad->set(this->weights->get(index), output_grad->get(index));
@@ -73,12 +85,22 @@ void SparseLinearOutput::updateInputGrad(Vector* output_grad) {
 		index = this->output_indices[i];
 		this->input_grad->addi(this->weights->get(index), output_grad->get(index));
 	}
+	return 0;
 }
 
-void SparseLinearOutput::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
+int SparseLinearOutput::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
 	int index;
 	for(int i=0; i<(int)this->output_indices.size(); i++) {
 		index = this->output_indices[i];
 		this->weights->get(index)->addi(input,output_grad->get(index) * -alpha);
 	}
+	return 0;
 }
+
+int SparseLinearOutput::getInputDim() { return this->input_dim;};
+int SparseLinearOutput::getOutputDim() { return this->output_dim;};
+bool SparseLinearOutput::hasSparseInput() {return this->sparse_input;};
+bool SparseLinearOutput::hasSparseOutput() {return this->sparse_output;}
+Vector* SparseLinearOutput::getOutput() {return this->output;}
+Vector* SparseLinearOutput::getInputGrad() {return this->input_grad;}
+std::vector<int> SparseLinearOutput::getFullOutputIndices() {return this->full_output_indices;}

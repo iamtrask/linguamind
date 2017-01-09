@@ -104,9 +104,16 @@ class Vector{
 		Vector subi(float x);
 		Vector operator-=(float x) const;
 
+		Vector gei(float x);
 		Vector operator>=(float x) const;
+
+		Vector lei(float x);
 		Vector operator<=(float x) const;
+
+		Vector gti(float x);
 		Vector operator>(float x) const;
+
+		Vector lti(float x);
 		Vector operator<(float x) const;
 
 		Vector muli(Vector* x);
@@ -121,9 +128,16 @@ class Vector{
 		Vector subi(Vector* x);
 		Vector operator-=(Vector* x) const;
 
+		Vector gei(Vector* x);
 		Vector operator>=(Vector* x) const;
+
+		Vector lei(Vector* x);
 		Vector operator<=(Vector* x) const;
+
+		Vector gti(Vector* x);
 		Vector operator>(Vector* x) const;
+
+		Vector lti(Vector* x);
 		Vector operator<(Vector* x) const;
 };
 

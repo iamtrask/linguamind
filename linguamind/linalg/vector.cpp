@@ -153,9 +153,31 @@ Vector Vector::operator-=(float x) const {
 	return *this;
 }
 
+Vector Vector::gei(float x) {
+	for(int i=0; i<this->size; i++) {
+		if(this->_data[i] >= x) {
+			this->_data[i] = 1.0;
+		} else {
+			this->_data[i] = 0.0;
+		}
+	}
+	return *this;
+}
+
 Vector Vector::operator>=(float x) const {
 	for(int i=0; i<this->size; i++) {
 		if(this->_data[i] >= x) {
+			this->_data[i] = 1.0;
+		} else {
+			this->_data[i] = 0.0;
+		}
+	}
+	return *this;
+}
+
+Vector Vector::lei(float x) {
+	for(int i=0; i<this->size; i++) {
+		if(this->_data[i] <= x) {
 			this->_data[i] = 1.0;
 		} else {
 			this->_data[i] = 0.0;
@@ -175,9 +197,31 @@ Vector Vector::operator<=(float x) const {
 	return *this;
 }
 
+Vector Vector::gti(float x) {
+	for(int i=0; i<this->size; i++) {
+		if(this->_data[i] > x) {
+			this->_data[i] = 1.0;
+		} else {
+			this->_data[i] = 0.0;
+		}
+	}
+	return *this;
+}
+
 Vector Vector::operator>(float x) const {
 	for(int i=0; i<this->size; i++) {
 		if(this->_data[i] > x) {
+			this->_data[i] = 1.0;
+		} else {
+			this->_data[i] = 0.0;
+		}
+	}
+	return *this;
+}
+
+Vector Vector::lti(float x) {
+	for(int i=0; i<this->size; i++) {
+		if(this->_data[i] < x) {
 			this->_data[i] = 1.0;
 		} else {
 			this->_data[i] = 0.0;
@@ -261,10 +305,34 @@ Vector Vector::operator-=(Vector* x) const {
 	return *this;
 }
 
+Vector Vector::gei(Vector* x) {
+	if(x->size != this->size) throw std::runtime_error("Vectors not the same size");
+	for(int i=0; i<this->size; i++) {
+		if(this->_data[i] >= x->_data[i]) {
+			this->_data[i] = 1.0;
+		} else {
+			this->_data[i] = 0.0;
+		}
+	}
+	return *this;
+}
+
 Vector Vector::operator>=(Vector* x) const {
 	if(x->size != this->size) throw std::runtime_error("Vectors not the same size");
 	for(int i=0; i<this->size; i++) {
 		if(this->_data[i] >= x->_data[i]) {
+			this->_data[i] = 1.0;
+		} else {
+			this->_data[i] = 0.0;
+		}
+	}
+	return *this;
+}
+
+Vector Vector::lei(Vector* x) {
+	if(x->size != this->size) throw std::runtime_error("Vectors not the same size");
+	for(int i=0; i<this->size; i++) {
+		if(this->_data[i] <= x->_data[i]) {
 			this->_data[i] = 1.0;
 		} else {
 			this->_data[i] = 0.0;
@@ -285,10 +353,34 @@ Vector Vector::operator<=(Vector* x) const {
 	return *this;
 }
 
+Vector Vector::gti(Vector* x) {
+	if(x->size != this->size) throw std::runtime_error("Vectors not the same size");
+	for(int i=0; i<this->size; i++) {
+		if(this->_data[i] > x->_data[i]) {
+			this->_data[i] = 1.0;
+		} else {
+			this->_data[i] = 0.0;
+		}
+	}
+	return *this;
+}
+
 Vector Vector::operator>(Vector* x) const {
 	if(x->size != this->size) throw std::runtime_error("Vectors not the same size");
 	for(int i=0; i<this->size; i++) {
 		if(this->_data[i] > x->_data[i]) {
+			this->_data[i] = 1.0;
+		} else {
+			this->_data[i] = 0.0;
+		}
+	}
+	return *this;
+}
+
+Vector Vector::lti(Vector* x) {
+	if(x->size != this->size) throw std::runtime_error("Vectors not the same size");
+	for(int i=0; i<this->size; i++) {
+		if(this->_data[i] < x->_data[i]) {
 			this->_data[i] = 1.0;
 		} else {
 			this->_data[i] = 0.0;
