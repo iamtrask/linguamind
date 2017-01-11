@@ -4,6 +4,7 @@
 #include <vector>
 #include "../linalg/vector.h"
 #include "../linalg/matrix.h"
+#include "../nlp/vocab.h"
 #include "layer.h"
 #include "criterion.h"
 #include "sequential.h"
@@ -11,16 +12,17 @@
 class CBOW  {
 
 	public:
-		CBOW(std::vector<std::vector<int> > window_indices,int vocab_size, int negative, int window);
+		CBOW(std::vector<std::vector<int> > window_indices,Vocab* vocab, int negative, int window);
 
 		std::vector<std::vector<int> > window_indices;
-		
+		long window_indices_size;
+
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
 		Vector* target_values;
-
-		int vocab_size;
+		Vocab* vocab;
+		
 		int iterator;
 		int window;
 		int negative;

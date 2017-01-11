@@ -7,12 +7,12 @@ typedef float real;
 Vector::Vector(int size) {
 
 	this->size = size;
-	// this->_data = (float*)malloc(this->size * sizeof(float));
-	int a = posix_memalign((void **)&this->_data, 128, (long long)this->size * sizeof(real));
+	this->_data = (float*)malloc(this->size * sizeof(float));
 	this->zero();
 }
 
 Vector Vector::resize(int size) {
+	printf("Resizing Vector from %i to %i", this->size, size);
 	if(size >= this->size) {
 		this->size = size;
 		this->_data = (float*)realloc(this->_data, this->size*sizeof(float));

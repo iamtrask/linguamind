@@ -7,7 +7,11 @@ MSECriterion::MSECriterion() {
 
 float MSECriterion::forward(Vector* input, Vector* target, std::vector<int> &output_indices) {
 	
-	if(target->size != output_indices.size()) throw std::runtime_error("OutOfBounds: input and output_indices vectors should be of identical length.");
+	if(target->size != output_indices.size()) {
+		printf("Target Size:%i", target->size);
+		printf("Output Indices Size:%i", output_indices.size());
+		throw std::runtime_error("OutOfBounds: target and output_indices vectors should be of identical length.");
+	}
 
 	float error = 0;
 	float tmp;

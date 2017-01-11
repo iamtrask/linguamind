@@ -7,19 +7,19 @@ StochasticGradient::StochasticGradient(Sequential* mlp, MSECriterion* criterion)
 
 float StochasticGradient::train(CBOW* training_generator, float alpha, int iterations) {
 	
-	float error;
+	float error = -1;
 	unsigned long long seed = 0;
 	
 	std::vector<int> input_indices = training_generator->getInputIndicesReference();
 	std::vector<int> output_indices = training_generator->getOutputIndicesReference();
 	Vector* target_values = training_generator->getTargetValuesReference();
-
+	
 	for(int iter=0; iter<iterations; iter++) {
 
 		while(training_generator->has_next) {
-			training_generator->next();
+
 			Vector* pred = this->mlp->forward(input_indices,output_indices);
-			error = this->criterion->forward(pred, target_values,output_indices);
+			// error = this->criterion->forward(pred, target_values,output_indices);
 			this->mlp->backward(this->criterion->backward(pred,target_values,output_indices),output_indices);
 
 			Vector* prev_layer_output = NULL;	
@@ -29,6 +29,8 @@ float StochasticGradient::train(CBOW* training_generator, float alpha, int itera
 			}
 
 			this->mlp->get(this->mlp->layers.size()-1)->accGradParameters(this->mlp->get(this->mlp->layers.size()-2)->getOutput(),criterion->grad,alpha);
+			training_generator->next();
+
 		}
 
 		training_generator->reset();

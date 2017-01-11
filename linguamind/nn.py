@@ -917,6 +917,58 @@ class Relu(Layer):
 Relu_swigregister = _nn.Relu_swigregister
 Relu_swigregister(Relu)
 
+class Sigmoid(Layer):
+    __swig_setmethods__ = {}
+    for _s in [Layer]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Sigmoid, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Layer]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, Sigmoid, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, dim: 'int'):
+        this = _nn.new_Sigmoid(dim)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def getInputDim(self) -> "int":
+        return _nn.Sigmoid_getInputDim(self)
+
+    def getOutputDim(self) -> "int":
+        return _nn.Sigmoid_getOutputDim(self)
+
+    def hasSparseInput(self) -> "bool":
+        return _nn.Sigmoid_hasSparseInput(self)
+
+    def hasSparseOutput(self) -> "bool":
+        return _nn.Sigmoid_hasSparseOutput(self)
+
+    def getOutput(self) -> "Vector *":
+        return _nn.Sigmoid_getOutput(self)
+
+    def getInputGrad(self) -> "Vector *":
+        return _nn.Sigmoid_getInputGrad(self)
+
+    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
+        return _nn.Sigmoid_getFullOutputIndices(self)
+
+    def updateOutput(self, input: 'Vector *', output_indices: 'vectori') -> "int":
+        return _nn.Sigmoid_updateOutput(self, input, output_indices)
+
+    def updateInputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.Sigmoid_updateInputGrad(self, output_grad)
+
+    def accGradParameters(self, input: 'Vector *', output_grad: 'Vector *', alpha: 'float') -> "int":
+        return _nn.Sigmoid_accGradParameters(self, input, output_grad, alpha)
+    __swig_destroy__ = _nn.delete_Sigmoid
+    __del__ = lambda self: None
+Sigmoid_swigregister = _nn.Sigmoid_swigregister
+Sigmoid_swigregister(Sigmoid)
+
 class MSECriterion(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, MSECriterion, name, value)
@@ -987,8 +1039,8 @@ class CBOW(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, CBOW, name)
     __repr__ = _swig_repr
 
-    def __init__(self, window_indices: 'TrainingExample', vocab_size: 'int', negative: 'int', window: 'int'):
-        this = _nn.new_CBOW(window_indices, vocab_size, negative, window)
+    def __init__(self, window_indices: 'TrainingExample', vocab: 'Vocab *', negative: 'int', window: 'int'):
+        this = _nn.new_CBOW(window_indices, vocab, negative, window)
         try:
             self.this.append(this)
         except __builtin__.Exception:
@@ -997,6 +1049,10 @@ class CBOW(_object):
     __swig_getmethods__["window_indices"] = _nn.CBOW_window_indices_get
     if _newclass:
         window_indices = _swig_property(_nn.CBOW_window_indices_get, _nn.CBOW_window_indices_set)
+    __swig_setmethods__["window_indices_size"] = _nn.CBOW_window_indices_size_set
+    __swig_getmethods__["window_indices_size"] = _nn.CBOW_window_indices_size_get
+    if _newclass:
+        window_indices_size = _swig_property(_nn.CBOW_window_indices_size_get, _nn.CBOW_window_indices_size_set)
     __swig_setmethods__["input_indices"] = _nn.CBOW_input_indices_set
     __swig_getmethods__["input_indices"] = _nn.CBOW_input_indices_get
     if _newclass:
@@ -1009,10 +1065,10 @@ class CBOW(_object):
     __swig_getmethods__["target_values"] = _nn.CBOW_target_values_get
     if _newclass:
         target_values = _swig_property(_nn.CBOW_target_values_get, _nn.CBOW_target_values_set)
-    __swig_setmethods__["vocab_size"] = _nn.CBOW_vocab_size_set
-    __swig_getmethods__["vocab_size"] = _nn.CBOW_vocab_size_get
+    __swig_setmethods__["vocab"] = _nn.CBOW_vocab_set
+    __swig_getmethods__["vocab"] = _nn.CBOW_vocab_get
     if _newclass:
-        vocab_size = _swig_property(_nn.CBOW_vocab_size_get, _nn.CBOW_vocab_size_set)
+        vocab = _swig_property(_nn.CBOW_vocab_get, _nn.CBOW_vocab_set)
     __swig_setmethods__["iterator"] = _nn.CBOW_iterator_set
     __swig_getmethods__["iterator"] = _nn.CBOW_iterator_get
     if _newclass:

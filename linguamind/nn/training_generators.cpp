@@ -1,16 +1,20 @@
 #include "training_generators.h"
 
-CBOW::CBOW(std::vector<std::vector<int> > window_indices,int vocab_size, int negative, int window) {
+CBOW::CBOW(std::vector<std::vector<int> > window_indices,Vocab* vocab, int negative, int window) {
 
-	this->vocab_size = 0;
+	this->vocab = vocab;
 
 	this->window_indices = window_indices;
+	this->window_indices_size = this->window_indices.size();
+
+	if(this->window_indices.size() == 0) throw std::runtime_error("ERROR: Cannot initialize CBOW with no training data (rows == 0)");
+
 	this->window = window;
 	this->negative = negative;
 
-	this->target_values = new Vector(this->negative + 1);
+	this->target_values = new Vector(this->negative+1);
 	this->target_values->zero();
-	this->target_values[0] = 1;
+	this->target_values->set(0,1);
 
 	this->win_i = 0;
 	this->pred_i = 0;
@@ -19,46 +23,63 @@ CBOW::CBOW(std::vector<std::vector<int> > window_indices,int vocab_size, int neg
 	this->seed = 0;
 	this->has_next = true;
 
+	this->next();
+
 }
 
 void CBOW::next() {
 			
 	int cur_i;
-	// prepare training example
-	int window_len = (int)window_indices[this->win_i].size();
-		
+	long long target = 0;
+	long long word;
+
+	int window_len = (int)this->window_indices[this->win_i].size();
+	if(this->pred_i >= window_len) {
+
+		this->pred_i = 0;
+		this->win_i++;
+		window_len = (int)this->window_indices[this->win_i].size();
+
+		while(window_len < 2 && this->win_i < (int)this->window_indices.size()) {
+			this->win_i++;
+			window_len = (int)this->window_indices[this->win_i].size();
+		}
+	}
+
+	if(this->win_i >= (int)this->window_indices.size()) {
+
+		this->win_i = 0;
+		this->has_next = false;
+		return;
+	}
+	
 	this->input_indices.clear();
 	this->output_indices.clear();
 
-	for(int cont_i = 0; cont_i<window_len*2+1; cont_i++) {
+	for(int cont_i = 0; cont_i<this->window*2+1; cont_i++) {
 		cur_i = pred_i + cont_i - this->window;
 		if(cur_i >=0 && cur_i < window_len && cur_i != this->pred_i) {
 			input_indices.push_back(this->window_indices[this->win_i][cur_i]);
 		}
 	}
 
-	this->output_indices.push_back(this->window_indices[this->win_i][pred_i]);
+	word = this->window_indices[this->win_i][pred_i];
+	this->output_indices.push_back(word);
 
-	for(int i=0; i<5; i++) {
+	this->seed = this->seed * (unsigned long long)25214903917 + 11; // preserves 1:1 comparison with word2vec
+
+	for(int i=0; i<this->negative; i++) {
 		this->seed = this->seed * (unsigned long long)25214903917 + 11;
-		this->output_indices.push_back((int)(this->seed % 29471));
+		// printf("\n next random:%llu\n",this->seed);
+		// printf("Unigram Index: %i\n",(this->seed >> 16) % this->vocab->unigram_table_size);
+		target = this->vocab->unigram_table[(this->seed >> 16) % this->vocab->unigram_table_size];
+		// printf("Unigram Value %i\n",target);
+		if (target == 0) target = this->seed % (this->vocab->size - 1) + 1; 
+		if (target == word) continue;
+		this->output_indices.push_back(target);
 	}
 
 	this->pred_i++;
-
-	if(this->pred_i >= window_len) {
-
-		this->win_i++;
-		this->pred_i = 0;
-
-		if(this->win_i >= (int)this->window_indices.size()) {
-
-			this->win_i = 0;
-			this->has_next = false;
-
-		}
-	}	
-
 }
 
 void CBOW::reset() {

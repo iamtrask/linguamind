@@ -18,7 +18,7 @@ linalg_module = Extension('_linalg',
                            )
 
 nn_module = Extension('_nn',
-                           sources=['linguamind/nn_wrap.cxx','linguamind/nn/layer.cpp', 'linguamind/nn/linear.cpp' ,'linguamind/nn/sparse_linear.cpp', 'linguamind/nn/relu.cpp', 'linguamind/nn/criterion.cpp', 'linguamind/nn/sequential.cpp', 'linguamind/nn/training_generators.cpp', 'linguamind/nn/stochastic_gradient.cpp'],
+                           sources=['linguamind/nn_wrap.cxx','linguamind/nn/layer.cpp', 'linguamind/nn/linear.cpp' ,'linguamind/nn/sparse_linear.cpp', 'linguamind/nn/relu.cpp', 'linguamind/nn/sigmoid.cpp' , 'linguamind/nn/criterion.cpp', 'linguamind/nn/sequential.cpp', 'linguamind/nn/training_generators.cpp', 'linguamind/nn/stochastic_gradient.cpp'],
                            extra_compile_args = ["-std=c++11", "-stdlib=libc++", "-mmacosx-version-min=10.7", "-pthread", "-O3", "-march=native", "-Wall", "-funroll-loops", "-Wno-unused-result"],
                            )
 

@@ -430,6 +430,10 @@ class Term(_object):
     __swig_getmethods__["letters"] = _nlp.Term_letters_get
     if _newclass:
         letters = _swig_property(_nlp.Term_letters_get, _nlp.Term_letters_set)
+    __swig_setmethods__["cn"] = _nlp.Term_cn_set
+    __swig_getmethods__["cn"] = _nlp.Term_cn_get
+    if _newclass:
+        cn = _swig_property(_nlp.Term_cn_get, _nlp.Term_cn_set)
 
     def __init__(self):
         this = _nlp.new_Term()
@@ -449,8 +453,8 @@ class Vocab(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, Vocab, name)
     __repr__ = _swig_repr
 
-    def __init__(self):
-        this = _nlp.new_Vocab()
+    def __init__(self, *args):
+        this = _nlp.new_Vocab(*args)
         try:
             self.this.append(this)
         except __builtin__.Exception:
@@ -475,22 +479,77 @@ class Vocab(_object):
     __swig_getmethods__["hash_table"] = _nlp.Vocab_hash_table_get
     if _newclass:
         hash_table = _swig_property(_nlp.Vocab_hash_table_get, _nlp.Vocab_hash_table_set)
+    __swig_getmethods__["unigram_table_size"] = _nlp.Vocab_unigram_table_size_get
+    if _newclass:
+        unigram_table_size = _swig_property(_nlp.Vocab_unigram_table_size_get)
+    __swig_setmethods__["unigram_table"] = _nlp.Vocab_unigram_table_set
+    __swig_getmethods__["unigram_table"] = _nlp.Vocab_unigram_table_get
+    if _newclass:
+        unigram_table = _swig_property(_nlp.Vocab_unigram_table_get, _nlp.Vocab_unigram_table_set)
+
+    def sort(self, min_count: 'int') -> "void":
+        return _nlp.Vocab_sort(self, min_count)
 
     def addTerm(self, term: 'char *') -> "int":
         return _nlp.Vocab_addTerm(self, term)
 
-    def getTermHash(self, term: 'char *') -> "int":
+    def getTermHash(self, term: 'char *') -> "unsigned int":
         return _nlp.Vocab_getTermHash(self, term)
 
-    def getTermAtIndex(self, i: 'int') -> "Term":
+    def getTermAtIndex(self, i: 'int') -> "Term *":
         return _nlp.Vocab_getTermAtIndex(self, i)
 
     def getTermIndex(self, term: 'char *') -> "int":
         return _nlp.Vocab_getTermIndex(self, term)
+
+    def getUnigramValue(self, index: 'int') -> "int":
+        return _nlp.Vocab_getUnigramValue(self, index)
+
+    def InitUnigramTable(self) -> "void":
+        return _nlp.Vocab_InitUnigramTable(self)
     __swig_destroy__ = _nlp.delete_Vocab
     __del__ = lambda self: None
 Vocab_swigregister = _nlp.Vocab_swigregister
 Vocab_swigregister(Vocab)
+
+class Text(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Text, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Text, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, filepath: 'char *', vocab: 'Vocab'):
+        this = _nlp.new_Text(filepath, vocab)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_setmethods__["filepath"] = _nlp.Text_filepath_set
+    __swig_getmethods__["filepath"] = _nlp.Text_filepath_get
+    if _newclass:
+        filepath = _swig_property(_nlp.Text_filepath_get, _nlp.Text_filepath_set)
+    __swig_setmethods__["vocab"] = _nlp.Text_vocab_set
+    __swig_getmethods__["vocab"] = _nlp.Text_vocab_get
+    if _newclass:
+        vocab = _swig_property(_nlp.Text_vocab_get, _nlp.Text_vocab_set)
+    __swig_setmethods__["sentences"] = _nlp.Text_sentences_set
+    __swig_getmethods__["sentences"] = _nlp.Text_sentences_get
+    if _newclass:
+        sentences = _swig_property(_nlp.Text_sentences_get, _nlp.Text_sentences_set)
+
+    def ChangeVocab(self, new_vocab: 'Vocab') -> "void":
+        return _nlp.Text_ChangeVocab(self, new_vocab)
+
+    def cacheTokensInMemoryAsIndices(self) -> "void":
+        return _nlp.Text_cacheTokensInMemoryAsIndices(self)
+
+    def ReadWord(self, word: 'char *', fin: 'FILE *') -> "void":
+        return _nlp.Text_ReadWord(self, word, fin)
+    __swig_destroy__ = _nlp.delete_Text
+    __del__ = lambda self: None
+Text_swigregister = _nlp.Text_swigregister
+Text_swigregister(Text)
 
 # This file is compatible with both classic and new-style classes.
 

@@ -22,6 +22,7 @@ namespace std {
 #include "nn/sparse_linear.h"
 #include "nn/linear.h"
 #include "nn/relu.h"
+#include "nn/sigmoid.h"
 #include "nn/criterion.h"
 #include "nn/sequential.h"
 #include "nn/training_generators.h"
@@ -245,6 +246,43 @@ class Relu: public Layer {
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
 
+class Sigmoid: public Layer {
+	
+	private:
+		
+		bool sparse_output;
+		bool sparse_input;
+
+		int input_dim;
+		int output_dim;
+
+		Vector* output;
+		Vector* input_grad;
+
+		Matrix* weights;
+
+		std::vector<int> output_indices;
+		std::vector<int> full_output_indices;
+
+	public:
+		Sigmoid(int dim);
+
+		int getInputDim();
+		int getOutputDim();
+
+		bool hasSparseInput();
+		bool hasSparseOutput();
+
+		Vector* getOutput();
+		Vector* getInputGrad();
+
+		std::vector<int> getFullOutputIndices();
+
+		int updateOutput(Vector* input, std::vector<int> &output_indices);
+		int updateInputGrad(Vector* output_grad);
+		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
+};
+
 class MSECriterion {
 
 	public:	
@@ -272,16 +310,17 @@ class Sequential  {
 class CBOW  {
 
 	public:
-		CBOW(std::vector<std::vector<int> > window_indices,int vocab_size, int negative, int window);
+		CBOW(std::vector<std::vector<int> > window_indices,Vocab* vocab, int negative, int window);
 
 		std::vector<std::vector<int> > window_indices;
-		
+		long window_indices_size;
+
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
 		Vector* target_values;
-
-		int vocab_size;
+		Vocab* vocab;
+		
 		int iterator;
 		int window;
 		int negative;
