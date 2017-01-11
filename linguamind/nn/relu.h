@@ -39,7 +39,7 @@ class Relu: public Layer {
 
 		std::vector<int> getFullOutputIndices();
 
-		int updateOutput(Vector* input, std::vector<int> output_indices);
+		int updateOutput(Vector* input, std::vector<int> &output_indices);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };

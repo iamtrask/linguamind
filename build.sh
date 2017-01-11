@@ -4,7 +4,7 @@ export CXX=/usr/bin/clang++
 sudo rm -rf build
 touch linguamind/__init__.py
 
-# swig -c++ -python linguamind/nlp.i
+swig -c++ -python -py3 linguamind/nlp.i
 swig -c++ -python -py3 linguamind/linalg.i
 swig -c++ -python -py3 linguamind/nn.i
 

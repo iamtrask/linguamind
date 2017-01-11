@@ -24,6 +24,7 @@ namespace std {
 #include "nn/relu.h"
 #include "nn/criterion.h"
 #include "nn/sequential.h"
+#include "nn/training_generators.h"
 #include "nn/stochastic_gradient.h"
 %}
 #include "nn/layer.h"
@@ -84,12 +85,16 @@ class Layer {
 
 		virtual std::vector<int> getFullOutputIndices() = 0;
 
-		virtual int updateOutput(Vector*, std::vector<int>) = 0;
+		virtual int updateOutput(Vector*, std::vector<int> &sparse_output) = 0;
 		virtual int updateInputGrad(Vector* output_grad) = 0;
 		virtual int accGradParameters(Vector* input, Vector* output_grad, float alpha) = 0;
 };
+
+// THIS IS SURPRISINGLY IMPORTANT TO MAKE THESE VALUES ACCEPTABLE AS PARAMETERS
+// not as LayerBuilder explicitly persay... but to be able to pass in vector<Layer*> you need it.
 namespace std {
    %template(LayerBuilder) vector<Layer*>;
+   %template(TrainingExample) vector<vector<int> >;
 };
 
 
@@ -125,7 +130,7 @@ class SparseLinearInput: public Layer {
 
 		std::vector<int> getFullOutputIndices();
 
-		int updateOutput(Vector* input, std::vector<int> input_indices);
+		int updateOutput(Vector* input, std::vector<int> &input_indices);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
@@ -162,7 +167,7 @@ class SparseLinearOutput: public Layer {
 
 		std::vector<int> getFullOutputIndices();
 
-		int updateOutput(Vector* input, std::vector<int> output_indices);
+		int updateOutput(Vector* input, std::vector<int> &output_indices);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
@@ -198,7 +203,7 @@ class Linear: public Layer {
 
 		std::vector<int> getFullOutputIndices();
 
-		int updateOutput(Vector* input, std::vector<int> not_used);
+		int updateOutput(Vector* input, std::vector<int> &not_used);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
@@ -235,7 +240,7 @@ class Relu: public Layer {
 
 		std::vector<int> getFullOutputIndices();
 
-		int updateOutput(Vector* input, std::vector<int> output_indices);
+		int updateOutput(Vector* input, std::vector<int> &output_indices);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
@@ -247,8 +252,8 @@ class MSECriterion {
 
 		Vector* grad;
 
-		float forward(Vector* input, Vector* target, std::vector<int> output_indices);
-		Vector* backward(Vector* output, Vector* target, std::vector<int> output_indices);
+		float forward(Vector* input, Vector* target, std::vector<int> &output_indices);
+		Vector* backward(Vector* output, Vector* target, std::vector<int> &output_indices);
 };
 
 class Sequential  {
@@ -260,8 +265,39 @@ class Sequential  {
 		Vector* output;
 
 		Layer* get(int i);
-		Vector* forward(std::vector<int> input_indices,std::vector<int> output_indices);
-		void backward(Vector* grad, std::vector<int> output_indices);
+		Vector* forward(std::vector<int> &input_indices,std::vector<int> &output_indices);
+		void backward(Vector* grad, std::vector<int> &output_indices);
+};
+
+class CBOW  {
+
+	public:
+		CBOW(std::vector<std::vector<int> > window_indices,int vocab_size, int negative, int window);
+
+		std::vector<std::vector<int> > window_indices;
+		
+		std::vector<int> input_indices;
+		std::vector<int> output_indices;
+
+		Vector* target_values;
+
+		int vocab_size;
+		int iterator;
+		int window;
+		int negative;
+		int win_i;
+		int pred_i;
+		int window_len;
+
+		unsigned long long seed;
+		bool has_next;
+
+		void next();
+		void reset();
+		std::vector<int> &getInputIndicesReference();
+		std::vector<int> &getOutputIndicesReference();
+		Vector* getTargetValuesReference();
+
 };
 
 class StochasticGradient  {
@@ -272,5 +308,5 @@ class StochasticGradient  {
 		Sequential* mlp;
 		MSECriterion* criterion;
 
-		float train(std::vector<int> input_indices, std::vector<int> output_indices, Vector* target_values, float alpha, int iterations);		
+		float train(CBOW* training_generator, float alpha, int iterations);
 };

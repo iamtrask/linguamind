@@ -18,8 +18,8 @@ class Sequential  {
 		Vector* output;
 
 		Layer* get(int i);
-		Vector* forward(std::vector<int> input_indices,std::vector<int> output_indices);
-		void backward(Vector* grad, std::vector<int> output_indices);
+		Vector* forward(std::vector<int> &input_indices,std::vector<int> &output_indices);
+		void backward(Vector* grad, std::vector<int> &output_indices);
 };
 
 

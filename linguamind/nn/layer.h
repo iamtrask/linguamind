@@ -42,7 +42,7 @@ class Layer {
 
 		virtual std::vector<int> getFullOutputIndices() = 0;
 
-		virtual int updateOutput(Vector*, std::vector<int>) = 0;
+		virtual int updateOutput(Vector*, std::vector<int> &sparse_output) = 0;
 		virtual int updateInputGrad(Vector* output_grad) = 0;
 		virtual int accGradParameters(Vector* input, Vector* output_grad, float alpha) = 0;
 };

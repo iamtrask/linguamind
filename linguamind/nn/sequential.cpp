@@ -19,8 +19,9 @@ Layer* Sequential::get(int i) {
 }
 
 // forward with sparse input and output
-Vector* Sequential::forward(std::vector<int> input_indices,std::vector<int> output_indices) {
+Vector* Sequential::forward(std::vector<int> &input_indices,std::vector<int> &output_indices) {
 	int num_layers = (int)this->layers.size();
+	std::vector<int> fullOutputIndices;
 	if(num_layers > 1) {
 		this->layers[0]->updateOutput(NULL, input_indices);
 
@@ -32,7 +33,8 @@ Vector* Sequential::forward(std::vector<int> input_indices,std::vector<int> outp
 			if(sparse_output_until_end) {
 				this->layers[index+1]->updateOutput(this->layers[index]->getOutput(),output_indices);
 			} else {
-				this->layers[index+1]->updateOutput(this->layers[index]->getOutput(),this->layers[index+1]->getFullOutputIndices());
+				fullOutputIndices = this->layers[index+1]->getFullOutputIndices();
+				this->layers[index+1]->updateOutput(this->layers[index]->getOutput(),fullOutputIndices);
 			}
 		}	
 
@@ -41,7 +43,7 @@ Vector* Sequential::forward(std::vector<int> input_indices,std::vector<int> outp
 	return this->output;
 }
 
-void Sequential::backward(Vector* grad, std::vector<int> output_indices) {
+void Sequential::backward(Vector* grad, std::vector<int> &output_indices) {
 	this->layers[this->layers.size()-1]->updateInputGrad(grad);
 
 	for (int i=this->layers.size()-3; i >= 0; i--) {

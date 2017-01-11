@@ -5,7 +5,7 @@ MSECriterion::MSECriterion() {
 	this->grad = new Vector(32);	
 }
 
-float MSECriterion::forward(Vector* input, Vector* target, std::vector<int> output_indices) {
+float MSECriterion::forward(Vector* input, Vector* target, std::vector<int> &output_indices) {
 	
 	if(target->size != output_indices.size()) throw std::runtime_error("OutOfBounds: input and output_indices vectors should be of identical length.");
 
@@ -22,7 +22,7 @@ float MSECriterion::forward(Vector* input, Vector* target, std::vector<int> outp
 	return error / (float)output_indices.size();
 }
 
-Vector* MSECriterion::backward(Vector* output, Vector* target, std::vector<int> output_indices) {
+Vector* MSECriterion::backward(Vector* output, Vector* target, std::vector<int> &output_indices) {
 	
 	if(target->size != (int)output_indices.size()) throw std::runtime_error("OutOfBounds: output_indices and target vectors should be of identical length.");
 
@@ -39,3 +39,4 @@ Vector* MSECriterion::backward(Vector* output, Vector* target, std::vector<int> 
 
 	return this->grad;
 }
+

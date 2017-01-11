@@ -38,7 +38,7 @@ class SparseLinearInput: public Layer {
 
 		std::vector<int> getFullOutputIndices();
 
-		int updateOutput(Vector* input, std::vector<int> input_indices);
+		int updateOutput(Vector* input, std::vector<int> &input_indices);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
@@ -75,9 +75,51 @@ class SparseLinearOutput: public Layer {
 
 		std::vector<int> getFullOutputIndices();
 
-		int updateOutput(Vector* input, std::vector<int> output_indices);
+		int updateOutput(Vector* input, std::vector<int> &output_indices);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
+
+// class NegativeSamplingOutput: public Layer {
+
+// 	private:
+// 		bool sparse_output;
+// 		bool sparse_input;
+
+// 		int input_dim;
+// 		int output_dim;
+
+// 		Vector* output;
+// 		Vector* input_grad;
+
+// 		std::vector<int> output_indices;
+// 		std::vector<int> full_output_indices;
+
+// 		int negative_sample_size;
+// 		int vocab_size;
+// 		unsigned long long neg_pos;
+
+// 	public:
+
+// 		NegativeSamplingOutput(int input_dim, int negative_sample_size, int vocab_size);
+
+// 		Matrix* weights;
+
+// 		int getInputDim();
+// 		int getOutputDim();
+
+// 		bool hasSparseInput();
+// 		bool hasSparseOutput();
+
+// 		Vector* getOutput();
+// 		Vector* getInputGrad();
+
+// 		std::vector<int> getFullOutputIndices();
+		
+// 		int getRandom(int target);
+// 		int updateOutput(Vector* input, std::vector<int> &output_indices);
+// 		int updateInputGrad(Vector* output_grad);
+// 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
+// };
 
 #endif

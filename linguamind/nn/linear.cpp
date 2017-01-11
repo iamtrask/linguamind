@@ -20,7 +20,7 @@ Linear::Linear(int input_dim, int output_dim) {
 
 }
 
-int Linear::updateOutput(Vector* input, std::vector<int> not_used) {
+int Linear::updateOutput(Vector* input, std::vector<int> &not_used) {
 
 	for(int index=0; index < this->output_dim; index++) {
 		this->output->doti(index, input, this->weights->get(index));

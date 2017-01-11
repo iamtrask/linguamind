@@ -17,7 +17,7 @@ SparseLinearInput::SparseLinearInput(int input_dim, int output_dim) {
 
 }
 
-int SparseLinearInput::updateOutput(Vector* input, std::vector<int> input_indices) {
+int SparseLinearInput::updateOutput(Vector* input, std::vector<int> &input_indices) {
 	this->input_indices = input_indices;
 
 	this->output->zero();
@@ -66,7 +66,7 @@ SparseLinearOutput::SparseLinearOutput(int input_dim, int output_dim) {
 
 }
 
-int SparseLinearOutput::updateOutput(Vector* input, std::vector<int> output_indices) {
+int SparseLinearOutput::updateOutput(Vector* input, std::vector<int> &output_indices) {
 	this->output_indices = output_indices;
 	
 	int index = 0;
@@ -104,3 +104,88 @@ bool SparseLinearOutput::hasSparseOutput() {return this->sparse_output;}
 Vector* SparseLinearOutput::getOutput() {return this->output;}
 Vector* SparseLinearOutput::getInputGrad() {return this->input_grad;}
 std::vector<int> SparseLinearOutput::getFullOutputIndices() {return this->full_output_indices;}
+
+
+// NegativeSamplingOutput::NegativeSamplingOutput(int input_dim, int negative_sample_size, int vocab_size) {
+
+// 	this->sparse_output = true;
+// 	this->sparse_input = false;
+
+// 	this->input_dim = input_dim; // embedding dim
+// 	this->output_dim = vocab_size; // output vocab
+
+// 	this->weights = new Matrix(output_dim, input_dim);
+
+// 	this->input_grad = new Vector(this->input_dim);
+
+// 	this->output = new Vector(this->output_dim);
+// 	this->output->zero();
+
+// 	for(int i=0; i<this->output_dim; i++) this->full_output_indices.push_back(i);
+
+// 	this->negative_sample_size = negative_sample_size;
+// 	this->vocab_size = vocab_size;
+
+// 	for(int i=0; i<this->negative_sample_size+1; i++) {
+// 		this->output_indices.push_back(i);
+// 	}
+
+// 	// unsigned long long
+// 	this->neg_pos = 1;
+	
+// }
+
+// int NegativeSamplingOutput::updateOutput(Vector* input, std::vector<int> &output_indices) {
+// 	this->output_indices[0] = output_indices[0];
+	
+// 	int target = this->output_indices[0];
+// 	this->output->doti(target, input, this->weights->get(target));
+// 	int neg;
+// 	for(int i=0; i<this->negative_sample_size; i++) {
+// 		neg = this->getRandom(target);
+// 		this->output_indices[i+1] = neg;
+// 		this->output->doti(neg, input, this->weights->get(neg));
+// 	}
+
+// 	return 0;
+// }
+
+// int NegativeSamplingOutput::getRandom(int target) {
+// 	// TODO fix this to fetch the right distribution
+// 	this->neg_pos = this->neg_pos * (unsigned long long)25214903917 + 11;
+// 	int output = (int)(this->neg_pos % vocab_size);
+// 	while(output == target) {
+// 		this->neg_pos = this->neg_pos * (unsigned long long)25214903917 + 11;
+// 		output = (int)(this->neg_pos % vocab_size);
+// 	}
+// 	return output;
+// }
+// // these are exactly the same as SparseLinearOutput
+// int NegativeSamplingOutput::updateInputGrad(Vector* output_grad) {
+	
+// 	int index = this->output_indices[0];
+// 	this->input_grad->set(this->weights->get(index), output_grad->get(index));
+// 	for(int i=1; i < (int) this->output_indices.size(); i++) {
+// 		index = this->output_indices[i];
+// 		this->input_grad->addi(this->weights->get(index), output_grad->get(index));
+// 	}
+// 	return 0;
+// }
+
+// // these are exactly the same as SparseLinearOutput
+// int NegativeSamplingOutput::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
+// 	int index;
+// 	for(int i=0; i<(int)this->output_indices.size(); i++) {
+// 		index = this->output_indices[i];
+// 		this->weights->get(index)->addi(input,output_grad->get(index) * -alpha);
+// 	}
+// 	return 0;
+// }
+
+// int NegativeSamplingOutput::getInputDim() { return this->input_dim;};
+// int NegativeSamplingOutput::getOutputDim() { return this->output_dim;};
+// bool NegativeSamplingOutput::hasSparseInput() {return this->sparse_input;};
+// bool NegativeSamplingOutput::hasSparseOutput() {return this->sparse_output;}
+// Vector* NegativeSamplingOutput::getOutput() {return this->output;}
+// Vector* NegativeSamplingOutput::getInputGrad() {return this->input_grad;}
+// std::vector<int> NegativeSamplingOutput::getFullOutputIndices() {return this->full_output_indices;}

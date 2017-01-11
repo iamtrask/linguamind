@@ -2,10 +2,13 @@
 #include <assert.h>
 #include <stdexcept> 
 
+typedef float real;  
+
 Vector::Vector(int size) {
 
 	this->size = size;
-	this->_data = (float*)malloc(this->size * sizeof(float));
+	// this->_data = (float*)malloc(this->size * sizeof(float));
+	int a = posix_memalign((void **)&this->_data, 128, (long long)this->size * sizeof(real));
 	this->zero();
 }
 

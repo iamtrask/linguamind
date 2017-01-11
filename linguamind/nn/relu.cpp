@@ -18,24 +18,36 @@ Relu::Relu(int dim) {
 
 }
 
-int Relu::updateOutput(Vector* input, std::vector<int> output_indices) {
+int Relu::updateOutput(Vector* input, std::vector<int> &output_indices) {
 
 	this->output_indices = output_indices;
 	
-	this->input_grad->muli((float)0);
-	this->input_grad->addi(input);
-	this->input_grad->gei((float)0);
-
-	this->output->muli((float)0);
-	this->output->addi(input);
-	this->output->muli(this->input_grad);
+	int len = (int)output_indices.size();
+	float input_i;
+	for(int i=0; i<len; i++) {
+		input_i = input->get(i);
+		if(input_i > 0) {
+			this->output->set(i,input_i);
+		} else {
+			this->output->set(i,0);
+		}
+	}
 
 	return 0;
 }
 
 int Relu::updateInputGrad(Vector* output_grad) {
 	
-	this->input_grad->muli(output_grad);
+	int len = (int)this->output_indices.size();
+	float grad;
+	for(int i=0; i<len; i++) {
+		grad = this->output->get(i);
+		if(grad > 0) {
+			this->input_grad->set(i,grad);
+		} else {
+			this->output->set(i,0);
+		}
+	}
 
 	return 0;
 }

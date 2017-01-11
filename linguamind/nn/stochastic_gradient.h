@@ -7,6 +7,7 @@
 #include "layer.h"
 #include "criterion.h"
 #include "sequential.h"
+#include "training_generators.h"
 
 class StochasticGradient  {
 
@@ -16,7 +17,7 @@ class StochasticGradient  {
 		Sequential* mlp;
 		MSECriterion* criterion;
 
-		float train(std::vector<int> input_indices, std::vector<int> output_indices, Vector* target_values, float alpha, int iterations);		
+		float train(CBOW* training_generator, float alpha, int iterations);
 };
 
 

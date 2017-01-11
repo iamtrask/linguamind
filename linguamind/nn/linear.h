@@ -38,7 +38,7 @@ class Linear: public Layer {
 
 		std::vector<int> getFullOutputIndices();
 
-		int updateOutput(Vector* input, std::vector<int> not_used);
+		int updateOutput(Vector* input, std::vector<int> &not_used);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };

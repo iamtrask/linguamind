@@ -460,8 +460,8 @@ class Layer(_object):
     def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
         return _nn.Layer_getFullOutputIndices(self)
 
-    def updateOutput(self, arg2: 'Vector *', arg3: 'vectori') -> "int":
-        return _nn.Layer_updateOutput(self, arg2, arg3)
+    def updateOutput(self, arg2: 'Vector *', sparse_output: 'vectori') -> "int":
+        return _nn.Layer_updateOutput(self, arg2, sparse_output)
 
     def updateInputGrad(self, output_grad: 'Vector *') -> "int":
         return _nn.Layer_updateInputGrad(self, output_grad)
@@ -583,6 +583,119 @@ class LayerBuilder(_object):
     __del__ = lambda self: None
 LayerBuilder_swigregister = _nn.LayerBuilder_swigregister
 LayerBuilder_swigregister(LayerBuilder)
+
+class TrainingExample(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, TrainingExample, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, TrainingExample, name)
+    __repr__ = _swig_repr
+
+    def iterator(self) -> "swig::SwigPyIterator *":
+        return _nn.TrainingExample_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self) -> "bool":
+        return _nn.TrainingExample___nonzero__(self)
+
+    def __bool__(self) -> "bool":
+        return _nn.TrainingExample___bool__(self)
+
+    def __len__(self) -> "std::vector< std::vector< int > >::size_type":
+        return _nn.TrainingExample___len__(self)
+
+    def __getslice__(self, i: 'std::vector< std::vector< int > >::difference_type', j: 'std::vector< std::vector< int > >::difference_type') -> "std::vector< std::vector< int,std::allocator< int > >,std::allocator< std::vector< int,std::allocator< int > > > > *":
+        return _nn.TrainingExample___getslice__(self, i, j)
+
+    def __setslice__(self, *args) -> "void":
+        return _nn.TrainingExample___setslice__(self, *args)
+
+    def __delslice__(self, i: 'std::vector< std::vector< int > >::difference_type', j: 'std::vector< std::vector< int > >::difference_type') -> "void":
+        return _nn.TrainingExample___delslice__(self, i, j)
+
+    def __delitem__(self, *args) -> "void":
+        return _nn.TrainingExample___delitem__(self, *args)
+
+    def __getitem__(self, *args) -> "std::vector< std::vector< int > >::value_type const &":
+        return _nn.TrainingExample___getitem__(self, *args)
+
+    def __setitem__(self, *args) -> "void":
+        return _nn.TrainingExample___setitem__(self, *args)
+
+    def pop(self) -> "std::vector< std::vector< int > >::value_type":
+        return _nn.TrainingExample_pop(self)
+
+    def append(self, x: 'vectori') -> "void":
+        return _nn.TrainingExample_append(self, x)
+
+    def empty(self) -> "bool":
+        return _nn.TrainingExample_empty(self)
+
+    def size(self) -> "std::vector< std::vector< int > >::size_type":
+        return _nn.TrainingExample_size(self)
+
+    def swap(self, v: 'TrainingExample') -> "void":
+        return _nn.TrainingExample_swap(self, v)
+
+    def begin(self) -> "std::vector< std::vector< int > >::iterator":
+        return _nn.TrainingExample_begin(self)
+
+    def end(self) -> "std::vector< std::vector< int > >::iterator":
+        return _nn.TrainingExample_end(self)
+
+    def rbegin(self) -> "std::vector< std::vector< int > >::reverse_iterator":
+        return _nn.TrainingExample_rbegin(self)
+
+    def rend(self) -> "std::vector< std::vector< int > >::reverse_iterator":
+        return _nn.TrainingExample_rend(self)
+
+    def clear(self) -> "void":
+        return _nn.TrainingExample_clear(self)
+
+    def get_allocator(self) -> "std::vector< std::vector< int > >::allocator_type":
+        return _nn.TrainingExample_get_allocator(self)
+
+    def pop_back(self) -> "void":
+        return _nn.TrainingExample_pop_back(self)
+
+    def erase(self, *args) -> "std::vector< std::vector< int > >::iterator":
+        return _nn.TrainingExample_erase(self, *args)
+
+    def __init__(self, *args):
+        this = _nn.new_TrainingExample(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def push_back(self, x: 'vectori') -> "void":
+        return _nn.TrainingExample_push_back(self, x)
+
+    def front(self) -> "std::vector< std::vector< int > >::value_type const &":
+        return _nn.TrainingExample_front(self)
+
+    def back(self) -> "std::vector< std::vector< int > >::value_type const &":
+        return _nn.TrainingExample_back(self)
+
+    def assign(self, n: 'std::vector< std::vector< int > >::size_type', x: 'vectori') -> "void":
+        return _nn.TrainingExample_assign(self, n, x)
+
+    def resize(self, *args) -> "void":
+        return _nn.TrainingExample_resize(self, *args)
+
+    def insert(self, *args) -> "void":
+        return _nn.TrainingExample_insert(self, *args)
+
+    def reserve(self, n: 'std::vector< std::vector< int > >::size_type') -> "void":
+        return _nn.TrainingExample_reserve(self, n)
+
+    def capacity(self) -> "std::vector< std::vector< int > >::size_type":
+        return _nn.TrainingExample_capacity(self)
+    __swig_destroy__ = _nn.delete_TrainingExample
+    __del__ = lambda self: None
+TrainingExample_swigregister = _nn.TrainingExample_swigregister
+TrainingExample_swigregister(TrainingExample)
 
 class SparseLinearInput(Layer):
     __swig_setmethods__ = {}
@@ -867,6 +980,91 @@ class Sequential(_object):
 Sequential_swigregister = _nn.Sequential_swigregister
 Sequential_swigregister(Sequential)
 
+class CBOW(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, CBOW, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, CBOW, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, window_indices: 'TrainingExample', vocab_size: 'int', negative: 'int', window: 'int'):
+        this = _nn.new_CBOW(window_indices, vocab_size, negative, window)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_setmethods__["window_indices"] = _nn.CBOW_window_indices_set
+    __swig_getmethods__["window_indices"] = _nn.CBOW_window_indices_get
+    if _newclass:
+        window_indices = _swig_property(_nn.CBOW_window_indices_get, _nn.CBOW_window_indices_set)
+    __swig_setmethods__["input_indices"] = _nn.CBOW_input_indices_set
+    __swig_getmethods__["input_indices"] = _nn.CBOW_input_indices_get
+    if _newclass:
+        input_indices = _swig_property(_nn.CBOW_input_indices_get, _nn.CBOW_input_indices_set)
+    __swig_setmethods__["output_indices"] = _nn.CBOW_output_indices_set
+    __swig_getmethods__["output_indices"] = _nn.CBOW_output_indices_get
+    if _newclass:
+        output_indices = _swig_property(_nn.CBOW_output_indices_get, _nn.CBOW_output_indices_set)
+    __swig_setmethods__["target_values"] = _nn.CBOW_target_values_set
+    __swig_getmethods__["target_values"] = _nn.CBOW_target_values_get
+    if _newclass:
+        target_values = _swig_property(_nn.CBOW_target_values_get, _nn.CBOW_target_values_set)
+    __swig_setmethods__["vocab_size"] = _nn.CBOW_vocab_size_set
+    __swig_getmethods__["vocab_size"] = _nn.CBOW_vocab_size_get
+    if _newclass:
+        vocab_size = _swig_property(_nn.CBOW_vocab_size_get, _nn.CBOW_vocab_size_set)
+    __swig_setmethods__["iterator"] = _nn.CBOW_iterator_set
+    __swig_getmethods__["iterator"] = _nn.CBOW_iterator_get
+    if _newclass:
+        iterator = _swig_property(_nn.CBOW_iterator_get, _nn.CBOW_iterator_set)
+    __swig_setmethods__["window"] = _nn.CBOW_window_set
+    __swig_getmethods__["window"] = _nn.CBOW_window_get
+    if _newclass:
+        window = _swig_property(_nn.CBOW_window_get, _nn.CBOW_window_set)
+    __swig_setmethods__["negative"] = _nn.CBOW_negative_set
+    __swig_getmethods__["negative"] = _nn.CBOW_negative_get
+    if _newclass:
+        negative = _swig_property(_nn.CBOW_negative_get, _nn.CBOW_negative_set)
+    __swig_setmethods__["win_i"] = _nn.CBOW_win_i_set
+    __swig_getmethods__["win_i"] = _nn.CBOW_win_i_get
+    if _newclass:
+        win_i = _swig_property(_nn.CBOW_win_i_get, _nn.CBOW_win_i_set)
+    __swig_setmethods__["pred_i"] = _nn.CBOW_pred_i_set
+    __swig_getmethods__["pred_i"] = _nn.CBOW_pred_i_get
+    if _newclass:
+        pred_i = _swig_property(_nn.CBOW_pred_i_get, _nn.CBOW_pred_i_set)
+    __swig_setmethods__["window_len"] = _nn.CBOW_window_len_set
+    __swig_getmethods__["window_len"] = _nn.CBOW_window_len_get
+    if _newclass:
+        window_len = _swig_property(_nn.CBOW_window_len_get, _nn.CBOW_window_len_set)
+    __swig_setmethods__["seed"] = _nn.CBOW_seed_set
+    __swig_getmethods__["seed"] = _nn.CBOW_seed_get
+    if _newclass:
+        seed = _swig_property(_nn.CBOW_seed_get, _nn.CBOW_seed_set)
+    __swig_setmethods__["has_next"] = _nn.CBOW_has_next_set
+    __swig_getmethods__["has_next"] = _nn.CBOW_has_next_get
+    if _newclass:
+        has_next = _swig_property(_nn.CBOW_has_next_get, _nn.CBOW_has_next_set)
+
+    def next(self) -> "void":
+        return _nn.CBOW_next(self)
+
+    def reset(self) -> "void":
+        return _nn.CBOW_reset(self)
+
+    def getInputIndicesReference(self) -> "std::vector< int,std::allocator< int > > &":
+        return _nn.CBOW_getInputIndicesReference(self)
+
+    def getOutputIndicesReference(self) -> "std::vector< int,std::allocator< int > > &":
+        return _nn.CBOW_getOutputIndicesReference(self)
+
+    def getTargetValuesReference(self) -> "Vector *":
+        return _nn.CBOW_getTargetValuesReference(self)
+    __swig_destroy__ = _nn.delete_CBOW
+    __del__ = lambda self: None
+CBOW_swigregister = _nn.CBOW_swigregister
+CBOW_swigregister(CBOW)
+
 class StochasticGradient(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, StochasticGradient, name, value)
@@ -889,8 +1087,8 @@ class StochasticGradient(_object):
     if _newclass:
         criterion = _swig_property(_nn.StochasticGradient_criterion_get, _nn.StochasticGradient_criterion_set)
 
-    def train(self, input_indices: 'vectori', output_indices: 'vectori', target_values: 'Vector *', alpha: 'float', iterations: 'int') -> "float":
-        return _nn.StochasticGradient_train(self, input_indices, output_indices, target_values, alpha, iterations)
+    def train(self, training_generator: 'CBOW', alpha: 'float', iterations: 'int') -> "float":
+        return _nn.StochasticGradient_train(self, training_generator, alpha, iterations)
     __swig_destroy__ = _nn.delete_StochasticGradient
     __del__ = lambda self: None
 StochasticGradient_swigregister = _nn.StochasticGradient_swigregister
