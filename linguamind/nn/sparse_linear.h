@@ -27,6 +27,8 @@ class SparseLinearInput: public Layer {
 
 		Matrix* weights;
 
+		Layer* duplicateWithSameWeights();
+
 		int getInputDim();
 		int getOutputDim();
 
@@ -63,6 +65,8 @@ class SparseLinearOutput: public Layer {
 		SparseLinearOutput(int input_dim, int output_dim);
 
 		Matrix* weights;
+
+		Layer* duplicateWithSameWeights();
 
 		int getInputDim();
 		int getOutputDim();

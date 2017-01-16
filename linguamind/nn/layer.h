@@ -31,6 +31,8 @@ class Layer {
 
 		}
 
+		virtual Layer* duplicateWithSameWeights() = 0;
+
 		virtual int getInputDim() = 0;
 		virtual int getOutputDim() = 0;
 

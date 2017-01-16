@@ -439,6 +439,9 @@ class Layer(_object):
     __swig_destroy__ = _nn.delete_Layer
     __del__ = lambda self: None
 
+    def duplicateWithSameWeights(self) -> "Layer *":
+        return _nn.Layer_duplicateWithSameWeights(self)
+
     def getInputDim(self) -> "int":
         return _nn.Layer_getInputDim(self)
 
@@ -719,6 +722,9 @@ class SparseLinearInput(Layer):
     if _newclass:
         weights = _swig_property(_nn.SparseLinearInput_weights_get, _nn.SparseLinearInput_weights_set)
 
+    def duplicateWithSameWeights(self) -> "Layer *":
+        return _nn.SparseLinearInput_duplicateWithSameWeights(self)
+
     def getInputDim(self) -> "int":
         return _nn.SparseLinearInput_getInputDim(self)
 
@@ -774,6 +780,9 @@ class SparseLinearOutput(Layer):
     __swig_getmethods__["weights"] = _nn.SparseLinearOutput_weights_get
     if _newclass:
         weights = _swig_property(_nn.SparseLinearOutput_weights_get, _nn.SparseLinearOutput_weights_set)
+
+    def duplicateWithSameWeights(self) -> "Layer *":
+        return _nn.SparseLinearOutput_duplicateWithSameWeights(self)
 
     def getInputDim(self) -> "int":
         return _nn.SparseLinearOutput_getInputDim(self)
@@ -831,6 +840,9 @@ class Linear(Layer):
     if _newclass:
         weights = _swig_property(_nn.Linear_weights_get, _nn.Linear_weights_set)
 
+    def duplicateWithSameWeights(self) -> "Layer *":
+        return _nn.Linear_duplicateWithSameWeights(self)
+
     def getInputDim(self) -> "int":
         return _nn.Linear_getInputDim(self)
 
@@ -882,6 +894,9 @@ class Relu(Layer):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
+    def duplicateWithSameWeights(self) -> "Layer *":
+        return _nn.Relu_duplicateWithSameWeights(self)
 
     def getInputDim(self) -> "int":
         return _nn.Relu_getInputDim(self)
@@ -935,6 +950,9 @@ class Sigmoid(Layer):
         except __builtin__.Exception:
             self.this = this
 
+    def duplicateWithSameWeights(self) -> "Layer *":
+        return _nn.Sigmoid_duplicateWithSameWeights(self)
+
     def getInputDim(self) -> "int":
         return _nn.Sigmoid_getInputDim(self)
 
@@ -987,6 +1005,9 @@ class MSECriterion(_object):
     if _newclass:
         grad = _swig_property(_nn.MSECriterion_grad_get, _nn.MSECriterion_grad_set)
 
+    def duplicate(self) -> "MSECriterion *":
+        return _nn.MSECriterion_duplicate(self)
+
     def forward(self, input: 'Vector *', target: 'Vector *', output_indices: 'vectori') -> "float":
         return _nn.MSECriterion_forward(self, input, target, output_indices)
 
@@ -1018,6 +1039,9 @@ class Sequential(_object):
     __swig_getmethods__["output"] = _nn.Sequential_output_get
     if _newclass:
         output = _swig_property(_nn.Sequential_output_get, _nn.Sequential_output_set)
+
+    def duplicateWithSameWeights(self) -> "Sequential *":
+        return _nn.Sequential_duplicateWithSameWeights(self)
 
     def get(self, i: 'int') -> "Layer *":
         return _nn.Sequential_get(self, i)
@@ -1121,6 +1145,52 @@ class CBOW(_object):
 CBOW_swigregister = _nn.CBOW_swigregister
 CBOW_swigregister(CBOW)
 
+class StochasticGradientWorker(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, StochasticGradientWorker, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, StochasticGradientWorker, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, mlp: 'Sequential', criterion: 'MSECriterion', training_generator: 'CBOW', alpha: 'float', iterations: 'int', worker_id: 'int', num_workers: 'int'):
+        this = _nn.new_StochasticGradientWorker(mlp, criterion, training_generator, alpha, iterations, worker_id, num_workers)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_setmethods__["mlp"] = _nn.StochasticGradientWorker_mlp_set
+    __swig_getmethods__["mlp"] = _nn.StochasticGradientWorker_mlp_get
+    if _newclass:
+        mlp = _swig_property(_nn.StochasticGradientWorker_mlp_get, _nn.StochasticGradientWorker_mlp_set)
+    __swig_setmethods__["criterion"] = _nn.StochasticGradientWorker_criterion_set
+    __swig_getmethods__["criterion"] = _nn.StochasticGradientWorker_criterion_get
+    if _newclass:
+        criterion = _swig_property(_nn.StochasticGradientWorker_criterion_get, _nn.StochasticGradientWorker_criterion_set)
+    __swig_setmethods__["training_generator"] = _nn.StochasticGradientWorker_training_generator_set
+    __swig_getmethods__["training_generator"] = _nn.StochasticGradientWorker_training_generator_get
+    if _newclass:
+        training_generator = _swig_property(_nn.StochasticGradientWorker_training_generator_get, _nn.StochasticGradientWorker_training_generator_set)
+    __swig_setmethods__["alpha"] = _nn.StochasticGradientWorker_alpha_set
+    __swig_getmethods__["alpha"] = _nn.StochasticGradientWorker_alpha_get
+    if _newclass:
+        alpha = _swig_property(_nn.StochasticGradientWorker_alpha_get, _nn.StochasticGradientWorker_alpha_set)
+    __swig_setmethods__["iterations"] = _nn.StochasticGradientWorker_iterations_set
+    __swig_getmethods__["iterations"] = _nn.StochasticGradientWorker_iterations_get
+    if _newclass:
+        iterations = _swig_property(_nn.StochasticGradientWorker_iterations_get, _nn.StochasticGradientWorker_iterations_set)
+    __swig_setmethods__["worker_id"] = _nn.StochasticGradientWorker_worker_id_set
+    __swig_getmethods__["worker_id"] = _nn.StochasticGradientWorker_worker_id_get
+    if _newclass:
+        worker_id = _swig_property(_nn.StochasticGradientWorker_worker_id_get, _nn.StochasticGradientWorker_worker_id_set)
+    __swig_setmethods__["num_workers"] = _nn.StochasticGradientWorker_num_workers_set
+    __swig_getmethods__["num_workers"] = _nn.StochasticGradientWorker_num_workers_get
+    if _newclass:
+        num_workers = _swig_property(_nn.StochasticGradientWorker_num_workers_get, _nn.StochasticGradientWorker_num_workers_set)
+    __swig_destroy__ = _nn.delete_StochasticGradientWorker
+    __del__ = lambda self: None
+StochasticGradientWorker_swigregister = _nn.StochasticGradientWorker_swigregister
+StochasticGradientWorker_swigregister(StochasticGradientWorker)
+
 class StochasticGradient(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, StochasticGradient, name, value)
@@ -1143,13 +1213,17 @@ class StochasticGradient(_object):
     if _newclass:
         criterion = _swig_property(_nn.StochasticGradient_criterion_get, _nn.StochasticGradient_criterion_set)
 
-    def train(self, training_generator: 'CBOW', alpha: 'float', iterations: 'int') -> "float":
-        return _nn.StochasticGradient_train(self, training_generator, alpha, iterations)
+    def train(self, training_generator: 'CBOW', alpha: 'float', iterations: 'int', num_threads: 'int') -> "float":
+        return _nn.StochasticGradient_train(self, training_generator, alpha, iterations, num_threads)
     __swig_destroy__ = _nn.delete_StochasticGradient
     __del__ = lambda self: None
 StochasticGradient_swigregister = _nn.StochasticGradient_swigregister
 StochasticGradient_swigregister(StochasticGradient)
 
+
+def TrainModelThread(sgd: 'void *') -> "void *":
+    return _nn.TrainModelThread(sgd)
+TrainModelThread = _nn.TrainModelThread
 # This file is compatible with both classic and new-style classes.
 
 

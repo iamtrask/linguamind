@@ -13,6 +13,7 @@ class MSECriterion {
 
 		Vector* grad;
 
+		MSECriterion* duplicate();
 		float forward(Vector* input, Vector* target, std::vector<int> &output_indices);
 		Vector* backward(Vector* output, Vector* target, std::vector<int> &output_indices);
 };

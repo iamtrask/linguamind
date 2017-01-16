@@ -5,6 +5,10 @@ MSECriterion::MSECriterion() {
 	this->grad = new Vector(32);	
 }
 
+MSECriterion* MSECriterion::duplicate() {
+	return new MSECriterion();
+}
+
 float MSECriterion::forward(Vector* input, Vector* target, std::vector<int> &output_indices) {
 	
 	if(target->size != output_indices.size()) {
@@ -38,7 +42,10 @@ Vector* MSECriterion::backward(Vector* output, Vector* target, std::vector<int> 
 	int index;
 	for(int i=0; i<(int)output_indices.size(); i++) {
 		index = output_indices[i];
+		// printf("Target:%f ",target->get(i));
+		// printf("Pred:%f\n",output->get(index));
 		this->grad->set(index,output->get(index) - target->get(i));
+
 	}
 
 	return this->grad;

@@ -99,6 +99,14 @@ Vector Vector::addi(Vector* x, float a) {
 	return *this;
 }
 
+Vector Vector::subi(Vector* x, float a) {
+	if(x->size != this->size) throw std::runtime_error("Vectors not the same size");
+	for(int i=0; i<this->size; i++) {
+		this->_data[i] -= x->_data[i] * a;
+	}
+	return *this;
+}
+
 Vector Vector::muli(float x) {
 	for(int i=0; i<this->size; i++) {
 		this->_data[i] *= x;

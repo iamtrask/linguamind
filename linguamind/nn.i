@@ -75,6 +75,8 @@ class Layer {
 
 		}
 
+		virtual Layer* duplicateWithSameWeights();
+
 		virtual int getInputDim() = 0;
 		virtual int getOutputDim() = 0;
 
@@ -120,6 +122,8 @@ class SparseLinearInput: public Layer {
 
 		Matrix* weights;
 
+		Layer* duplicateWithSameWeights();
+
 		int getInputDim();
 		int getOutputDim();
 
@@ -157,6 +161,8 @@ class SparseLinearOutput: public Layer {
 
 		Matrix* weights;
 
+		Layer* duplicateWithSameWeights();
+
 		int getInputDim();
 		int getOutputDim();
 
@@ -192,6 +198,8 @@ class Linear: public Layer {
 		Linear(int input_dim, int output_dim);
 
 		Matrix* weights;
+
+		Layer* duplicateWithSameWeights();
 
 		int getInputDim();
 		int getOutputDim();
@@ -230,6 +238,8 @@ class Relu: public Layer {
 	public:
 		Relu(int dim);
 
+		Layer* duplicateWithSameWeights();
+
 		int getInputDim();
 		int getOutputDim();
 
@@ -264,8 +274,12 @@ class Sigmoid: public Layer {
 		std::vector<int> output_indices;
 		std::vector<int> full_output_indices;
 
+		float* expTable;
+
 	public:
 		Sigmoid(int dim);
+
+		Layer* duplicateWithSameWeights();
 
 		int getInputDim();
 		int getOutputDim();
@@ -290,6 +304,7 @@ class MSECriterion {
 
 		Vector* grad;
 
+		MSECriterion* duplicate();
 		float forward(Vector* input, Vector* target, std::vector<int> &output_indices);
 		Vector* backward(Vector* output, Vector* target, std::vector<int> &output_indices);
 };
@@ -301,6 +316,8 @@ class Sequential  {
 
 		std::vector<Layer*> layers;
 		Vector* output;
+
+		Sequential* duplicateWithSameWeights();
 
 		Layer* get(int i);
 		Vector* forward(std::vector<int> &input_indices,std::vector<int> &output_indices);
@@ -339,6 +356,23 @@ class CBOW  {
 
 };
 
+class StochasticGradientWorker{ 
+
+	public:
+		StochasticGradientWorker(Sequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers);
+
+		Sequential* mlp;
+		MSECriterion* criterion;
+		CBOW* training_generator;
+
+		float alpha;
+		int iterations;
+		
+		int worker_id;
+		int num_workers;
+
+};
+
 class StochasticGradient  {
 
 	public:
@@ -347,5 +381,9 @@ class StochasticGradient  {
 		Sequential* mlp;
 		MSECriterion* criterion;
 
-		float train(CBOW* training_generator, float alpha, int iterations);
+
+		float train(CBOW* training_generator, float alpha, int iterations, int num_threads);
 };
+
+void *TrainModelThread(void *sgd);
+

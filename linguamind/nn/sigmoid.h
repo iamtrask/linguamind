@@ -2,10 +2,15 @@
 #define SIGMOID
 
 #include <vector>
+#include <math.h>
+
 #include "../linalg/vector.h"
 #include "../linalg/matrix.h"
 
 #include "layer.h"
+
+#define EXP_TABLE_SIZE 1000
+#define MAX_EXP 6
 
 class Sigmoid: public Layer {
 	
@@ -25,8 +30,12 @@ class Sigmoid: public Layer {
 		std::vector<int> output_indices;
 		std::vector<int> full_output_indices;
 
+		float* expTable;
+
 	public:
 		Sigmoid(int dim);
+
+		Layer* duplicateWithSameWeights();
 
 		int getInputDim();
 		int getOutputDim();

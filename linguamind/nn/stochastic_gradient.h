@@ -9,6 +9,25 @@
 #include "sequential.h"
 #include "training_generators.h"
 
+class StochasticGradientWorker{ 
+
+	public:
+		StochasticGradientWorker(Sequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers);
+
+		Sequential* mlp;
+		MSECriterion* criterion;
+		CBOW* training_generator;
+
+		float alpha;
+		int iterations;
+
+		int worker_id;
+		int num_workers;
+
+		void train();
+
+};
+
 class StochasticGradient  {
 
 	public:
@@ -17,8 +36,9 @@ class StochasticGradient  {
 		Sequential* mlp;
 		MSECriterion* criterion;
 
-		float train(CBOW* training_generator, float alpha, int iterations);
+
+		float train(CBOW* training_generator, float alpha, int iterations, int num_threads);
 };
 
-
+void *TrainModelThread(void *sgd);
 #endif

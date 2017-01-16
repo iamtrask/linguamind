@@ -91,6 +91,7 @@ class Vector{
 
 		Vector set(Vector* x, float a);
 		Vector addi(Vector* x, float a);
+		Vector subi(Vector* x, float a);
 
 		Vector muli(float x);
 		Vector operator*=(float x) const;

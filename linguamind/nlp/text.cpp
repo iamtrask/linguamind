@@ -52,8 +52,13 @@ void Text::ChangeVocab(Vocab* new_vocab) {
 	for(int sent_i=0; sent_i<this->sentences.size(); sent_i++) {
 		for(int token_i=0; token_i < this->sentences[sent_i].size(); token_i++) {
 			index = new_vocab->getTermIndex(old_vocab->vocab[this->sentences[sent_i][token_i]].letters);
-			if(index == -1) index = new_vocab->addTerm(old_vocab->vocab[this->sentences[sent_i][token_i]].letters);
-			this->sentences[sent_i][token_i] = index;
+			if(index == -1) {
+				// this->sentences[sent_i].erase(this->sentences[sent_i].begin() + token_i);
+				this->sentences[sent_i][token_i] = 0;
+			} else {
+				this->sentences[sent_i][token_i] = index;
+			}
+			
 		}
 	}
 

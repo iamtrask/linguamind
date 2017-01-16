@@ -17,6 +17,8 @@ class Sequential  {
 		std::vector<Layer*> layers;
 		Vector* output;
 
+		Sequential* duplicateWithSameWeights();
+
 		Layer* get(int i);
 		Vector* forward(std::vector<int> &input_indices,std::vector<int> &output_indices);
 		void backward(Vector* grad, std::vector<int> &output_indices);

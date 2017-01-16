@@ -12,10 +12,11 @@
 class CBOW  {
 
 	public:
-		CBOW(std::vector<std::vector<int> > window_indices,Vocab* vocab, int negative, int window);
+		CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab, int negative, int window);
 
 		std::vector<std::vector<int> > window_indices;
 		long window_indices_size;
+		long size;
 
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
@@ -26,6 +27,8 @@ class CBOW  {
 		int iterator;
 		int window;
 		int negative;
+
+		int starting_win_i;
 		int win_i;
 		int pred_i;
 		int window_len;
@@ -35,6 +38,7 @@ class CBOW  {
 
 		void next();
 		void reset();
+		CBOW* getCopyForSection(int starting, int ending);
 		std::vector<int> &getInputIndicesReference();
 		std::vector<int> &getOutputIndicesReference();
 		Vector* getTargetValuesReference();

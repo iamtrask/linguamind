@@ -17,6 +17,14 @@ SparseLinearInput::SparseLinearInput(int input_dim, int output_dim) {
 
 }
 
+Layer* SparseLinearInput::duplicateWithSameWeights() {
+	SparseLinearInput* new_layer = new SparseLinearInput(this->input_dim, this->output_dim);
+	
+	free(new_layer->weights);
+	new_layer->weights = this->weights;
+	return (Layer*)new_layer;
+}
+
 int SparseLinearInput::updateOutput(Vector* input, std::vector<int> &input_indices) {
 	this->input_indices = input_indices;
 
@@ -24,6 +32,8 @@ int SparseLinearInput::updateOutput(Vector* input, std::vector<int> &input_indic
 	for(int i=0; i< (int)this->input_indices.size(); i++) {
 		this->output->addi(this->weights->get(input_indices[i]));
 	}
+
+	this->output->divi((int)this->input_indices.size());
 	return 0;
 }
 
@@ -34,7 +44,7 @@ int SparseLinearInput::updateInputGrad(Vector* output_grad) {
 
 int SparseLinearInput::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
 	for(int i=0; i<(int)this->input_indices.size(); i++) {
-		this->weights->get(this->input_indices[i])->addi(output_grad,-alpha);
+		this->weights->get(this->input_indices[i])->subi(output_grad,alpha);
 	}
 	return 0;
 }
@@ -66,6 +76,14 @@ SparseLinearOutput::SparseLinearOutput(int input_dim, int output_dim) {
 
 }
 
+Layer* SparseLinearOutput::duplicateWithSameWeights() {
+	SparseLinearOutput* new_layer = new SparseLinearOutput(this->input_dim, this->output_dim);
+	
+	free(new_layer->weights);
+	new_layer->weights = this->weights;
+	return (Layer*)new_layer;
+}
+
 int SparseLinearOutput::updateOutput(Vector* input, std::vector<int> &output_indices) {
 	this->output_indices = output_indices;
 	
@@ -92,7 +110,7 @@ int SparseLinearOutput::accGradParameters(Vector* input, Vector* output_grad, fl
 	int index;
 	for(int i=0; i<(int)this->output_indices.size(); i++) {
 		index = this->output_indices[i];
-		this->weights->get(index)->addi(input,output_grad->get(index) * -alpha);
+		this->weights->get(index)->subi(input,output_grad->get(index) * alpha);
 	}
 	return 0;
 }

@@ -27,6 +27,8 @@ class Linear: public Layer {
 
 		Matrix* weights;
 
+		Layer* duplicateWithSameWeights();
+
 		int getInputDim();
 		int getOutputDim();
 

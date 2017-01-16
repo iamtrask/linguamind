@@ -20,6 +20,16 @@ Linear::Linear(int input_dim, int output_dim) {
 
 }
 
+Layer* Linear::duplicateWithSameWeights() {
+
+	Linear* new_layer = new Linear(this->input_dim, this->output_dim);
+
+	free(new_layer->weights);
+	new_layer->weights = this->weights;
+
+	return (Layer*)new_layer;
+}
+
 int Linear::updateOutput(Vector* input, std::vector<int> &not_used) {
 
 	for(int index=0; index < this->output_dim; index++) {
@@ -41,7 +51,7 @@ int Linear::updateInputGrad(Vector* output_grad) {
 int Linear::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
 	
 	for(int index=0; index < this->output_dim; index++) {
-		this->weights->get(index)->addi(input,output_grad->get(index) * -alpha);
+		this->weights->get(index)->subi(input,output_grad->get(index) * alpha);
 	}
 	return 0;
 }

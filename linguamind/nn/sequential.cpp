@@ -9,13 +9,21 @@ Sequential::Sequential(std::vector<Layer*> layers) {
 	}
 }
 
-// void Sequential::add(Layer* layer) {
-// 	this->layers.push_back(layer);
-	
-// }
-
 Layer* Sequential::get(int i) {
 	return this->layers[i];
+}
+
+Sequential* Sequential::duplicateWithSameWeights() {
+
+	std::vector<Layer*> new_layers;
+
+	for(int i=0; i<this->layers.size(); i++) {
+		new_layers.push_back(this->layers[i]->duplicateWithSameWeights());
+	}
+
+	Sequential* new_seq = new Sequential(new_layers);
+	
+	return new_seq;
 }
 
 // forward with sparse input and output

@@ -18,18 +18,24 @@ Relu::Relu(int dim) {
 
 }
 
+Layer* Relu::duplicateWithSameWeights() {
+	return (Layer*) new Relu(this->input_dim);
+}
+
 int Relu::updateOutput(Vector* input, std::vector<int> &output_indices) {
 
 	this->output_indices = output_indices;
 	
 	int len = (int)output_indices.size();
 	float input_i;
+	int index;
 	for(int i=0; i<len; i++) {
-		input_i = input->get(i);
+		index = output_indices[i];
+		input_i = input->get(index);
 		if(input_i > 0) {
-			this->output->set(i,input_i);
+			this->output->set(index,input_i);
 		} else {
-			this->output->set(i,0);
+			this->output->set(index,0);
 		}
 	}
 
@@ -40,12 +46,14 @@ int Relu::updateInputGrad(Vector* output_grad) {
 	
 	int len = (int)this->output_indices.size();
 	float grad;
+	int index;
 	for(int i=0; i<len; i++) {
-		grad = this->output->get(i);
+		index = output_indices[i];
+		grad = output_grad->get(index);
 		if(grad > 0) {
-			this->input_grad->set(i,grad);
+			this->input_grad->set(index,grad);
 		} else {
-			this->output->set(i,0);
+			this->output->set(index,0);
 		}
 	}
 
