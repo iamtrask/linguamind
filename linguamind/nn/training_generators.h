@@ -9,10 +9,28 @@
 #include "criterion.h"
 #include "sequential.h"
 
+class Sampler {
+	public:
+		Sampler(Vocab* vocab, int sample_size);
+
+		Vocab* vocab;
+		unsigned long long seed;
+
+		int sample_size;
+		int output_size;
+
+		Vector* target_values;
+
+		std::vector<int> next(std::vector<int> & output_indices);
+		Vector* getTargetValues();
+
+};
+
+
 class CBOW  {
 
 	public:
-		CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab, int negative, int window);
+		CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab, Sampler* sampler, int window);
 
 		std::vector<std::vector<int> > window_indices;
 		long window_indices_size;
@@ -21,8 +39,8 @@ class CBOW  {
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
-		Vector* target_values;
 		Vocab* vocab;
+		Sampler* sampler;
 		
 		int iterator;
 		int window;

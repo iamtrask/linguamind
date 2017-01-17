@@ -1056,6 +1056,50 @@ class Sequential(_object):
 Sequential_swigregister = _nn.Sequential_swigregister
 Sequential_swigregister(Sequential)
 
+class Sampler(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Sampler, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Sampler, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, vocab: 'Vocab *', sample_size: 'int'):
+        this = _nn.new_Sampler(vocab, sample_size)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_setmethods__["vocab"] = _nn.Sampler_vocab_set
+    __swig_getmethods__["vocab"] = _nn.Sampler_vocab_get
+    if _newclass:
+        vocab = _swig_property(_nn.Sampler_vocab_get, _nn.Sampler_vocab_set)
+    __swig_setmethods__["seed"] = _nn.Sampler_seed_set
+    __swig_getmethods__["seed"] = _nn.Sampler_seed_get
+    if _newclass:
+        seed = _swig_property(_nn.Sampler_seed_get, _nn.Sampler_seed_set)
+    __swig_setmethods__["sample_size"] = _nn.Sampler_sample_size_set
+    __swig_getmethods__["sample_size"] = _nn.Sampler_sample_size_get
+    if _newclass:
+        sample_size = _swig_property(_nn.Sampler_sample_size_get, _nn.Sampler_sample_size_set)
+    __swig_setmethods__["output_size"] = _nn.Sampler_output_size_set
+    __swig_getmethods__["output_size"] = _nn.Sampler_output_size_get
+    if _newclass:
+        output_size = _swig_property(_nn.Sampler_output_size_get, _nn.Sampler_output_size_set)
+    __swig_setmethods__["target_values"] = _nn.Sampler_target_values_set
+    __swig_getmethods__["target_values"] = _nn.Sampler_target_values_get
+    if _newclass:
+        target_values = _swig_property(_nn.Sampler_target_values_get, _nn.Sampler_target_values_set)
+
+    def next(self, output_indices: 'vectori') -> "std::vector< int,std::allocator< int > >":
+        return _nn.Sampler_next(self, output_indices)
+
+    def getTargetValues(self) -> "Vector *":
+        return _nn.Sampler_getTargetValues(self)
+    __swig_destroy__ = _nn.delete_Sampler
+    __del__ = lambda self: None
+Sampler_swigregister = _nn.Sampler_swigregister
+Sampler_swigregister(Sampler)
+
 class CBOW(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, CBOW, name, value)
@@ -1063,8 +1107,8 @@ class CBOW(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, CBOW, name)
     __repr__ = _swig_repr
 
-    def __init__(self, window_indices: 'TrainingExample', vocab: 'Vocab *', negative: 'int', window: 'int'):
-        this = _nn.new_CBOW(window_indices, vocab, negative, window)
+    def __init__(self, window_indices: 'TrainingExample', vocab: 'Vocab *', sampler: 'Sampler', window: 'int'):
+        this = _nn.new_CBOW(window_indices, vocab, sampler, window)
         try:
             self.this.append(this)
         except __builtin__.Exception:
@@ -1077,6 +1121,10 @@ class CBOW(_object):
     __swig_getmethods__["window_indices_size"] = _nn.CBOW_window_indices_size_get
     if _newclass:
         window_indices_size = _swig_property(_nn.CBOW_window_indices_size_get, _nn.CBOW_window_indices_size_set)
+    __swig_setmethods__["size"] = _nn.CBOW_size_set
+    __swig_getmethods__["size"] = _nn.CBOW_size_get
+    if _newclass:
+        size = _swig_property(_nn.CBOW_size_get, _nn.CBOW_size_set)
     __swig_setmethods__["input_indices"] = _nn.CBOW_input_indices_set
     __swig_getmethods__["input_indices"] = _nn.CBOW_input_indices_get
     if _newclass:
@@ -1085,14 +1133,14 @@ class CBOW(_object):
     __swig_getmethods__["output_indices"] = _nn.CBOW_output_indices_get
     if _newclass:
         output_indices = _swig_property(_nn.CBOW_output_indices_get, _nn.CBOW_output_indices_set)
-    __swig_setmethods__["target_values"] = _nn.CBOW_target_values_set
-    __swig_getmethods__["target_values"] = _nn.CBOW_target_values_get
-    if _newclass:
-        target_values = _swig_property(_nn.CBOW_target_values_get, _nn.CBOW_target_values_set)
     __swig_setmethods__["vocab"] = _nn.CBOW_vocab_set
     __swig_getmethods__["vocab"] = _nn.CBOW_vocab_get
     if _newclass:
         vocab = _swig_property(_nn.CBOW_vocab_get, _nn.CBOW_vocab_set)
+    __swig_setmethods__["sampler"] = _nn.CBOW_sampler_set
+    __swig_getmethods__["sampler"] = _nn.CBOW_sampler_get
+    if _newclass:
+        sampler = _swig_property(_nn.CBOW_sampler_get, _nn.CBOW_sampler_set)
     __swig_setmethods__["iterator"] = _nn.CBOW_iterator_set
     __swig_getmethods__["iterator"] = _nn.CBOW_iterator_get
     if _newclass:
@@ -1105,6 +1153,10 @@ class CBOW(_object):
     __swig_getmethods__["negative"] = _nn.CBOW_negative_get
     if _newclass:
         negative = _swig_property(_nn.CBOW_negative_get, _nn.CBOW_negative_set)
+    __swig_setmethods__["starting_win_i"] = _nn.CBOW_starting_win_i_set
+    __swig_getmethods__["starting_win_i"] = _nn.CBOW_starting_win_i_get
+    if _newclass:
+        starting_win_i = _swig_property(_nn.CBOW_starting_win_i_get, _nn.CBOW_starting_win_i_set)
     __swig_setmethods__["win_i"] = _nn.CBOW_win_i_set
     __swig_getmethods__["win_i"] = _nn.CBOW_win_i_get
     if _newclass:
@@ -1131,6 +1183,9 @@ class CBOW(_object):
 
     def reset(self) -> "void":
         return _nn.CBOW_reset(self)
+
+    def getCopyForSection(self, starting: 'int', ending: 'int') -> "CBOW *":
+        return _nn.CBOW_getCopyForSection(self, starting, ending)
 
     def getInputIndicesReference(self) -> "std::vector< int,std::allocator< int > > &":
         return _nn.CBOW_getInputIndicesReference(self)

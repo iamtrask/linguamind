@@ -1,8 +1,60 @@
 #include "training_generators.h"
 
-CBOW::CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab, int negative, int window) {
+Sampler::Sampler(Vocab* vocab, int sample_size) {
+	
+	this->vocab = vocab;
+	this->seed = 11;
+
+	// if -1 then do a full smple
+	this->sample_size = sample_size;
+
+
+	if(this->sample_size >= 0) {
+
+		this->output_size = this->sample_size+1;
+
+		this->target_values = new Vector(this->output_size);
+		this->target_values->zero();
+		this->target_values->set(0,1);
+
+
+	} else {
+		this->output_size = this->vocab->size;
+
+		this->target_values = new Vector(this->output_size);
+		this->target_values->zero();
+		this->target_values->set(0,1);
+	}
+}
+
+std::vector<int> Sampler::next(std::vector<int> &output_indices) {
+
+	if(output_indices.size() != 1) throw std::runtime_error("ERROR: Sampler expects the output_indices vector to already contain exactly 1 value, the value of the true prediction.");	
+
+	int target;
+
+	while(output_indices.size() < this->output_size) {
+
+		this->seed = this->seed * (unsigned long long)25214903917 + 11;
+		target = this->vocab->unigram_table[(this->seed >> 16) % this->vocab->unigram_table_size];
+		 
+		if (target == 0) continue;
+		if (target == output_indices[0]) continue;
+		output_indices.push_back(target);
+		
+	}
+
+	return output_indices;
+}
+
+Vector* Sampler::getTargetValues() {
+	return this->target_values;
+}
+
+CBOW::CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab,Sampler* sampler, int window) {
 
 	this->vocab = vocab;
+	this->sampler = sampler;
 
 	this->window_indices = window_indices;
 	this->window_indices_size = this->window_indices.size();
@@ -11,11 +63,6 @@ CBOW::CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab, int nega
 	if(this->window_indices.size() == 0) throw std::runtime_error("ERROR: Cannot initialize CBOW with no training data (rows == 0)");
 
 	this->window = window;
-	this->negative = negative;
-
-	this->target_values = new Vector(this->negative+1);
-	this->target_values->zero();
-	this->target_values->set(0,1);
 
 	this->starting_win_i = 0;
 
@@ -32,7 +79,7 @@ CBOW::CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab, int nega
 
 CBOW* CBOW::getCopyForSection(int starting, int ending) {
 	
-	CBOW* new_cbow = new CBOW(this->window_indices, this->vocab, this->negative, this->window);
+	CBOW* new_cbow = new CBOW(this->window_indices, this->vocab, this->sampler, this->window);
 	
 	new_cbow->starting_win_i = starting;
 	new_cbow->size = ending;
@@ -81,19 +128,7 @@ void CBOW::next() {
 	word = this->window_indices[this->win_i][pred_i];
 	this->output_indices.push_back(word);
 
-	this->seed = this->seed * (unsigned long long)25214903917 + 11; // preserves 1:1 comparison with word2vec
-
-	while(output_indices.size() <= this->negative) {
-		this->seed = this->seed * (unsigned long long)25214903917 + 11;
-		// printf("\n next random:%llu\n",this->seed);
-		// printf("Unigram Index: %i\n",(this->seed >> 16) % this->vocab->unigram_table_size);
-		target = this->vocab->unigram_table[(this->seed >> 16) % this->vocab->unigram_table_size];
-		// printf("Unigram Value %i\n",target);
-		// if (target == 0) target = this->seed % (this->vocab->size - 1) + 1; 
-		if (target == 0) continue;
-		if (target == word) continue;
-		this->output_indices.push_back(target);
-	}
+	this->sampler->next(this->output_indices);
 
 	this->pred_i++;
 }
@@ -113,5 +148,5 @@ std::vector<int> &CBOW::getOutputIndicesReference() {
 }
 
 Vector* CBOW::getTargetValuesReference() {
-	return this->target_values;
+	return this->sampler->getTargetValues();
 }
