@@ -41,7 +41,7 @@ std::vector<int> Sampler::next(std::vector<int> &output_indices) {
 		if (target == 0) continue;
 		if (target == output_indices[0]) continue;
 		output_indices.push_back(target);
-		
+
 	}
 
 	return output_indices;
@@ -51,10 +51,17 @@ Vector* Sampler::getTargetValues() {
 	return this->target_values;
 }
 
-CBOW::CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab,Sampler* sampler, int window) {
+CBOW::CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab,Sampler* sampler, int window_left, int window_right, bool model_order) {
 
 	this->vocab = vocab;
 	this->sampler = sampler;
+	this->model_order = model_order;
+
+	if(model_order) {
+		this->minimum_input_dimensionality = (window_right + window_left) * this->vocab->size;
+	} else {
+		this->minimum_input_dimensionality = this->vocab->size;
+	}
 
 	this->window_indices = window_indices;
 	this->window_indices_size = this->window_indices.size();
@@ -62,7 +69,8 @@ CBOW::CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab,Sampler* 
 
 	if(this->window_indices.size() == 0) throw std::runtime_error("ERROR: Cannot initialize CBOW with no training data (rows == 0)");
 
-	this->window = window;
+	this->window_left = window_left;
+	this->window_right = window_right;
 
 	this->starting_win_i = 0;
 
@@ -79,7 +87,7 @@ CBOW::CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab,Sampler* 
 
 CBOW* CBOW::getCopyForSection(int starting, int ending) {
 	
-	CBOW* new_cbow = new CBOW(this->window_indices, this->vocab, this->sampler, this->window);
+	CBOW* new_cbow = new CBOW(this->window_indices, this->vocab, this->sampler, this->window_left, this->window_right, this->model_order);
 	
 	new_cbow->starting_win_i = starting;
 	new_cbow->size = ending;
@@ -118,19 +126,51 @@ void CBOW::next() {
 	this->input_indices.clear();
 	this->output_indices.clear();
 
-	for(int cont_i = 0; cont_i<this->window*2+1; cont_i++) {
-		cur_i = pred_i + cont_i - this->window;
-		if(cur_i >=0 && cur_i < window_len && cur_i != this->pred_i) {
-			input_indices.push_back(this->window_indices[this->win_i][cur_i]);
+
+
+	if(model_order) {
+
+		// push left (earlier) indices
+		for(int cont_i = 0; cont_i < this->window_left; cont_i++) {
+			cur_i = pred_i - cont_i - 1;
+			if(cur_i >= 0) {
+				input_indices.push_back(this->vocab->size * cont_i + this->window_indices[this->win_i][cur_i]);
+			}
+		}
+
+		// push right (later) indices
+		for(int cont_i = 0; cont_i < this->window_right; cont_i++) {
+			cur_i = pred_i + cont_i + 1;
+			if(cur_i < window_len) {
+				input_indices.push_back(this->vocab->size * (cont_i + this->window_left) + this->window_indices[this->win_i][cur_i]);
+			}
+		}
+	} else {
+		// push left (earlier) indices
+		for(int cont_i = 0; cont_i < this->window_left; cont_i++) {
+			cur_i = pred_i - cont_i - 1;
+			if(cur_i >= 0) {
+				input_indices.push_back(this->window_indices[this->win_i][cur_i]);
+			}
+		}
+
+		// push right (later) indices
+		for(int cont_i = 0; cont_i < this->window_right; cont_i++) {
+			cur_i = pred_i + cont_i + 1;
+			if(cur_i < window_len) {
+				input_indices.push_back(this->window_indices[this->win_i][cur_i]);
+			}
 		}
 	}
 
 	word = this->window_indices[this->win_i][pred_i];
 	this->output_indices.push_back(word);
-
+	
 	this->sampler->next(this->output_indices);
 
 	this->pred_i++;
+
+	if(this->input_indices.size() == 0) this->next();
 }
 
 void CBOW::reset() {

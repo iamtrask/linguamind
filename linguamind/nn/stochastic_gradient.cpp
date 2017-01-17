@@ -73,7 +73,9 @@ void *TrainModelThread(void *sgd_ptr) {
 }
 
 float StochasticGradient::train(CBOW* training_generator, float alpha, int iterations, int num_threads) {
-	
+
+	if(training_generator->minimum_input_dimensionality > this->mlp->get(0)->getInputDim()) throw std::runtime_error("ERROR: input layer too small for training example generator. Are you modeling order? Dont't forget to increase your input dimensionality by the size of your window.");
+
 	float error = -1;
 	unsigned long long seed = 0;
 	int a;

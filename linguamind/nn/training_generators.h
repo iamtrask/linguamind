@@ -30,7 +30,7 @@ class Sampler {
 class CBOW  {
 
 	public:
-		CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab, Sampler* sampler, int window);
+		CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab, Sampler* sampler, int window_left, int window_right, bool model_order);
 
 		std::vector<std::vector<int> > window_indices;
 		long window_indices_size;
@@ -42,8 +42,13 @@ class CBOW  {
 		Vocab* vocab;
 		Sampler* sampler;
 		
+		int window_left;
+		int window_right;
+
+		bool model_order;
+		int minimum_input_dimensionality;
+
 		int iterator;
-		int window;
 		int negative;
 
 		int starting_win_i;

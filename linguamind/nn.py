@@ -1107,8 +1107,8 @@ class CBOW(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, CBOW, name)
     __repr__ = _swig_repr
 
-    def __init__(self, window_indices: 'TrainingExample', vocab: 'Vocab *', sampler: 'Sampler', window: 'int'):
-        this = _nn.new_CBOW(window_indices, vocab, sampler, window)
+    def __init__(self, window_indices: 'TrainingExample', vocab: 'Vocab *', sampler: 'Sampler', window_left: 'int', window_right: 'int', model_order: 'bool'):
+        this = _nn.new_CBOW(window_indices, vocab, sampler, window_left, window_right, model_order)
         try:
             self.this.append(this)
         except __builtin__.Exception:
@@ -1141,14 +1141,26 @@ class CBOW(_object):
     __swig_getmethods__["sampler"] = _nn.CBOW_sampler_get
     if _newclass:
         sampler = _swig_property(_nn.CBOW_sampler_get, _nn.CBOW_sampler_set)
+    __swig_setmethods__["window_left"] = _nn.CBOW_window_left_set
+    __swig_getmethods__["window_left"] = _nn.CBOW_window_left_get
+    if _newclass:
+        window_left = _swig_property(_nn.CBOW_window_left_get, _nn.CBOW_window_left_set)
+    __swig_setmethods__["window_right"] = _nn.CBOW_window_right_set
+    __swig_getmethods__["window_right"] = _nn.CBOW_window_right_get
+    if _newclass:
+        window_right = _swig_property(_nn.CBOW_window_right_get, _nn.CBOW_window_right_set)
+    __swig_setmethods__["model_order"] = _nn.CBOW_model_order_set
+    __swig_getmethods__["model_order"] = _nn.CBOW_model_order_get
+    if _newclass:
+        model_order = _swig_property(_nn.CBOW_model_order_get, _nn.CBOW_model_order_set)
+    __swig_setmethods__["minimum_input_dimensionality"] = _nn.CBOW_minimum_input_dimensionality_set
+    __swig_getmethods__["minimum_input_dimensionality"] = _nn.CBOW_minimum_input_dimensionality_get
+    if _newclass:
+        minimum_input_dimensionality = _swig_property(_nn.CBOW_minimum_input_dimensionality_get, _nn.CBOW_minimum_input_dimensionality_set)
     __swig_setmethods__["iterator"] = _nn.CBOW_iterator_set
     __swig_getmethods__["iterator"] = _nn.CBOW_iterator_get
     if _newclass:
         iterator = _swig_property(_nn.CBOW_iterator_get, _nn.CBOW_iterator_set)
-    __swig_setmethods__["window"] = _nn.CBOW_window_set
-    __swig_getmethods__["window"] = _nn.CBOW_window_get
-    if _newclass:
-        window = _swig_property(_nn.CBOW_window_get, _nn.CBOW_window_set)
     __swig_setmethods__["negative"] = _nn.CBOW_negative_set
     __swig_getmethods__["negative"] = _nn.CBOW_negative_get
     if _newclass:
