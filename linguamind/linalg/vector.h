@@ -9,7 +9,7 @@ class Vector{
 
 	public:
 		Vector(int size);
-		
+		// ~Vector();
 		int size;
 
 		float* _data;
@@ -25,6 +25,8 @@ class Vector{
 
 		float dot(Vector* x);
 		void doti(int i, Vector* x, Vector* y);
+		
+		Vector set(Vector* x);
 
 		Vector set(Vector* x, float a);
 		Vector addi(Vector* x, float a);
@@ -35,6 +37,8 @@ class Vector{
 
 		Vector divi(float x);
 		Vector operator/=(float x) const;
+
+		Vector addi(int i, float a);
 
 		Vector addi(float x);
 		Vector operator+=(float x) const;

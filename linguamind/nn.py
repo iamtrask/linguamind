@@ -474,6 +474,83 @@ class Layer(_object):
 Layer_swigregister = _nn.Layer_swigregister
 Layer_swigregister(Layer)
 
+class FlexLayer(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FlexLayer, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, FlexLayer, name)
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined - class is abstract")
+    __repr__ = _swig_repr
+    __swig_destroy__ = _nn.delete_FlexLayer
+    __del__ = lambda self: None
+
+    def duplicateWithSameWeights(self) -> "FlexLayer *":
+        return _nn.FlexLayer_duplicateWithSameWeights(self)
+
+    def getInputDim(self) -> "int":
+        return _nn.FlexLayer_getInputDim(self)
+
+    def getOutputDim(self) -> "int":
+        return _nn.FlexLayer_getOutputDim(self)
+
+    def inputMustBeSparse(self) -> "bool":
+        return _nn.FlexLayer_inputMustBeSparse(self)
+
+    def outputMustBeSparse(self) -> "bool":
+        return _nn.FlexLayer_outputMustBeSparse(self)
+
+    def mandatoryIdenticalInputOutputSparsity(self) -> "bool":
+        return _nn.FlexLayer_mandatoryIdenticalInputOutputSparsity(self)
+
+    def containsLayers(self) -> "bool":
+        return _nn.FlexLayer_containsLayers(self)
+
+    def getOutput(self) -> "Vector *":
+        return _nn.FlexLayer_getOutput(self)
+
+    def getOutputIndices(self) -> "std::vector< int,std::allocator< int > > &":
+        return _nn.FlexLayer_getOutputIndices(self)
+
+    def getInputGrad(self) -> "Vector *":
+        return _nn.FlexLayer_getInputGrad(self)
+
+    def setOutputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexLayer_setOutputGrad(self, output_grad)
+
+    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
+        return _nn.FlexLayer_getFullOutputIndices(self)
+
+    def updateOutputDenseToDense(self, input: 'Vector *') -> "int":
+        return _nn.FlexLayer_updateOutputDenseToDense(self, input)
+
+    def updateOutputDenseToWeightedSparse(self, input: 'Vector *', sparse_output: 'vectori') -> "int":
+        return _nn.FlexLayer_updateOutputDenseToWeightedSparse(self, input, sparse_output)
+
+    def updateOutputWeightedSparseToDense(self, input: 'Vector *', sparse_input: 'vectori') -> "int":
+        return _nn.FlexLayer_updateOutputWeightedSparseToDense(self, input, sparse_input)
+
+    def updateOutputWeightedSparseToWeightedSparse(self, input: 'Vector *', sparse_input: 'vectori', sparse_output: 'vectori') -> "int":
+        return _nn.FlexLayer_updateOutputWeightedSparseToWeightedSparse(self, input, sparse_input, sparse_output)
+
+    def updateOutputBinarySparseToDense(self, sparse_input: 'vectori') -> "int":
+        return _nn.FlexLayer_updateOutputBinarySparseToDense(self, sparse_input)
+
+    def updateOutputBinarySparseToWeightedSparse(self, sparse_input: 'vectori', sparse_output: 'vectori') -> "int":
+        return _nn.FlexLayer_updateOutputBinarySparseToWeightedSparse(self, sparse_input, sparse_output)
+
+    def backward(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexLayer_backward(self, output_grad)
+
+    def updateInputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexLayer_updateInputGrad(self, output_grad)
+
+    def accGradParameters(self, alpha: 'float') -> "int":
+        return _nn.FlexLayer_accGradParameters(self, alpha)
+FlexLayer_swigregister = _nn.FlexLayer_swigregister
+FlexLayer_swigregister(FlexLayer)
+
 class LayerBuilder(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, LayerBuilder, name, value)
@@ -586,6 +663,119 @@ class LayerBuilder(_object):
     __del__ = lambda self: None
 LayerBuilder_swigregister = _nn.LayerBuilder_swigregister
 LayerBuilder_swigregister(LayerBuilder)
+
+class FlexLayerBuilder(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FlexLayerBuilder, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, FlexLayerBuilder, name)
+    __repr__ = _swig_repr
+
+    def iterator(self) -> "swig::SwigPyIterator *":
+        return _nn.FlexLayerBuilder_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self) -> "bool":
+        return _nn.FlexLayerBuilder___nonzero__(self)
+
+    def __bool__(self) -> "bool":
+        return _nn.FlexLayerBuilder___bool__(self)
+
+    def __len__(self) -> "std::vector< FlexLayer * >::size_type":
+        return _nn.FlexLayerBuilder___len__(self)
+
+    def __getslice__(self, i: 'std::vector< FlexLayer * >::difference_type', j: 'std::vector< FlexLayer * >::difference_type') -> "std::vector< FlexLayer *,std::allocator< FlexLayer * > > *":
+        return _nn.FlexLayerBuilder___getslice__(self, i, j)
+
+    def __setslice__(self, *args) -> "void":
+        return _nn.FlexLayerBuilder___setslice__(self, *args)
+
+    def __delslice__(self, i: 'std::vector< FlexLayer * >::difference_type', j: 'std::vector< FlexLayer * >::difference_type') -> "void":
+        return _nn.FlexLayerBuilder___delslice__(self, i, j)
+
+    def __delitem__(self, *args) -> "void":
+        return _nn.FlexLayerBuilder___delitem__(self, *args)
+
+    def __getitem__(self, *args) -> "std::vector< FlexLayer * >::value_type":
+        return _nn.FlexLayerBuilder___getitem__(self, *args)
+
+    def __setitem__(self, *args) -> "void":
+        return _nn.FlexLayerBuilder___setitem__(self, *args)
+
+    def pop(self) -> "std::vector< FlexLayer * >::value_type":
+        return _nn.FlexLayerBuilder_pop(self)
+
+    def append(self, x: 'FlexLayer') -> "void":
+        return _nn.FlexLayerBuilder_append(self, x)
+
+    def empty(self) -> "bool":
+        return _nn.FlexLayerBuilder_empty(self)
+
+    def size(self) -> "std::vector< FlexLayer * >::size_type":
+        return _nn.FlexLayerBuilder_size(self)
+
+    def swap(self, v: 'FlexLayerBuilder') -> "void":
+        return _nn.FlexLayerBuilder_swap(self, v)
+
+    def begin(self) -> "std::vector< FlexLayer * >::iterator":
+        return _nn.FlexLayerBuilder_begin(self)
+
+    def end(self) -> "std::vector< FlexLayer * >::iterator":
+        return _nn.FlexLayerBuilder_end(self)
+
+    def rbegin(self) -> "std::vector< FlexLayer * >::reverse_iterator":
+        return _nn.FlexLayerBuilder_rbegin(self)
+
+    def rend(self) -> "std::vector< FlexLayer * >::reverse_iterator":
+        return _nn.FlexLayerBuilder_rend(self)
+
+    def clear(self) -> "void":
+        return _nn.FlexLayerBuilder_clear(self)
+
+    def get_allocator(self) -> "std::vector< FlexLayer * >::allocator_type":
+        return _nn.FlexLayerBuilder_get_allocator(self)
+
+    def pop_back(self) -> "void":
+        return _nn.FlexLayerBuilder_pop_back(self)
+
+    def erase(self, *args) -> "std::vector< FlexLayer * >::iterator":
+        return _nn.FlexLayerBuilder_erase(self, *args)
+
+    def __init__(self, *args):
+        this = _nn.new_FlexLayerBuilder(*args)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def push_back(self, x: 'FlexLayer') -> "void":
+        return _nn.FlexLayerBuilder_push_back(self, x)
+
+    def front(self) -> "std::vector< FlexLayer * >::value_type":
+        return _nn.FlexLayerBuilder_front(self)
+
+    def back(self) -> "std::vector< FlexLayer * >::value_type":
+        return _nn.FlexLayerBuilder_back(self)
+
+    def assign(self, n: 'std::vector< FlexLayer * >::size_type', x: 'FlexLayer') -> "void":
+        return _nn.FlexLayerBuilder_assign(self, n, x)
+
+    def resize(self, *args) -> "void":
+        return _nn.FlexLayerBuilder_resize(self, *args)
+
+    def insert(self, *args) -> "void":
+        return _nn.FlexLayerBuilder_insert(self, *args)
+
+    def reserve(self, n: 'std::vector< FlexLayer * >::size_type') -> "void":
+        return _nn.FlexLayerBuilder_reserve(self, n)
+
+    def capacity(self) -> "std::vector< FlexLayer * >::size_type":
+        return _nn.FlexLayerBuilder_capacity(self)
+    __swig_destroy__ = _nn.delete_FlexLayerBuilder
+    __del__ = lambda self: None
+FlexLayerBuilder_swigregister = _nn.FlexLayerBuilder_swigregister
+FlexLayerBuilder_swigregister(FlexLayerBuilder)
 
 class TrainingExample(_object):
     __swig_setmethods__ = {}
@@ -700,6 +890,101 @@ class TrainingExample(_object):
 TrainingExample_swigregister = _nn.TrainingExample_swigregister
 TrainingExample_swigregister(TrainingExample)
 
+class FlexLinear(FlexLayer):
+    __swig_setmethods__ = {}
+    for _s in [FlexLayer]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FlexLinear, name, value)
+    __swig_getmethods__ = {}
+    for _s in [FlexLayer]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, FlexLinear, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, input_dim: 'int', output_dim: 'int'):
+        this = _nn.new_FlexLinear(input_dim, output_dim)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def init(self, input_dim: 'int', output_dim: 'int') -> "void":
+        return _nn.FlexLinear_init(self, input_dim, output_dim)
+    __swig_setmethods__["weights"] = _nn.FlexLinear_weights_set
+    __swig_getmethods__["weights"] = _nn.FlexLinear_weights_get
+    if _newclass:
+        weights = _swig_property(_nn.FlexLinear_weights_get, _nn.FlexLinear_weights_set)
+
+    def duplicateWithSameWeights(self) -> "FlexLayer *":
+        return _nn.FlexLinear_duplicateWithSameWeights(self)
+
+    def swapInputOutputSparsity(self) -> "int":
+        return _nn.FlexLinear_swapInputOutputSparsity(self)
+
+    def mandatoryIdenticalInputOutputSparsity(self) -> "bool":
+        return _nn.FlexLinear_mandatoryIdenticalInputOutputSparsity(self)
+
+    def getInputDim(self) -> "int":
+        return _nn.FlexLinear_getInputDim(self)
+
+    def getOutputDim(self) -> "int":
+        return _nn.FlexLinear_getOutputDim(self)
+
+    def inputMustBeSparse(self) -> "bool":
+        return _nn.FlexLinear_inputMustBeSparse(self)
+
+    def outputMustBeSparse(self) -> "bool":
+        return _nn.FlexLinear_outputMustBeSparse(self)
+
+    def containsLayers(self) -> "bool":
+        return _nn.FlexLinear_containsLayers(self)
+
+    def getOutput(self) -> "Vector *":
+        return _nn.FlexLinear_getOutput(self)
+
+    def getOutputIndices(self) -> "std::vector< int,std::allocator< int > > &":
+        return _nn.FlexLinear_getOutputIndices(self)
+
+    def getInputGrad(self) -> "Vector *":
+        return _nn.FlexLinear_getInputGrad(self)
+
+    def setOutputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexLinear_setOutputGrad(self, output_grad)
+
+    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
+        return _nn.FlexLinear_getFullOutputIndices(self)
+
+    def updateOutputDenseToDense(self, input: 'Vector *') -> "int":
+        return _nn.FlexLinear_updateOutputDenseToDense(self, input)
+
+    def updateOutputDenseToWeightedSparse(self, input: 'Vector *', output_indices: 'vectori') -> "int":
+        return _nn.FlexLinear_updateOutputDenseToWeightedSparse(self, input, output_indices)
+
+    def updateOutputWeightedSparseToDense(self, input: 'Vector *', input_indices: 'vectori') -> "int":
+        return _nn.FlexLinear_updateOutputWeightedSparseToDense(self, input, input_indices)
+
+    def updateOutputWeightedSparseToWeightedSparse(self, input: 'Vector *', input_indices: 'vectori', output_indices: 'vectori') -> "int":
+        return _nn.FlexLinear_updateOutputWeightedSparseToWeightedSparse(self, input, input_indices, output_indices)
+
+    def updateOutputBinarySparseToDense(self, input_indices: 'vectori') -> "int":
+        return _nn.FlexLinear_updateOutputBinarySparseToDense(self, input_indices)
+
+    def updateOutputBinarySparseToWeightedSparse(self, input_indices: 'vectori', output_indices: 'vectori') -> "int":
+        return _nn.FlexLinear_updateOutputBinarySparseToWeightedSparse(self, input_indices, output_indices)
+
+    def backward(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexLinear_backward(self, output_grad)
+
+    def updateInputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexLinear_updateInputGrad(self, output_grad)
+
+    def accGradParameters(self, alpha: 'float') -> "int":
+        return _nn.FlexLinear_accGradParameters(self, alpha)
+    __swig_destroy__ = _nn.delete_FlexLinear
+    __del__ = lambda self: None
+FlexLinear_swigregister = _nn.FlexLinear_swigregister
+FlexLinear_swigregister(FlexLinear)
+
 class SparseLinearInput(Layer):
     __swig_setmethods__ = {}
     for _s in [Layer]:
@@ -717,6 +1002,9 @@ class SparseLinearInput(Layer):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
+    def init(self, input_dim: 'int', output_dim: 'int') -> "void":
+        return _nn.SparseLinearInput_init(self, input_dim, output_dim)
     __swig_setmethods__["weights"] = _nn.SparseLinearInput_weights_set
     __swig_getmethods__["weights"] = _nn.SparseLinearInput_weights_get
     if _newclass:
@@ -776,6 +1064,9 @@ class SparseLinearOutput(Layer):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
+    def init(self, input_dim: 'int', output_dim: 'int') -> "void":
+        return _nn.SparseLinearOutput_init(self, input_dim, output_dim)
     __swig_setmethods__["weights"] = _nn.SparseLinearOutput_weights_set
     __swig_getmethods__["weights"] = _nn.SparseLinearOutput_weights_get
     if _newclass:
@@ -818,6 +1109,71 @@ class SparseLinearOutput(Layer):
 SparseLinearOutput_swigregister = _nn.SparseLinearOutput_swigregister
 SparseLinearOutput_swigregister(SparseLinearOutput)
 
+class WeightedSparseLinearInput(Layer):
+    __swig_setmethods__ = {}
+    for _s in [Layer]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, WeightedSparseLinearInput, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Layer]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, WeightedSparseLinearInput, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, input_dim: 'int', output_dim: 'int'):
+        this = _nn.new_WeightedSparseLinearInput(input_dim, output_dim)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def init(self, input_dim: 'int', output_dim: 'int') -> "void":
+        return _nn.WeightedSparseLinearInput_init(self, input_dim, output_dim)
+    __swig_setmethods__["weights"] = _nn.WeightedSparseLinearInput_weights_set
+    __swig_getmethods__["weights"] = _nn.WeightedSparseLinearInput_weights_get
+    if _newclass:
+        weights = _swig_property(_nn.WeightedSparseLinearInput_weights_get, _nn.WeightedSparseLinearInput_weights_set)
+
+    def duplicateWithSameWeights(self) -> "Layer *":
+        return _nn.WeightedSparseLinearInput_duplicateWithSameWeights(self)
+
+    def getInputDim(self) -> "int":
+        return _nn.WeightedSparseLinearInput_getInputDim(self)
+
+    def getOutputDim(self) -> "int":
+        return _nn.WeightedSparseLinearInput_getOutputDim(self)
+
+    def hasSparseInput(self) -> "bool":
+        return _nn.WeightedSparseLinearInput_hasSparseInput(self)
+
+    def hasSparseOutput(self) -> "bool":
+        return _nn.WeightedSparseLinearInput_hasSparseOutput(self)
+
+    def getOutput(self) -> "Vector *":
+        return _nn.WeightedSparseLinearInput_getOutput(self)
+
+    def getInputGrad(self) -> "Vector *":
+        return _nn.WeightedSparseLinearInput_getInputGrad(self)
+
+    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
+        return _nn.WeightedSparseLinearInput_getFullOutputIndices(self)
+
+    def predict(self, input: 'Vector *', input_indices: 'vectori') -> "int":
+        return _nn.WeightedSparseLinearInput_predict(self, input, input_indices)
+
+    def updateOutput(self, input: 'Vector *', input_indices: 'vectori') -> "int":
+        return _nn.WeightedSparseLinearInput_updateOutput(self, input, input_indices)
+
+    def updateInputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.WeightedSparseLinearInput_updateInputGrad(self, output_grad)
+
+    def accGradParameters(self, input: 'Vector *', output_grad: 'Vector *', alpha: 'float') -> "int":
+        return _nn.WeightedSparseLinearInput_accGradParameters(self, input, output_grad, alpha)
+    __swig_destroy__ = _nn.delete_WeightedSparseLinearInput
+    __del__ = lambda self: None
+WeightedSparseLinearInput_swigregister = _nn.WeightedSparseLinearInput_swigregister
+WeightedSparseLinearInput_swigregister(WeightedSparseLinearInput)
+
 class Linear(Layer):
     __swig_setmethods__ = {}
     for _s in [Layer]:
@@ -835,6 +1191,9 @@ class Linear(Layer):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
+    def init(self, input_dim: 'int', output_dim: 'int') -> "void":
+        return _nn.Linear_init(self, input_dim, output_dim)
     __swig_setmethods__["weights"] = _nn.Linear_weights_set
     __swig_getmethods__["weights"] = _nn.Linear_weights_get
     if _newclass:
@@ -895,6 +1254,9 @@ class Relu(Layer):
         except __builtin__.Exception:
             self.this = this
 
+    def init(self, dim: 'int') -> "void":
+        return _nn.Relu_init(self, dim)
+
     def duplicateWithSameWeights(self) -> "Layer *":
         return _nn.Relu_duplicateWithSameWeights(self)
 
@@ -950,6 +1312,9 @@ class Sigmoid(Layer):
         except __builtin__.Exception:
             self.this = this
 
+    def init(self, dim: 'int') -> "void":
+        return _nn.Sigmoid_init(self, dim)
+
     def duplicateWithSameWeights(self) -> "Layer *":
         return _nn.Sigmoid_duplicateWithSameWeights(self)
 
@@ -987,6 +1352,91 @@ class Sigmoid(Layer):
 Sigmoid_swigregister = _nn.Sigmoid_swigregister
 Sigmoid_swigregister(Sigmoid)
 
+class FlexSigmoid(FlexLayer):
+    __swig_setmethods__ = {}
+    for _s in [FlexLayer]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FlexSigmoid, name, value)
+    __swig_getmethods__ = {}
+    for _s in [FlexLayer]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, FlexSigmoid, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, dim: 'int'):
+        this = _nn.new_FlexSigmoid(dim)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def duplicateWithSameWeights(self) -> "FlexLayer *":
+        return _nn.FlexSigmoid_duplicateWithSameWeights(self)
+
+    def getInputDim(self) -> "int":
+        return _nn.FlexSigmoid_getInputDim(self)
+
+    def getOutputDim(self) -> "int":
+        return _nn.FlexSigmoid_getOutputDim(self)
+
+    def inputMustBeSparse(self) -> "bool":
+        return _nn.FlexSigmoid_inputMustBeSparse(self)
+
+    def outputMustBeSparse(self) -> "bool":
+        return _nn.FlexSigmoid_outputMustBeSparse(self)
+
+    def containsLayers(self) -> "bool":
+        return _nn.FlexSigmoid_containsLayers(self)
+
+    def mandatoryIdenticalInputOutputSparsity(self) -> "bool":
+        return _nn.FlexSigmoid_mandatoryIdenticalInputOutputSparsity(self)
+
+    def getOutput(self) -> "Vector *":
+        return _nn.FlexSigmoid_getOutput(self)
+
+    def getOutputIndices(self) -> "std::vector< int,std::allocator< int > > &":
+        return _nn.FlexSigmoid_getOutputIndices(self)
+
+    def getInputGrad(self) -> "Vector *":
+        return _nn.FlexSigmoid_getInputGrad(self)
+
+    def setOutputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexSigmoid_setOutputGrad(self, output_grad)
+
+    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
+        return _nn.FlexSigmoid_getFullOutputIndices(self)
+
+    def updateOutputDenseToDense(self, input: 'Vector *') -> "int":
+        return _nn.FlexSigmoid_updateOutputDenseToDense(self, input)
+
+    def updateOutputDenseToWeightedSparse(self, input: 'Vector *', sparse_output: 'vectori') -> "int":
+        return _nn.FlexSigmoid_updateOutputDenseToWeightedSparse(self, input, sparse_output)
+
+    def updateOutputWeightedSparseToDense(self, input: 'Vector *', sparse_input: 'vectori') -> "int":
+        return _nn.FlexSigmoid_updateOutputWeightedSparseToDense(self, input, sparse_input)
+
+    def updateOutputWeightedSparseToWeightedSparse(self, input: 'Vector *', sparse_input: 'vectori', sparse_output: 'vectori') -> "int":
+        return _nn.FlexSigmoid_updateOutputWeightedSparseToWeightedSparse(self, input, sparse_input, sparse_output)
+
+    def updateOutputBinarySparseToDense(self, sparse_input: 'vectori') -> "int":
+        return _nn.FlexSigmoid_updateOutputBinarySparseToDense(self, sparse_input)
+
+    def updateOutputBinarySparseToWeightedSparse(self, sparse_input: 'vectori', sparse_output: 'vectori') -> "int":
+        return _nn.FlexSigmoid_updateOutputBinarySparseToWeightedSparse(self, sparse_input, sparse_output)
+
+    def backward(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexSigmoid_backward(self, output_grad)
+
+    def updateInputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexSigmoid_updateInputGrad(self, output_grad)
+
+    def accGradParameters(self, alpha: 'float') -> "int":
+        return _nn.FlexSigmoid_accGradParameters(self, alpha)
+    __swig_destroy__ = _nn.delete_FlexSigmoid
+    __del__ = lambda self: None
+FlexSigmoid_swigregister = _nn.FlexSigmoid_swigregister
+FlexSigmoid_swigregister(FlexSigmoid)
+
 class MSECriterion(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, MSECriterion, name, value)
@@ -1008,11 +1458,11 @@ class MSECriterion(_object):
     def duplicate(self) -> "MSECriterion *":
         return _nn.MSECriterion_duplicate(self)
 
-    def forward(self, input: 'Vector *', target: 'Vector *', output_indices: 'vectori') -> "float":
-        return _nn.MSECriterion_forward(self, input, target, output_indices)
+    def forward(self, *args) -> "float":
+        return _nn.MSECriterion_forward(self, *args)
 
-    def backward(self, output: 'Vector *', target: 'Vector *', output_indices: 'vectori') -> "Vector *":
-        return _nn.MSECriterion_backward(self, output, target, output_indices)
+    def backward(self, *args) -> "Vector *":
+        return _nn.MSECriterion_backward(self, *args)
     __swig_destroy__ = _nn.delete_MSECriterion
     __del__ = lambda self: None
 MSECriterion_swigregister = _nn.MSECriterion_swigregister
@@ -1055,6 +1505,110 @@ class Sequential(_object):
     __del__ = lambda self: None
 Sequential_swigregister = _nn.Sequential_swigregister
 Sequential_swigregister(Sequential)
+
+class FlexSequential(FlexLayer):
+    __swig_setmethods__ = {}
+    for _s in [FlexLayer]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FlexSequential, name, value)
+    __swig_getmethods__ = {}
+    for _s in [FlexLayer]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, FlexSequential, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["layers"] = _nn.FlexSequential_layers_set
+    __swig_getmethods__["layers"] = _nn.FlexSequential_layers_get
+    if _newclass:
+        layers = _swig_property(_nn.FlexSequential_layers_get, _nn.FlexSequential_layers_set)
+
+    def __init__(self, layers: 'FlexLayerBuilder'):
+        this = _nn.new_FlexSequential(layers)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def init(self, input_dim: 'int', output_dim: 'int') -> "void":
+        return _nn.FlexSequential_init(self, input_dim, output_dim)
+
+    def duplicateWithSameWeights(self) -> "FlexLayer *":
+        return _nn.FlexSequential_duplicateWithSameWeights(self)
+
+    def duplicateSequentialWithSameWeights(self) -> "FlexSequential *":
+        return _nn.FlexSequential_duplicateSequentialWithSameWeights(self)
+
+    def getLayerIndexToBeginUsingSequenceOutputIndices(self) -> "int":
+        return _nn.FlexSequential_getLayerIndexToBeginUsingSequenceOutputIndices(self)
+
+    def get(self, i: 'int') -> "FlexLayer *":
+        return _nn.FlexSequential_get(self, i)
+
+    def getInputDim(self) -> "int":
+        return _nn.FlexSequential_getInputDim(self)
+
+    def getOutputDim(self) -> "int":
+        return _nn.FlexSequential_getOutputDim(self)
+
+    def inputMustBeSparse(self) -> "bool":
+        return _nn.FlexSequential_inputMustBeSparse(self)
+
+    def outputMustBeSparse(self) -> "bool":
+        return _nn.FlexSequential_outputMustBeSparse(self)
+
+    def containsLayers(self) -> "bool":
+        return _nn.FlexSequential_containsLayers(self)
+
+    def mandatoryIdenticalInputOutputSparsity(self) -> "bool":
+        return _nn.FlexSequential_mandatoryIdenticalInputOutputSparsity(self)
+
+    def getOutput(self) -> "Vector *":
+        return _nn.FlexSequential_getOutput(self)
+
+    def getOutputIndices(self) -> "std::vector< int,std::allocator< int > > &":
+        return _nn.FlexSequential_getOutputIndices(self)
+
+    def getInputGrad(self) -> "Vector *":
+        return _nn.FlexSequential_getInputGrad(self)
+
+    def setOutputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexSequential_setOutputGrad(self, output_grad)
+
+    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
+        return _nn.FlexSequential_getFullOutputIndices(self)
+
+    def forward(self, input_indices: 'vectori', output_indices: 'vectori') -> "Vector *":
+        return _nn.FlexSequential_forward(self, input_indices, output_indices)
+
+    def updateOutputDenseToDense(self, input: 'Vector *') -> "int":
+        return _nn.FlexSequential_updateOutputDenseToDense(self, input)
+
+    def updateOutputDenseToWeightedSparse(self, input: 'Vector *', output_indices: 'vectori') -> "int":
+        return _nn.FlexSequential_updateOutputDenseToWeightedSparse(self, input, output_indices)
+
+    def updateOutputWeightedSparseToDense(self, input: 'Vector *', input_indices: 'vectori') -> "int":
+        return _nn.FlexSequential_updateOutputWeightedSparseToDense(self, input, input_indices)
+
+    def updateOutputWeightedSparseToWeightedSparse(self, input: 'Vector *', input_indices: 'vectori', output_indices: 'vectori') -> "int":
+        return _nn.FlexSequential_updateOutputWeightedSparseToWeightedSparse(self, input, input_indices, output_indices)
+
+    def updateOutputBinarySparseToDense(self, input_indices: 'vectori') -> "int":
+        return _nn.FlexSequential_updateOutputBinarySparseToDense(self, input_indices)
+
+    def updateOutputBinarySparseToWeightedSparse(self, input_indices: 'vectori', output_indices: 'vectori') -> "int":
+        return _nn.FlexSequential_updateOutputBinarySparseToWeightedSparse(self, input_indices, output_indices)
+
+    def backward(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexSequential_backward(self, output_grad)
+
+    def updateInputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.FlexSequential_updateInputGrad(self, output_grad)
+
+    def accGradParameters(self, alpha: 'float') -> "int":
+        return _nn.FlexSequential_accGradParameters(self, alpha)
+    __swig_destroy__ = _nn.delete_FlexSequential
+    __del__ = lambda self: None
+FlexSequential_swigregister = _nn.FlexSequential_swigregister
+FlexSequential_swigregister(FlexSequential)
 
 class Sampler(_object):
     __swig_setmethods__ = {}
@@ -1219,7 +1773,7 @@ class StochasticGradientWorker(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, StochasticGradientWorker, name)
     __repr__ = _swig_repr
 
-    def __init__(self, mlp: 'Sequential', criterion: 'MSECriterion', training_generator: 'CBOW', alpha: 'float', iterations: 'int', worker_id: 'int', num_workers: 'int'):
+    def __init__(self, mlp: 'FlexSequential', criterion: 'MSECriterion', training_generator: 'CBOW', alpha: 'float', iterations: 'int', worker_id: 'int', num_workers: 'int'):
         this = _nn.new_StochasticGradientWorker(mlp, criterion, training_generator, alpha, iterations, worker_id, num_workers)
         try:
             self.this.append(this)
@@ -1265,7 +1819,7 @@ class StochasticGradient(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, StochasticGradient, name)
     __repr__ = _swig_repr
 
-    def __init__(self, mlp: 'Sequential', criterion: 'MSECriterion'):
+    def __init__(self, mlp: 'FlexSequential', criterion: 'MSECriterion'):
         this = _nn.new_StochasticGradient(mlp, criterion)
         try:
             self.this.append(this)
@@ -1291,6 +1845,115 @@ StochasticGradient_swigregister(StochasticGradient)
 def TrainModelThread(sgd: 'void *') -> "void *":
     return _nn.TrainModelThread(sgd)
 TrainModelThread = _nn.TrainModelThread
+class LinearTree(Layer):
+    __swig_setmethods__ = {}
+    for _s in [Layer]:
+        __swig_setmethods__.update(getattr(_s, '__swig_setmethods__', {}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LinearTree, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Layer]:
+        __swig_getmethods__.update(getattr(_s, '__swig_getmethods__', {}))
+    __getattr__ = lambda self, name: _swig_getattr(self, LinearTree, name)
+    __repr__ = _swig_repr
+
+    def __init__(self, input_dim: 'int', output_dim: 'int'):
+        this = _nn.new_LinearTree(input_dim, output_dim)
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+
+    def init(self, input_dim: 'int', output_dim: 'int') -> "void":
+        return _nn.LinearTree_init(self, input_dim, output_dim)
+    __swig_setmethods__["tree"] = _nn.LinearTree_tree_set
+    __swig_getmethods__["tree"] = _nn.LinearTree_tree_get
+    if _newclass:
+        tree = _swig_property(_nn.LinearTree_tree_get, _nn.LinearTree_tree_set)
+    __swig_setmethods__["paths"] = _nn.LinearTree_paths_set
+    __swig_getmethods__["paths"] = _nn.LinearTree_paths_get
+    if _newclass:
+        paths = _swig_property(_nn.LinearTree_paths_get, _nn.LinearTree_paths_set)
+    __swig_setmethods__["codes"] = _nn.LinearTree_codes_set
+    __swig_getmethods__["codes"] = _nn.LinearTree_codes_get
+    if _newclass:
+        codes = _swig_property(_nn.LinearTree_codes_get, _nn.LinearTree_codes_set)
+    __swig_setmethods__["factored_output"] = _nn.LinearTree_factored_output_set
+    __swig_getmethods__["factored_output"] = _nn.LinearTree_factored_output_get
+    if _newclass:
+        factored_output = _swig_property(_nn.LinearTree_factored_output_get, _nn.LinearTree_factored_output_set)
+    __swig_setmethods__["heap"] = _nn.LinearTree_heap_set
+    __swig_getmethods__["heap"] = _nn.LinearTree_heap_get
+    if _newclass:
+        heap = _swig_property(_nn.LinearTree_heap_get, _nn.LinearTree_heap_set)
+    __swig_setmethods__["weights"] = _nn.LinearTree_weights_set
+    __swig_getmethods__["weights"] = _nn.LinearTree_weights_get
+    if _newclass:
+        weights = _swig_property(_nn.LinearTree_weights_get, _nn.LinearTree_weights_set)
+
+    def sigmoid(self, x: 'float') -> "float":
+        return _nn.LinearTree_sigmoid(self, x)
+
+    def createBinaryTree(self) -> "void":
+        return _nn.LinearTree_createBinaryTree(self)
+
+    def getPathSize(self, i: 'int') -> "int":
+        return _nn.LinearTree_getPathSize(self, i)
+
+    def getCodeSize(self, i: 'int') -> "int":
+        return _nn.LinearTree_getCodeSize(self, i)
+
+    def getPath(self, i: 'int', j: 'int') -> "int":
+        return _nn.LinearTree_getPath(self, i, j)
+
+    def getCode(self, i: 'int', j: 'int') -> "bool":
+        return _nn.LinearTree_getCode(self, i, j)
+
+    def duplicateWithSameWeights(self) -> "Layer *":
+        return _nn.LinearTree_duplicateWithSameWeights(self)
+
+    def getInputDim(self) -> "int":
+        return _nn.LinearTree_getInputDim(self)
+
+    def getOutputDim(self) -> "int":
+        return _nn.LinearTree_getOutputDim(self)
+
+    def hasSparseInput(self) -> "bool":
+        return _nn.LinearTree_hasSparseInput(self)
+
+    def hasSparseOutput(self) -> "bool":
+        return _nn.LinearTree_hasSparseOutput(self)
+
+    def getOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
+        return _nn.LinearTree_getOutputIndices(self)
+
+    def getOutput(self) -> "Vector *":
+        return _nn.LinearTree_getOutput(self)
+
+    def getInputGrad(self) -> "Vector *":
+        return _nn.LinearTree_getInputGrad(self)
+
+    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
+        return _nn.LinearTree_getFullOutputIndices(self)
+
+    def dfs(self, arg2: 'int32_t', arg3: 'int32_t', arg4: 'float', arg5: 'std::vector< std::pair< float,int32_t >,std::allocator< std::pair< float,int32_t > > > &', arg6: 'Vector *', arg7: 'int') -> "void":
+        return _nn.LinearTree_dfs(self, arg2, arg3, arg4, arg5, arg6, arg7)
+
+    def predict(self, input: 'Vector *', output_indices: 'vectori') -> "int":
+        return _nn.LinearTree_predict(self, input, output_indices)
+
+    def updateOutput(self, input: 'Vector *', output_indices: 'vectori') -> "int":
+        return _nn.LinearTree_updateOutput(self, input, output_indices)
+
+    def updateInputGrad(self, output_grad: 'Vector *') -> "int":
+        return _nn.LinearTree_updateInputGrad(self, output_grad)
+
+    def accGradParameters(self, input: 'Vector *', output_grad: 'Vector *', alpha: 'float') -> "int":
+        return _nn.LinearTree_accGradParameters(self, input, output_grad, alpha)
+    __swig_destroy__ = _nn.delete_LinearTree
+    __del__ = lambda self: None
+LinearTree_swigregister = _nn.LinearTree_swigregister
+LinearTree_swigregister(LinearTree)
+
 # This file is compatible with both classic and new-style classes.
 
 

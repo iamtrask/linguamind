@@ -35,6 +35,8 @@ class Sigmoid: public Layer {
 	public:
 		Sigmoid(int dim);
 
+		void init(int dim);
+
 		Layer* duplicateWithSameWeights();
 
 		int getInputDim();
@@ -51,6 +53,69 @@ class Sigmoid: public Layer {
 		int updateOutput(Vector* input, std::vector<int> &output_indices);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
+};
+
+class FlexSigmoid: public FlexLayer {
+
+	private:
+
+		int input_dim;
+		int output_dim;
+
+		bool input_must_be_sparse;
+		bool output_must_be_sparse;
+
+		bool contains_layers;
+
+		bool mandatory_identical_input_output_sparsity;
+
+		int forward_code;
+
+		Vector* output;
+		Vector* input_grad;
+		Vector* output_grad;
+
+		std::vector<int> input_indices;
+		std::vector<int> output_indices;
+
+		std::vector<int> full_input_indices;
+		std::vector<int> full_output_indices;
+
+		float* expTable;
+
+	public:
+		
+		FlexSigmoid(int dim);
+
+		FlexLayer* duplicateWithSameWeights();
+
+		int getInputDim();
+		int getOutputDim();
+
+		bool inputMustBeSparse();
+		bool outputMustBeSparse();
+
+		bool containsLayers();
+
+		bool mandatoryIdenticalInputOutputSparsity();
+
+		Vector* getOutput();
+		std::vector<int> &getOutputIndices();
+		Vector* getInputGrad();
+		int setOutputGrad(Vector* output_grad);
+
+		std::vector<int> getFullOutputIndices();
+
+		int updateOutputDenseToDense(Vector* input);
+		int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &sparse_output);
+		int updateOutputWeightedSparseToDense(Vector* input, std::vector<int> &sparse_input);
+		int updateOutputWeightedSparseToWeightedSparse(Vector* input, std::vector<int> &sparse_input, std::vector<int> &sparse_output);
+		int updateOutputBinarySparseToDense(std::vector<int> &sparse_input);
+		int updateOutputBinarySparseToWeightedSparse(std::vector<int> &sparse_input, std::vector<int> &sparse_output);
+
+		int backward(Vector* output_grad);
+		int updateInputGrad(Vector* output_grad);
+		int accGradParameters(float alpha);
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "stochastic_gradient.h"
 
-StochasticGradientWorker::StochasticGradientWorker(Sequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers) {
+StochasticGradientWorker::StochasticGradientWorker(FlexSequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers) {
 	
 	this->alpha = alpha;
 	this->iterations = iterations;
@@ -9,7 +9,7 @@ StochasticGradientWorker::StochasticGradientWorker(Sequential* mlp, MSECriterion
 	this->num_workers = num_workers;
 
 	if(this->worker_id != 0) {
-		this->mlp = mlp->duplicateWithSameWeights();
+		this->mlp = mlp->duplicateSequentialWithSameWeights();
 		this->criterion = criterion->duplicate();
 	} else {
 		this->mlp = mlp;
@@ -28,29 +28,19 @@ StochasticGradientWorker::StochasticGradientWorker(Sequential* mlp, MSECriterion
 
 void StochasticGradientWorker::train() {
 	
-	std::vector<int> input_indices = this->training_generator->getInputIndicesReference();
-	std::vector<int> output_indices = this->training_generator->getOutputIndicesReference();
+	std::vector<int> &input_indices = this->training_generator->getInputIndicesReference();
+	std::vector<int> &output_indices = this->training_generator->getOutputIndicesReference();
 	Vector* target_values = this->training_generator->getTargetValuesReference();
 
 	for(int iter=0; iter<this->iterations; iter++) {
 
 		while(this->training_generator->has_next) {
-			
-			input_indices = this->training_generator->getInputIndicesReference();
-			output_indices = this->training_generator->getOutputIndicesReference();
-			target_values = this->training_generator->getTargetValuesReference();
-			
-			Vector* pred = this->mlp->forward(input_indices,output_indices);
-			// error = this->criterion->forward(pred, target_values,output_indices);
-			this->mlp->backward(this->criterion->backward(pred,target_values,output_indices),output_indices);
+		
+			this->mlp->backward(this->criterion->backward(this->mlp->forward(input_indices,output_indices),target_values,output_indices));
 
-			Vector* prev_layer_output = NULL;	
-			for(int i=0; i<(int)this->mlp->layers.size()-1; i++) {
-				this->mlp->get(i)->accGradParameters(prev_layer_output,this->mlp->get(i+1)->getInputGrad(),this->alpha);
-				prev_layer_output = this->mlp->get(i)->getOutput();
+			for(int i=0; i<(int)this->mlp->layers.size(); i++) {
+				this->mlp->get(i)->accGradParameters(this->alpha);
 			}
-
-			this->mlp->get(this->mlp->layers.size()-1)->accGradParameters(this->mlp->get(this->mlp->layers.size()-2)->getOutput(),criterion->grad,this->alpha);
 			this->training_generator->next();
 
 		}
@@ -59,7 +49,7 @@ void StochasticGradientWorker::train() {
 	}
 }
 
-StochasticGradient::StochasticGradient(Sequential* mlp, MSECriterion* criterion) {
+StochasticGradient::StochasticGradient(FlexSequential* mlp, MSECriterion* criterion) {
 	this->mlp = mlp;
 	this->criterion = criterion;
 }

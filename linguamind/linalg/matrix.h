@@ -18,6 +18,7 @@ class Matrix {
 
 		Matrix zero();
 		Matrix uniform(Seed* seed);
+		void transpose();
 
 		// std::vector<float> get();
 		Vector* get(int i);

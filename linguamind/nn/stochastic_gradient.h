@@ -12,9 +12,9 @@
 class StochasticGradientWorker{ 
 
 	public:
-		StochasticGradientWorker(Sequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers);
+		StochasticGradientWorker(FlexSequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers);
 
-		Sequential* mlp;
+		FlexSequential* mlp;
 		MSECriterion* criterion;
 		CBOW* training_generator;
 
@@ -31,9 +31,9 @@ class StochasticGradientWorker{
 class StochasticGradient  {
 
 	public:
-		StochasticGradient(Sequential* mlp, MSECriterion* criterion);
+		StochasticGradient(FlexSequential* mlp, MSECriterion* criterion);
 
-		Sequential* mlp;
+		FlexSequential* mlp;
 		MSECriterion* criterion;
 
 

@@ -27,6 +27,7 @@ namespace std {
 #include "nn/sequential.h"
 #include "nn/training_generators.h"
 #include "nn/stochastic_gradient.h"
+#include "nn/hierarchical_layers.h"
 %}
 #include "nn/layer.h"
 
@@ -93,13 +94,146 @@ class Layer {
 		virtual int accGradParameters(Vector* input, Vector* output_grad, float alpha) = 0;
 };
 
+
+class FlexLayer {
+
+	private:
+
+		int input_dim;
+		int output_dim;
+
+		bool input_must_be_sparse;
+		bool output_must_be_sparse;
+
+		bool mandatory_identical_input_output_sparsity;
+
+		bool contains_layers;
+
+		Vector* output;
+		Vector* input_grad;
+		Vector* output_grad;
+
+		std::vector<int> input_indices;
+		std::vector<int> output_indices;
+
+		std::vector<int> full_input_indices;
+		std::vector<int> full_output_indices;
+
+	public:
+		
+		FlexLayer() {
+    		
+  		}
+  		virtual ~FlexLayer() {
+
+		}
+
+		virtual FlexLayer* duplicateWithSameWeights() = 0;
+
+		virtual int getInputDim() = 0;
+		virtual int getOutputDim() = 0;
+
+		virtual bool inputMustBeSparse() = 0;
+		virtual bool outputMustBeSparse() = 0;
+		virtual bool mandatoryIdenticalInputOutputSparsity() = 0;
+
+		virtual bool containsLayers() = 0;
+
+		virtual Vector* getOutput() = 0;
+		virtual std::vector<int> &getOutputIndices() = 0;
+		virtual Vector* getInputGrad() = 0;
+		virtual int setOutputGrad(Vector* output_grad) = 0;
+
+		virtual std::vector<int> getFullOutputIndices() = 0;
+
+		virtual int updateOutputDenseToDense(Vector* input) = 0;
+		virtual int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &sparse_output) = 0;
+		virtual int updateOutputWeightedSparseToDense(Vector* input, std::vector<int> &sparse_input) = 0;
+		virtual int updateOutputWeightedSparseToWeightedSparse(Vector* input, std::vector<int> &sparse_input, std::vector<int> &sparse_output) = 0;
+		virtual int updateOutputBinarySparseToDense(std::vector<int> &sparse_input) = 0;
+		virtual int updateOutputBinarySparseToWeightedSparse(std::vector<int> &sparse_input, std::vector<int> &sparse_output) = 0;
+
+		virtual int backward(Vector* output_grad) = 0;
+		virtual int updateInputGrad(Vector* output_grad) = 0;
+		virtual int accGradParameters(float alpha) = 0;
+};
+
 // THIS IS SURPRISINGLY IMPORTANT TO MAKE THESE VALUES ACCEPTABLE AS PARAMETERS
 // not as LayerBuilder explicitly persay... but to be able to pass in vector<Layer*> you need it.
 namespace std {
    %template(LayerBuilder) vector<Layer*>;
+   %template(FlexLayerBuilder) vector<FlexLayer*>;
    %template(TrainingExample) vector<vector<int> >;
 };
 
+class FlexLinear: public FlexLayer {
+
+	private:
+
+		int forward_code;
+
+		bool weights_configured_input_sparse;
+
+		int input_dim;
+		int output_dim;
+
+		bool output_must_be_sparse;
+		bool input_must_be_sparse;
+
+		bool mandatory_identical_input_output_sparsity;
+
+		bool contains_layers;
+
+		Vector* input;
+		Vector* output;
+
+		Vector* input_grad;
+		Vector* output_grad;
+
+		std::vector<int> input_indices;
+		std::vector<int> output_indices;
+
+		std::vector<int> full_input_indices;
+		std::vector<int> full_output_indices;
+
+	public:
+		FlexLinear(int input_dim, int output_dim);
+		void init(int input_dim, int output_dim);
+
+		Matrix* weights;
+
+		FlexLayer* duplicateWithSameWeights();
+
+		int swapInputOutputSparsity();
+		bool mandatoryIdenticalInputOutputSparsity();
+
+		int getInputDim();
+		int getOutputDim();
+
+		bool inputMustBeSparse();
+		bool outputMustBeSparse();
+
+		bool containsLayers();
+
+		Vector* getOutput();
+		std::vector<int> &getOutputIndices();
+		Vector* getInputGrad();
+		int setOutputGrad(Vector* output_grad);
+
+		std::vector<int> getFullOutputIndices();
+
+		// int updateOutput(Vector* input, std::vector<int> &not_used);
+		int updateOutputDenseToDense(Vector* input);
+		int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &output_indices);
+		int updateOutputWeightedSparseToDense(Vector* input, std::vector<int> &input_indices);
+		int updateOutputWeightedSparseToWeightedSparse(Vector* input, std::vector<int> &input_indices, std::vector<int> &output_indices);
+		int updateOutputBinarySparseToDense(std::vector<int> &input_indices);
+		int updateOutputBinarySparseToWeightedSparse(std::vector<int> &input_indices, std::vector<int> &output_indices);
+
+		int backward(Vector* output_grad);
+		int updateInputGrad(Vector* output_grad);
+		int accGradParameters(float alpha);
+};
 
 class SparseLinearInput: public Layer {
 
@@ -119,6 +253,7 @@ class SparseLinearInput: public Layer {
 
 	public:
 		SparseLinearInput(int input_dim, int output_dim);
+		void init(int input_dim, int output_dim);
 
 		Matrix* weights;
 
@@ -158,6 +293,7 @@ class SparseLinearOutput: public Layer {
 	public:
 
 		SparseLinearOutput(int input_dim, int output_dim);
+		void init(int input_dim, int output_dim);
 
 		Matrix* weights;
 
@@ -179,6 +315,49 @@ class SparseLinearOutput: public Layer {
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
 
+class WeightedSparseLinearInput: public Layer {
+
+	private:
+
+		bool sparse_output;
+		bool sparse_input;
+
+		int input_dim;
+		int output_dim;
+
+		Vector* output;
+		Vector* input_grad;
+
+		std::vector<int> input_indices;
+		std::vector<int> full_output_indices;
+
+	public:
+
+		WeightedSparseLinearInput(int input_dim, int output_dim);
+
+		void init(int input_dim, int output_dim);
+
+		Matrix* weights;
+
+		Layer* duplicateWithSameWeights();
+
+		int getInputDim();
+		int getOutputDim();
+
+		bool hasSparseInput();
+		bool hasSparseOutput();
+
+		Vector* getOutput();
+		Vector* getInputGrad();
+
+		std::vector<int> getFullOutputIndices();
+		
+		int predict(Vector* input, std::vector<int> input_indices);
+		int updateOutput(Vector* input, std::vector<int> &input_indices);
+		int updateInputGrad(Vector* output_grad);
+		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
+};
+
 class Linear: public Layer {
 
 	private:
@@ -196,6 +375,7 @@ class Linear: public Layer {
 
 	public:
 		Linear(int input_dim, int output_dim);
+		void init(int input_dim, int output_dim);
 
 		Matrix* weights;
 
@@ -237,6 +417,7 @@ class Relu: public Layer {
 
 	public:
 		Relu(int dim);
+		void init(int dim);
 
 		Layer* duplicateWithSameWeights();
 
@@ -278,6 +459,7 @@ class Sigmoid: public Layer {
 
 	public:
 		Sigmoid(int dim);
+		void init(int dim);
 
 		Layer* duplicateWithSameWeights();
 
@@ -297,6 +479,69 @@ class Sigmoid: public Layer {
 		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
 };
 
+class FlexSigmoid: public FlexLayer {
+
+	private:
+
+		int input_dim;
+		int output_dim;
+
+		bool input_must_be_sparse;
+		bool output_must_be_sparse;
+
+		bool contains_layers;
+
+		bool mandatory_identical_input_output_sparsity;
+
+		int forward_code;
+
+		Vector* output;
+		Vector* input_grad;
+		Vector* output_grad;
+
+		std::vector<int> input_indices;
+		std::vector<int> output_indices;
+
+		std::vector<int> full_input_indices;
+		std::vector<int> full_output_indices;
+
+		float* expTable;
+
+	public:
+		
+		FlexSigmoid(int dim);
+
+		FlexLayer* duplicateWithSameWeights();
+
+		int getInputDim();
+		int getOutputDim();
+
+		bool inputMustBeSparse();
+		bool outputMustBeSparse();
+
+		bool containsLayers();
+
+		bool mandatoryIdenticalInputOutputSparsity();
+
+		Vector* getOutput();
+		std::vector<int> &getOutputIndices();
+		Vector* getInputGrad();
+		int setOutputGrad(Vector* output_grad);
+
+		std::vector<int> getFullOutputIndices();
+
+		int updateOutputDenseToDense(Vector* input);
+		int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &sparse_output);
+		int updateOutputWeightedSparseToDense(Vector* input, std::vector<int> &sparse_input);
+		int updateOutputWeightedSparseToWeightedSparse(Vector* input, std::vector<int> &sparse_input, std::vector<int> &sparse_output);
+		int updateOutputBinarySparseToDense(std::vector<int> &sparse_input);
+		int updateOutputBinarySparseToWeightedSparse(std::vector<int> &sparse_input, std::vector<int> &sparse_output);
+
+		int backward(Vector* output_grad);
+		int updateInputGrad(Vector* output_grad);
+		int accGradParameters(float alpha);
+};
+
 class MSECriterion {
 
 	public:	
@@ -305,9 +550,14 @@ class MSECriterion {
 		Vector* grad;
 
 		MSECriterion* duplicate();
+		
+		float forward(Vector* input, Vector* target);
 		float forward(Vector* input, Vector* target, std::vector<int> &output_indices);
+
+		Vector* backward(Vector* output, Vector* target);
 		Vector* backward(Vector* output, Vector* target, std::vector<int> &output_indices);
 };
+
 
 class Sequential  {
 
@@ -322,6 +572,86 @@ class Sequential  {
 		Layer* get(int i);
 		Vector* forward(std::vector<int> &input_indices,std::vector<int> &output_indices);
 		void backward(Vector* grad, std::vector<int> &output_indices);
+};
+
+
+class FlexSequential: public FlexLayer  {
+
+	private:
+		
+		bool output_must_be_sparse;
+		bool input_must_be_sparse;
+
+		bool contains_layers;
+
+		bool mandatory_identical_input_output_sparsity;
+		int layer_index_to_begin_using_sequence_output_indices;
+
+		int forward_code;
+
+		int input_dim;
+		int output_dim;
+
+		Vector* input;
+		Vector* output;
+
+		Vector* input_grad;
+		Vector* output_grad;
+
+		std::vector<int> input_indices;
+		std::vector<int> output_indices;
+
+		std::vector<int> full_input_indices;
+		std::vector<int> full_output_indices;
+
+		std::vector<int> not_used;
+
+		
+		int num_layers;
+
+	public:
+
+		std::vector<FlexLayer*> layers;
+
+		FlexSequential(std::vector<FlexLayer*> layers);
+		void init(int input_dim, int output_dim);
+
+		FlexLayer* duplicateWithSameWeights();
+		FlexSequential* duplicateSequentialWithSameWeights();
+		int getLayerIndexToBeginUsingSequenceOutputIndices();
+
+		FlexLayer* get(int i);
+
+		int getInputDim();
+		int getOutputDim();
+
+		bool inputMustBeSparse();
+		bool outputMustBeSparse();
+
+		bool containsLayers();
+		bool mandatoryIdenticalInputOutputSparsity();
+
+		Vector* getOutput();
+		std::vector<int> &getOutputIndices();
+		Vector* getInputGrad();
+		int setOutputGrad(Vector* output_grad);
+
+		std::vector<int> getFullOutputIndices();
+
+		Vector* forward(std::vector<int> &input_indices,std::vector<int> &output_indices);
+
+		// int updateOutput(Vector* input, std::vector<int> &not_used);
+		int updateOutputDenseToDense(Vector* input);
+		int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &output_indices);
+		int updateOutputWeightedSparseToDense(Vector* input, std::vector<int> &input_indices);
+		int updateOutputWeightedSparseToWeightedSparse(Vector* input, std::vector<int> &input_indices, std::vector<int> &output_indices);
+		int updateOutputBinarySparseToDense(std::vector<int> &input_indices);
+		int updateOutputBinarySparseToWeightedSparse(std::vector<int> &input_indices, std::vector<int> &output_indices);
+
+		int backward(Vector* output_grad);
+		int updateInputGrad(Vector* output_grad);
+		int accGradParameters(float alpha);
+
 };
 
 class Sampler {
@@ -387,9 +717,9 @@ class CBOW  {
 class StochasticGradientWorker{ 
 
 	public:
-		StochasticGradientWorker(Sequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers);
+		StochasticGradientWorker(FlexSequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers);
 
-		Sequential* mlp;
+		FlexSequential* mlp;
 		MSECriterion* criterion;
 		CBOW* training_generator;
 
@@ -404,9 +734,9 @@ class StochasticGradientWorker{
 class StochasticGradient  {
 
 	public:
-		StochasticGradient(Sequential* mlp, MSECriterion* criterion);
+		StochasticGradient(FlexSequential* mlp, MSECriterion* criterion);
 
-		Sequential* mlp;
+		FlexSequential* mlp;
 		MSECriterion* criterion;
 
 
@@ -414,4 +744,70 @@ class StochasticGradient  {
 };
 
 void *TrainModelThread(void *sgd);
+
+class LinearTree: public Layer  {
+	
+
+	private:
+		bool sparse_output;
+		bool sparse_input;
+
+		int input_dim;
+		int output_dim;
+
+		Vector* output;
+		Vector* input_grad;
+
+		std::vector<int> output_indices;
+		std::vector<int> full_output_indices;
+
+
+		static bool comparePairs(const std::pair<float, int32_t>&,
+                             const std::pair<float, int32_t>&);
+	public:
+		LinearTree(int input_dim, int output_dim);
+		void init(int input_dim, int output_dim);
+
+		std::vector<Node> tree;
+		std::vector< std::vector<int32_t> > paths;
+    	std::vector< std::vector<bool> > codes;
+    	std::vector< std::vector<float> > factored_output;
+    	std::vector<std::pair<float, int32_t>> heap;
+
+		Matrix* weights;
+
+		float sigmoid(float x);
+
+		void createBinaryTree();
+
+		int getPathSize(int i);
+		int getCodeSize(int i);
+
+		int getPath(int i, int j);
+		bool getCode(int i, int j);
+
+		Layer* duplicateWithSameWeights();
+
+		int getInputDim();
+		int getOutputDim();
+
+		bool hasSparseInput();
+		bool hasSparseOutput();
+
+		std::vector<int> getOutputIndices();
+
+		Vector* getOutput();
+		Vector* getInputGrad();
+
+		std::vector<int> getFullOutputIndices();
+
+		void dfs(int32_t, int32_t, float,
+             std::vector<std::pair<float, int32_t>>&,
+             Vector*, int);
+
+		int predict(Vector* input, std::vector<int> output_indices);
+		int updateOutput(Vector* input, std::vector<int> &output_indices);
+		int updateInputGrad(Vector* output_grad);
+		int accGradParameters(Vector* input, Vector* output_grad, float alpha);
+};
 

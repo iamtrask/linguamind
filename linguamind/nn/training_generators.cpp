@@ -162,7 +162,7 @@ void CBOW::next() {
 			}
 		}
 	}
-
+	
 	word = this->window_indices[this->win_i][pred_i];
 	this->output_indices.push_back(word);
 	

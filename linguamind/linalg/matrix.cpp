@@ -29,9 +29,30 @@ Matrix Matrix::uniform(Seed* seed) {
 
 Vector* Matrix::get(int i) {
 	if(i >= this->rows) {
-		throw std::runtime_error("OutOfBounds: Row does not exist.");
+		throw std::runtime_error("Vector* Matrix::get(int i): OutOfBounds: Row does not exist.");
 	} 
 	return this->_data[i];
+}
+
+// change how the rows and columns are stored.
+// this method is extremely inefficient... it's not supposed
+// to be used during training or testing... only during setup.
+void Matrix::transpose() {
+	Matrix* t_mat = new Matrix(this->cols, this->rows);
+	for(int i=0; i<this->rows; i++) {
+		for(int j=0; j<this->cols; j++) {
+			t_mat->get(j)->set(i,this->get(i)->get(j));
+		}
+	}
+
+	this->_data.clear();
+
+	this->_data = t_mat->_data;
+	int rows = this->rows;
+	int cols = this->cols;
+
+	this->rows = cols;
+	this->cols = rows;
 }
 
 Matrix Matrix::operator*=(float x) const {
@@ -64,7 +85,7 @@ Matrix Matrix::operator-=(float x) const {
 
 Matrix Matrix::operator*=(Matrix* x) const {
 	if(x->rows != this->rows || x->cols != this->cols) {
-		throw std::runtime_error("OutOfBounds: Matrices not identically sized");
+		throw std::runtime_error("Matrix Matrix::operator*=(Matrix* x): OutOfBounds: Matrices not identically sized");
 	} 
 	for(int i=0; i<this->rows; i++) {
 		this->_data[i]->muli(x->_data[i]);
@@ -74,7 +95,7 @@ Matrix Matrix::operator*=(Matrix* x) const {
 
 Matrix Matrix::operator/=(Matrix* x) const {
 	if(x->rows != this->rows || x->cols != this->cols) {
-		throw std::runtime_error("OutOfBounds: Matrices not identically sized");
+		throw std::runtime_error("Matrix Matrix::operator/=(Matrix* x): OutOfBounds: Matrices not identically sized");
 	} 
 	for(int i=0; i<this->rows; i++) {
 		this->_data[i]->divi(x->_data[i]);
@@ -84,7 +105,7 @@ Matrix Matrix::operator/=(Matrix* x) const {
 
 Matrix Matrix::operator+=(Matrix* x) const {
 	if(x->rows != this->rows || x->cols != this->cols) {
-		throw std::runtime_error("OutOfBounds: Matrices not identically sized");
+		throw std::runtime_error("Matrix Matrix::operator+=(Matrix* x): OutOfBounds: Matrices not identically sized");
 	} 
 	for(int i=0; i<this->rows; i++) {
 		this->_data[i]->addi(x->_data[i]);
@@ -94,7 +115,7 @@ Matrix Matrix::operator+=(Matrix* x) const {
 
 Matrix Matrix::operator-=(Matrix* x) const {
 	if(x->rows != this->rows || x->cols != this->cols) {
-		throw std::runtime_error("OutOfBounds: Matrices not identically sized");
+		throw std::runtime_error("Matrix Matrix::operator-=(Matrix* x): OutOfBounds: Matrices not identically sized");
 	} 
 	for(int i=0; i<this->rows; i++) {
 		this->_data[i]->subi(x->_data[i]);

@@ -697,6 +697,12 @@ class Matrix(_object):
     def uniform(self, seed: 'Seed') -> "Matrix":
         return _linalg.Matrix_uniform(self, seed)
 
+    def transpose(self) -> "void":
+        return _linalg.Matrix_transpose(self)
+
+    def get(self, i: 'int') -> "Vector *":
+        return _linalg.Matrix_get(self, i)
+
     def __imul__(self, *args) -> "Matrix":
         return _linalg.Matrix___imul__(self, *args)
 

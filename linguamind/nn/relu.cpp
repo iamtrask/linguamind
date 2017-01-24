@@ -1,7 +1,10 @@
 #include "relu.h"
 
 Relu::Relu(int dim) {
+	this->init(dim);
+}
 
+void Relu::init(int dim) {
 	this->sparse_output = false;
 	this->sparse_input = false;
 
@@ -15,7 +18,6 @@ Relu::Relu(int dim) {
 	this->output->zero();
 
 	for(int i=0; i<this->output_dim; i++) this->full_output_indices.push_back(i);
-
 }
 
 Layer* Relu::duplicateWithSameWeights() {

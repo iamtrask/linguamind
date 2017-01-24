@@ -88,6 +88,8 @@ class Vector{
 
 		float dot(Vector* x);
 		void doti(int i, Vector* x, Vector* y);
+		
+		Vector set(Vector* x);
 
 		Vector set(Vector* x, float a);
 		Vector addi(Vector* x, float a);
@@ -98,6 +100,8 @@ class Vector{
 
 		Vector divi(float x);
 		Vector operator/=(float x) const;
+
+		Vector addi(int i, float a);
 
 		Vector addi(float x);
 		Vector operator+=(float x) const;
@@ -176,9 +180,10 @@ class Matrix {
 
 		Matrix zero();
 		Matrix uniform(Seed* seed);
+		void transpose();
 
 		// std::vector<float> get();
-		// Vector* get(int i);
+		Vector* get(int i);
 		// Vector* set(int i, Vector* x);
 
 		Matrix operator*=(float x) const;
@@ -191,6 +196,7 @@ class Matrix {
 		Matrix operator+=(Matrix* x) const;
 		Matrix operator-=(Matrix* x) const;
 };
+
 
 class Tensor{
 

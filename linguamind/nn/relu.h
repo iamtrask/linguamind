@@ -28,6 +28,8 @@ class Relu: public Layer {
 	public:
 		Relu(int dim);
 
+		void init(int dim);
+
 		Layer* duplicateWithSameWeights();
 
 		int getInputDim();

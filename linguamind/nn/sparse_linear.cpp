@@ -1,7 +1,10 @@
 #include "sparse_linear.h"
 
 SparseLinearInput::SparseLinearInput(int input_dim, int output_dim) {
+	this->init(input_dim, output_dim);
+}
 
+void SparseLinearInput::init(int input_dim, int output_dim) {
 	this->sparse_output = false;
 	this->sparse_input = true;
 
@@ -58,6 +61,10 @@ Vector* SparseLinearInput::getInputGrad() {return this->input_grad;}
 std::vector<int> SparseLinearInput::getFullOutputIndices() {return this->full_output_indices;}
 
 SparseLinearOutput::SparseLinearOutput(int input_dim, int output_dim) {
+	this->init(input_dim, output_dim);
+}
+
+void SparseLinearOutput::init(int input_dim, int output_dim) {
 
 	this->sparse_output = true;
 	this->sparse_input = false;
@@ -123,6 +130,72 @@ Vector* SparseLinearOutput::getOutput() {return this->output;}
 Vector* SparseLinearOutput::getInputGrad() {return this->input_grad;}
 std::vector<int> SparseLinearOutput::getFullOutputIndices() {return this->full_output_indices;}
 
+
+WeightedSparseLinearInput::WeightedSparseLinearInput(int input_dim, int output_dim) {
+	this->init(input_dim, output_dim);
+}
+
+void WeightedSparseLinearInput::init(int input_dim, int output_dim) {
+	this->sparse_output = false;
+	this->sparse_input = true;
+
+	this->input_dim = input_dim;
+	this->output_dim = output_dim;
+
+	this->weights = new Matrix(input_dim, output_dim);
+
+	this->output = new Vector(this->output_dim);
+	this->output->zero();
+
+	for(int i=0; i<this->output_dim; i++) this->full_output_indices.push_back(i);
+
+}
+
+Layer* WeightedSparseLinearInput::duplicateWithSameWeights() {
+	SparseLinearInput* new_layer = new SparseLinearInput(this->input_dim, this->output_dim);
+	
+	free(new_layer->weights);
+	new_layer->weights = this->weights;
+	return (Layer*)new_layer;
+}
+
+int WeightedSparseLinearInput::predict(Vector* input, std::vector<int> input_indices) {
+	this->updateOutput(input,input_indices);
+	return 0;
+}
+
+int WeightedSparseLinearInput::updateOutput(Vector* input, std::vector<int> &input_indices) {
+	this->input_indices = input_indices;
+	int index;
+	this->output->zero();
+	for(int i=0; i< (int)this->input_indices.size(); i++) {
+		index = input_indices[i];
+		this->output->addi(this->weights->get(index),input->get(index));
+	}
+
+	// this->output->divi((int)this->input_indices.size());
+	return 0;
+}
+
+int WeightedSparseLinearInput::updateInputGrad(Vector* output_grad) {
+	// do nothing
+	return 0;
+}
+
+int WeightedSparseLinearInput::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
+	for(int i=0; i<(int)this->input_indices.size(); i++) {
+		this->weights->get(this->input_indices[i])->subi(output_grad,alpha);
+	}
+	return 0;
+}
+
+int WeightedSparseLinearInput::getInputDim() { return this->input_dim;};
+int WeightedSparseLinearInput::getOutputDim() { return this->output_dim;};
+bool WeightedSparseLinearInput::hasSparseInput() {return this->sparse_input;};
+bool WeightedSparseLinearInput::hasSparseOutput() {return this->sparse_output;}
+Vector* WeightedSparseLinearInput::getOutput() {return this->output;}
+Vector* WeightedSparseLinearInput::getInputGrad() {return this->input_grad;}
+std::vector<int> WeightedSparseLinearInput::getFullOutputIndices() {return this->full_output_indices;}
 
 // NegativeSamplingOutput::NegativeSamplingOutput(int input_dim, int negative_sample_size, int vocab_size) {
 
