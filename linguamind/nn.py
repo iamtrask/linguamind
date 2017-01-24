@@ -486,6 +486,9 @@ class FlexLayer(_object):
     __swig_destroy__ = _nn.delete_FlexLayer
     __del__ = lambda self: None
 
+    def destroy(self, dont_destroy_weights: 'bool') -> "int":
+        return _nn.FlexLayer_destroy(self, dont_destroy_weights)
+
     def duplicateWithSameWeights(self) -> "FlexLayer *":
         return _nn.FlexLayer_duplicateWithSameWeights(self)
 
@@ -518,9 +521,6 @@ class FlexLayer(_object):
 
     def setOutputGrad(self, output_grad: 'Vector *') -> "int":
         return _nn.FlexLayer_setOutputGrad(self, output_grad)
-
-    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
-        return _nn.FlexLayer_getFullOutputIndices(self)
 
     def updateOutputDenseToDense(self, input: 'Vector *') -> "int":
         return _nn.FlexLayer_updateOutputDenseToDense(self, input)
@@ -901,15 +901,18 @@ class FlexLinear(FlexLayer):
     __getattr__ = lambda self, name: _swig_getattr(self, FlexLinear, name)
     __repr__ = _swig_repr
 
-    def __init__(self, input_dim: 'int', output_dim: 'int'):
-        this = _nn.new_FlexLinear(input_dim, output_dim)
+    def __init__(self, *args):
+        this = _nn.new_FlexLinear(*args)
         try:
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
 
-    def init(self, input_dim: 'int', output_dim: 'int') -> "void":
-        return _nn.FlexLinear_init(self, input_dim, output_dim)
+    def init(self, input_dim: 'int', output_dim: 'int', init_weights: 'bool') -> "void":
+        return _nn.FlexLinear_init(self, input_dim, output_dim, init_weights)
+
+    def destroy(self, dont_destroy_weights: 'bool') -> "int":
+        return _nn.FlexLinear_destroy(self, dont_destroy_weights)
     __swig_setmethods__["weights"] = _nn.FlexLinear_weights_set
     __swig_getmethods__["weights"] = _nn.FlexLinear_weights_get
     if _newclass:
@@ -950,9 +953,6 @@ class FlexLinear(FlexLayer):
 
     def setOutputGrad(self, output_grad: 'Vector *') -> "int":
         return _nn.FlexLinear_setOutputGrad(self, output_grad)
-
-    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
-        return _nn.FlexLinear_getFullOutputIndices(self)
 
     def updateOutputDenseToDense(self, input: 'Vector *') -> "int":
         return _nn.FlexLinear_updateOutputDenseToDense(self, input)
@@ -1370,6 +1370,9 @@ class FlexSigmoid(FlexLayer):
         except __builtin__.Exception:
             self.this = this
 
+    def destroy(self, dont_destroy_weights: 'bool') -> "int":
+        return _nn.FlexSigmoid_destroy(self, dont_destroy_weights)
+
     def duplicateWithSameWeights(self) -> "FlexLayer *":
         return _nn.FlexSigmoid_duplicateWithSameWeights(self)
 
@@ -1402,9 +1405,6 @@ class FlexSigmoid(FlexLayer):
 
     def setOutputGrad(self, output_grad: 'Vector *') -> "int":
         return _nn.FlexSigmoid_setOutputGrad(self, output_grad)
-
-    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
-        return _nn.FlexSigmoid_getFullOutputIndices(self)
 
     def updateOutputDenseToDense(self, input: 'Vector *') -> "int":
         return _nn.FlexSigmoid_updateOutputDenseToDense(self, input)
@@ -1457,6 +1457,9 @@ class MSECriterion(_object):
 
     def duplicate(self) -> "MSECriterion *":
         return _nn.MSECriterion_duplicate(self)
+
+    def destroy(self) -> "void":
+        return _nn.MSECriterion_destroy(self)
 
     def forward(self, *args) -> "float":
         return _nn.MSECriterion_forward(self, *args)
@@ -1528,6 +1531,9 @@ class FlexSequential(FlexLayer):
         except __builtin__.Exception:
             self.this = this
 
+    def destroy(self, dont_destroy_weights: 'bool') -> "int":
+        return _nn.FlexSequential_destroy(self, dont_destroy_weights)
+
     def init(self, input_dim: 'int', output_dim: 'int') -> "void":
         return _nn.FlexSequential_init(self, input_dim, output_dim)
 
@@ -1572,9 +1578,6 @@ class FlexSequential(FlexLayer):
 
     def setOutputGrad(self, output_grad: 'Vector *') -> "int":
         return _nn.FlexSequential_setOutputGrad(self, output_grad)
-
-    def getFullOutputIndices(self) -> "std::vector< int,std::allocator< int > >":
-        return _nn.FlexSequential_getFullOutputIndices(self)
 
     def forward(self, input_indices: 'vectori', output_indices: 'vectori') -> "Vector *":
         return _nn.FlexSequential_forward(self, input_indices, output_indices)
@@ -1807,6 +1810,12 @@ class StochasticGradientWorker(_object):
     __swig_getmethods__["num_workers"] = _nn.StochasticGradientWorker_num_workers_get
     if _newclass:
         num_workers = _swig_property(_nn.StochasticGradientWorker_num_workers_get, _nn.StochasticGradientWorker_num_workers_set)
+
+    def train(self) -> "void":
+        return _nn.StochasticGradientWorker_train(self)
+
+    def destroy(self, arg2: 'bool') -> "void":
+        return _nn.StochasticGradientWorker_destroy(self, arg2)
     __swig_destroy__ = _nn.delete_StochasticGradientWorker
     __del__ = lambda self: None
 StochasticGradientWorker_swigregister = _nn.StochasticGradientWorker_swigregister

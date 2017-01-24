@@ -7,15 +7,17 @@ typedef float real;
 Vector::Vector(int size) {
 
 	this->size = size;
-	this->_data = (float*)malloc(this->size * sizeof(float));
+	this->_data = new float[this->size];
+	// this->_data = (float*)malloc(this->size * sizeof(float));
 	this->zero();
 
 }
 
-// Vector::~Vector(void) {
-	// free(this->_data);
-	// this->size = 0;
-// }
+int Vector::destroy() {
+	delete this->_data;
+	this->size = 0;
+	return 0;
+}
 
 Vector Vector::resize(int size) {
 	printf("Resizing Vector from %i to %i", this->size, size);

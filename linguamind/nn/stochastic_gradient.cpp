@@ -49,6 +49,20 @@ void StochasticGradientWorker::train() {
 	}
 }
 
+void StochasticGradientWorker::destroy(bool dont_destroy_weights) {
+	if(this->worker_id != 0) {
+		this->mlp->destroy(dont_destroy_weights);
+		this->criterion->destroy();	
+		delete this->mlp;
+		delete this->criterion;
+	}
+	
+	delete this->training_generator;
+	// TODO: optimize this method... cache mlp and criterion instead of destroying them
+	// or just cache the entire SGDWorker...  (although this is relatively minor ... 0.1 ms probably)
+	
+}
+
 StochasticGradient::StochasticGradient(FlexSequential* mlp, MSECriterion* criterion) {
 	this->mlp = mlp;
 	this->criterion = criterion;
@@ -74,15 +88,25 @@ float StochasticGradient::train(CBOW* training_generator, float alpha, int itera
 	std::vector<int> output_indices = training_generator->getOutputIndicesReference();
 	Vector* target_values = training_generator->getTargetValuesReference();
 	
+	this->mlp->forward(input_indices,output_indices);
+
 	pthread_t *pt = (pthread_t *)malloc(num_threads * sizeof(pthread_t));
 	
 	for (a = 0; a < num_threads; a++) {
 		
 		StochasticGradientWorker* worker = new StochasticGradientWorker(this->mlp, this->criterion, training_generator, alpha, iterations, a, num_threads);
 		pthread_create(&pt[a], NULL, TrainModelThread, worker);
+		this->workers.push_back(worker);
 
 	}
+
   	for (a = 0; a < num_threads; a++) pthread_join(pt[a], NULL);
 
+	for(a = 0; a < this->workers.size(); a++) {
+		this->workers[a]->destroy(true);
+	}
+
+	this->workers.clear();
+	
 	return error;
 }

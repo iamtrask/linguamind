@@ -571,6 +571,9 @@ class Vector(_object):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
+    def destroy(self) -> "int":
+        return _linalg.Vector_destroy(self)
     __swig_setmethods__["size"] = _linalg.Vector_size_set
     __swig_getmethods__["size"] = _linalg.Vector_size_get
     if _newclass:
@@ -678,6 +681,9 @@ class Matrix(_object):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
+    def destroy(self) -> "int":
+        return _linalg.Matrix_destroy(self)
     __swig_setmethods__["rows"] = _linalg.Matrix_rows_set
     __swig_getmethods__["rows"] = _linalg.Matrix_rows_get
     if _newclass:

@@ -9,6 +9,11 @@ MSECriterion* MSECriterion::duplicate() {
 	return new MSECriterion();
 }
 
+void MSECriterion::destroy() {
+	this->grad->destroy();
+	delete this->grad;
+}
+
 float MSECriterion::forward(Vector* input, Vector* target) {
 
 

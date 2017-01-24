@@ -9,7 +9,8 @@ class Vector{
 
 	public:
 		Vector(int size);
-		// ~Vector();
+
+		int destroy();
 		int size;
 
 		float* _data;

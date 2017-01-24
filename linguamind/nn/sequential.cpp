@@ -91,6 +91,21 @@ FlexSequential::FlexSequential(std::vector<FlexLayer*> layers) {
 
 }
 
+int FlexSequential::destroy(bool dont_destroy_weights) {
+
+	this->input_indices.clear();
+	this->output_indices.clear();
+	this->not_used.clear();
+
+	for(int i=0; i<3; i++) {
+		this->layers[i]->destroy(dont_destroy_weights);
+	}
+
+	this->layers.clear();
+
+	return 0;
+}
+
 int FlexSequential::getLayerIndexToBeginUsingSequenceOutputIndices() {
 	return this->layer_index_to_begin_using_sequence_output_indices;
 }
@@ -107,13 +122,11 @@ void FlexSequential::init(int input_dim, int output_dim) {
 	this->input_dim = input_dim; // embedding dim
 	this->output_dim = output_dim; // output vocab
 
-	this->input_grad = new Vector(this->input_dim);
-	this->input_grad->zero();
+	// this->input_grad = new Vector(this->input_dim);
+	// this->input_grad->zero();
 
-	this->output = new Vector(this->output_dim);
-	this->output->zero();
-
-	for(int i=0; i<this->output_dim; i++) this->full_output_indices.push_back(i);
+	// this->output = new Vector(this->output_dim);
+	// this->output->zero();
 
 }
 
@@ -544,6 +557,5 @@ Vector* FlexSequential::getOutput() {return this->output;}
 std::vector<int> &FlexSequential::getOutputIndices() {return this->output_indices;}
 Vector* FlexSequential::getInputGrad() {return this->input_grad;}
 int FlexSequential::setOutputGrad(Vector* output_grad) {this->output_grad = output_grad;};
-std::vector<int> FlexSequential::getFullOutputIndices() {return this->full_output_indices;}
 bool FlexSequential::mandatoryIdenticalInputOutputSparsity() {return this->mandatory_identical_input_output_sparsity;}
 

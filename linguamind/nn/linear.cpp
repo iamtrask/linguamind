@@ -70,10 +70,28 @@ std::vector<int> Linear::getFullOutputIndices() {return this->full_output_indice
 
 
 FlexLinear::FlexLinear(int input_dim, int output_dim) {
-	this->init(input_dim, output_dim);
+	this->init(input_dim, output_dim, true);
 }
 
-void FlexLinear::init(int input_dim, int output_dim) {
+FlexLinear::FlexLinear(int input_dim, int output_dim, bool init_weights) {
+	this->init(input_dim, output_dim, init_weights);
+}
+
+// FlexLinear::~FlexLinear() {
+
+// 	// delete this->input;
+// 	// delete this->output;
+
+// 	// delete this->input_grad;
+// 	// delete this->output_grad;
+
+// 	// this->input_indices.clear();
+// 	// this->output_indices.clear();
+
+// 	// delete this->weights;
+// }
+
+void FlexLinear::init(int input_dim, int output_dim, bool init_weights) {
 
 	this->output_must_be_sparse = false;
 	this->input_must_be_sparse = false;
@@ -85,7 +103,9 @@ void FlexLinear::init(int input_dim, int output_dim) {
 	this->input_dim = input_dim; // embedding dim
 	this->output_dim = output_dim; // output vocab
 
-	this->weights = new Matrix(input_dim, output_dim);
+	if(init_weights) {
+		this->weights = new Matrix(input_dim, output_dim);
+	}
 
 	this->weights_configured_input_sparse = true;
 
@@ -95,8 +115,28 @@ void FlexLinear::init(int input_dim, int output_dim) {
 	this->output = new Vector(this->output_dim);
 	this->output->zero();
 
-	for(int i=0; i<this->output_dim; i++) this->full_output_indices.push_back(i);
+}
 
+int FlexLinear::destroy(bool dont_destroy_weights) {
+
+	this->output->destroy();
+	delete this->output;
+
+	this->input_grad->destroy();
+	// this->output_grad->destroy();
+
+	delete this->input_grad;
+	// delete this->output_grad;
+
+	this->input_indices.clear();
+	this->output_indices.clear();
+	
+	if(!dont_destroy_weights){
+		this->weights->destroy();
+		delete this->weights;
+	}
+
+	return 0;
 }
 
 int FlexLinear::swapInputOutputSparsity() {
@@ -109,9 +149,7 @@ int FlexLinear::swapInputOutputSparsity() {
 
 FlexLayer* FlexLinear::duplicateWithSameWeights() {
 
-	FlexLinear* new_layer = new FlexLinear(this->input_dim, this->output_dim);
-
-	free(new_layer->weights);
+	FlexLinear* new_layer = new FlexLinear(this->input_dim, this->output_dim,false);
 
 	new_layer->weights = this->weights;
 	new_layer->weights_configured_input_sparse = this->weights_configured_input_sparse;
@@ -390,5 +428,4 @@ Vector* FlexLinear::getOutput() {return this->output;}
 std::vector<int> &FlexLinear::getOutputIndices() {return this->output_indices;}
 Vector* FlexLinear::getInputGrad() {return this->input_grad;}
 int FlexLinear::setOutputGrad(Vector* output_grad) {this->output_grad = output_grad;};
-std::vector<int> FlexLinear::getFullOutputIndices() {return this->full_output_indices;}
 bool FlexLinear::mandatoryIdenticalInputOutputSparsity() {return this->mandatory_identical_input_output_sparsity;}

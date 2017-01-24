@@ -25,6 +25,7 @@ class StochasticGradientWorker{
 		int num_workers;
 
 		void train();
+		void destroy(bool dont_destroy_weights);
 
 };
 
@@ -35,6 +36,7 @@ class StochasticGradient  {
 
 		FlexSequential* mlp;
 		MSECriterion* criterion;
+		std::vector<StochasticGradientWorker*> workers;
 
 
 		float train(CBOW* training_generator, float alpha, int iterations, int num_threads);

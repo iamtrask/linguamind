@@ -50,9 +50,6 @@ class FlexSequential: public FlexLayer  {
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
-		std::vector<int> full_input_indices;
-		std::vector<int> full_output_indices;
-
 		std::vector<int> not_used;
 
 		
@@ -63,6 +60,9 @@ class FlexSequential: public FlexLayer  {
 		std::vector<FlexLayer*> layers;
 
 		FlexSequential(std::vector<FlexLayer*> layers);
+		// ~FlexSequential();
+		int destroy(bool dont_destroy_weights);
+
 		void init(int input_dim, int output_dim);
 
 		FlexLayer* duplicateWithSameWeights();
@@ -85,8 +85,6 @@ class FlexSequential: public FlexLayer  {
 		std::vector<int> &getOutputIndices();
 		Vector* getInputGrad();
 		int setOutputGrad(Vector* output_grad);
-
-		std::vector<int> getFullOutputIndices();
 
 		Vector* forward(std::vector<int> &input_indices,std::vector<int> &output_indices);
 

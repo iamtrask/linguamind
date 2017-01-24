@@ -72,7 +72,8 @@ class Vector{
 
 	public:
 		Vector(int size);
-		
+
+		int destroy();
 		int size;
 
 		float* _data;
@@ -173,6 +174,8 @@ class Matrix {
 
 	public:
 		Matrix(int rows, int cols);
+		
+		int destroy();
 		
 		int rows, cols;
 

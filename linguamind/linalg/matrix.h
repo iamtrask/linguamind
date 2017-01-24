@@ -12,6 +12,8 @@ class Matrix {
 	public:
 		Matrix(int rows, int cols);
 		
+		int destroy();
+		
 		int rows, cols;
 
 		std::vector<Vector*> _data;

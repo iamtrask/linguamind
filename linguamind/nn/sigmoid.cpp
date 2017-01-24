@@ -17,8 +17,6 @@ void Sigmoid::init(int dim) {
 	this->output = new Vector(this->output_dim);
 	this->output->zero();
 
-	for(int i=0; i<this->output_dim; i++) this->full_output_indices.push_back(i);
-
 		this->expTable = (float *)malloc((EXP_TABLE_SIZE + 1) * sizeof(float));
 	for (int i = 0; i < EXP_TABLE_SIZE; i++) {
    		this->expTable[i] = exp((i / (float)EXP_TABLE_SIZE * 2 - 1) * MAX_EXP); // Precompute the exp() table
@@ -104,6 +102,28 @@ FlexSigmoid::FlexSigmoid(int dim) {
     	this->expTable[i] = this->expTable[i] / (this->expTable[i] + 1);                   // Precompute f(x) = x / (x + 1)
     }
 
+}
+
+int FlexSigmoid::destroy(bool dont_destroy_weights) {
+
+	this->output->destroy();
+	delete this->output;
+
+	this->input_grad->destroy();
+	// this->output_grad->destroy();
+
+	delete this->input_grad;
+	// delete this->output_grad;
+
+	this->input_indices.clear();
+	this->output_indices.clear();
+
+	free(this->expTable);
+
+	this->input_dim = 0;
+	this->output_dim = 0;
+
+	return 0;
 }
 
 FlexLayer* FlexSigmoid::duplicateWithSameWeights() {
@@ -226,5 +246,4 @@ Vector* FlexSigmoid::getOutput() {return this->output;}
 std::vector<int> &FlexSigmoid::getOutputIndices() {return this->output_indices;}
 Vector* FlexSigmoid::getInputGrad() {return this->input_grad;}
 int FlexSigmoid::setOutputGrad(Vector* output_grad) {this->output_grad = output_grad;};
-std::vector<int> FlexSigmoid::getFullOutputIndices() {return this->full_output_indices;}
 bool FlexSigmoid::mandatoryIdenticalInputOutputSparsity() {return this->mandatory_identical_input_output_sparsity;}

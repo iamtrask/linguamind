@@ -13,6 +13,15 @@ Matrix::Matrix(int rows, int cols) {
 
 }
 
+int Matrix::destroy() {
+	for(int i=0; i<rows; i++) {
+		this->_data[i]->destroy();	
+	}
+	this->_data.clear();
+	this->rows = 0;
+	this->cols = 0;
+}
+
 Matrix Matrix::zero() {
 	for(int i=0; i < this->rows; i++) {
 		this->_data[i]->zero();

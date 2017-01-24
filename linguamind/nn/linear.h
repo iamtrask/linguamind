@@ -74,12 +74,13 @@ class FlexLinear: public FlexLayer {
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
-		std::vector<int> full_input_indices;
-		std::vector<int> full_output_indices;
-
 	public:
 		FlexLinear(int input_dim, int output_dim);
-		void init(int input_dim, int output_dim);
+		FlexLinear(int input_dim, int output_dim, bool init_weights);
+		// ~FlexLinear();
+		void init(int input_dim, int output_dim, bool init_weights);
+
+		int destroy(bool dont_destroy_weights);
 
 		Matrix* weights;
 
@@ -100,8 +101,6 @@ class FlexLinear: public FlexLayer {
 		std::vector<int> &getOutputIndices();
 		Vector* getInputGrad();
 		int setOutputGrad(Vector* output_grad);
-
-		std::vector<int> getFullOutputIndices();
 
 		// int updateOutput(Vector* input, std::vector<int> &not_used);
 		int updateOutputDenseToDense(Vector* input);

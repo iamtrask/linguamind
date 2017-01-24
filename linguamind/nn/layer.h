@@ -71,9 +71,6 @@ class FlexLayer {
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
-		std::vector<int> full_input_indices;
-		std::vector<int> full_output_indices;
-
 	public:
 		
 		FlexLayer() {
@@ -82,6 +79,8 @@ class FlexLayer {
   		virtual ~FlexLayer() {
 
 		}
+
+		virtual int destroy(bool dont_destroy_weights) = 0;
 
 		virtual FlexLayer* duplicateWithSameWeights() = 0;
 
@@ -98,8 +97,6 @@ class FlexLayer {
 		virtual std::vector<int> &getOutputIndices() = 0;
 		virtual Vector* getInputGrad() = 0;
 		virtual int setOutputGrad(Vector* output_grad) = 0;
-
-		virtual std::vector<int> getFullOutputIndices() = 0;
 
 		virtual int updateOutputDenseToDense(Vector* input) = 0;
 		virtual int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &sparse_output) = 0;

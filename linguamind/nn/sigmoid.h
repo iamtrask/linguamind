@@ -78,15 +78,13 @@ class FlexSigmoid: public FlexLayer {
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
-		std::vector<int> full_input_indices;
-		std::vector<int> full_output_indices;
-
 		float* expTable;
 
 	public:
 		
 		FlexSigmoid(int dim);
-
+		int destroy(bool dont_destroy_weights);
+		
 		FlexLayer* duplicateWithSameWeights();
 
 		int getInputDim();
@@ -103,8 +101,6 @@ class FlexSigmoid: public FlexLayer {
 		std::vector<int> &getOutputIndices();
 		Vector* getInputGrad();
 		int setOutputGrad(Vector* output_grad);
-
-		std::vector<int> getFullOutputIndices();
 
 		int updateOutputDenseToDense(Vector* input);
 		int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &sparse_output);

@@ -116,9 +116,6 @@ class FlexLayer {
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
-		std::vector<int> full_input_indices;
-		std::vector<int> full_output_indices;
-
 	public:
 		
 		FlexLayer() {
@@ -127,6 +124,8 @@ class FlexLayer {
   		virtual ~FlexLayer() {
 
 		}
+
+		virtual int destroy(bool dont_destroy_weights) = 0;
 
 		virtual FlexLayer* duplicateWithSameWeights() = 0;
 
@@ -143,8 +142,6 @@ class FlexLayer {
 		virtual std::vector<int> &getOutputIndices() = 0;
 		virtual Vector* getInputGrad() = 0;
 		virtual int setOutputGrad(Vector* output_grad) = 0;
-
-		virtual std::vector<int> getFullOutputIndices() = 0;
 
 		virtual int updateOutputDenseToDense(Vector* input) = 0;
 		virtual int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &sparse_output) = 0;
@@ -193,12 +190,13 @@ class FlexLinear: public FlexLayer {
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
-		std::vector<int> full_input_indices;
-		std::vector<int> full_output_indices;
-
 	public:
 		FlexLinear(int input_dim, int output_dim);
-		void init(int input_dim, int output_dim);
+		FlexLinear(int input_dim, int output_dim, bool init_weights);
+		// ~FlexLinear();
+		void init(int input_dim, int output_dim, bool init_weights);
+
+		int destroy(bool dont_destroy_weights);
 
 		Matrix* weights;
 
@@ -219,8 +217,6 @@ class FlexLinear: public FlexLayer {
 		std::vector<int> &getOutputIndices();
 		Vector* getInputGrad();
 		int setOutputGrad(Vector* output_grad);
-
-		std::vector<int> getFullOutputIndices();
 
 		// int updateOutput(Vector* input, std::vector<int> &not_used);
 		int updateOutputDenseToDense(Vector* input);
@@ -502,15 +498,13 @@ class FlexSigmoid: public FlexLayer {
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
-		std::vector<int> full_input_indices;
-		std::vector<int> full_output_indices;
-
 		float* expTable;
 
 	public:
 		
 		FlexSigmoid(int dim);
-
+		int destroy(bool dont_destroy_weights);
+		
 		FlexLayer* duplicateWithSameWeights();
 
 		int getInputDim();
@@ -527,8 +521,6 @@ class FlexSigmoid: public FlexLayer {
 		std::vector<int> &getOutputIndices();
 		Vector* getInputGrad();
 		int setOutputGrad(Vector* output_grad);
-
-		std::vector<int> getFullOutputIndices();
 
 		int updateOutputDenseToDense(Vector* input);
 		int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &sparse_output);
@@ -550,6 +542,7 @@ class MSECriterion {
 		Vector* grad;
 
 		MSECriterion* duplicate();
+		void destroy();
 		
 		float forward(Vector* input, Vector* target);
 		float forward(Vector* input, Vector* target, std::vector<int> &output_indices);
@@ -601,9 +594,6 @@ class FlexSequential: public FlexLayer  {
 		std::vector<int> input_indices;
 		std::vector<int> output_indices;
 
-		std::vector<int> full_input_indices;
-		std::vector<int> full_output_indices;
-
 		std::vector<int> not_used;
 
 		
@@ -614,10 +604,14 @@ class FlexSequential: public FlexLayer  {
 		std::vector<FlexLayer*> layers;
 
 		FlexSequential(std::vector<FlexLayer*> layers);
+		// ~FlexSequential();
+		int destroy(bool dont_destroy_weights);
+
 		void init(int input_dim, int output_dim);
 
 		FlexLayer* duplicateWithSameWeights();
 		FlexSequential* duplicateSequentialWithSameWeights();
+
 		int getLayerIndexToBeginUsingSequenceOutputIndices();
 
 		FlexLayer* get(int i);
@@ -635,8 +629,6 @@ class FlexSequential: public FlexLayer  {
 		std::vector<int> &getOutputIndices();
 		Vector* getInputGrad();
 		int setOutputGrad(Vector* output_grad);
-
-		std::vector<int> getFullOutputIndices();
 
 		Vector* forward(std::vector<int> &input_indices,std::vector<int> &output_indices);
 
@@ -725,9 +717,12 @@ class StochasticGradientWorker{
 
 		float alpha;
 		int iterations;
-		
+
 		int worker_id;
 		int num_workers;
+
+		void train();
+		void destroy(bool);
 
 };
 

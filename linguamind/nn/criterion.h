@@ -14,6 +14,7 @@ class MSECriterion {
 		Vector* grad;
 
 		MSECriterion* duplicate();
+		void destroy();
 		
 		float forward(Vector* input, Vector* target);
 		float forward(Vector* input, Vector* target, std::vector<int> &output_indices);
