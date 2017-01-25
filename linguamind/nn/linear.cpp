@@ -69,7 +69,7 @@ Vector* Linear::getInputGrad() {return this->input_grad;}
 std::vector<int> Linear::getFullOutputIndices() {return this->full_output_indices;}
 
 
-// TODO: push the algebra from this library to the matrix/vector libraries so that you make fewer method calls.
+// TODO: push the algebra from this library to the matrix/vector libraries so that you make fewer method calls...
 
 FlexLinear::FlexLinear(int input_dim, int output_dim) {
 	this->init(input_dim, output_dim, true);
