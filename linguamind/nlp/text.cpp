@@ -29,9 +29,9 @@ void Text::cacheTokensInMemoryAsIndices() {
 	    i = this->vocab->getTermIndex(word);
 	    if (i == -1) {
 	      i = this->vocab->addTerm(word);
-	      this->vocab->vocab[i].cn = 1;
+	      this->vocab->vocab[i].count = 1;
 	    } else{
-	      this->vocab->vocab[i].cn += 1;
+	      this->vocab->vocab[i].count += 1;
 	    } 
 
 	    if(i == 0) {

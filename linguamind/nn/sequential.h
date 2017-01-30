@@ -86,8 +86,11 @@ class FlexSequential: public FlexLayer  {
 		Vector* getInputGrad();
 		int setOutputGrad(Vector* output_grad);
 
-		Vector* forward(std::vector<int> &input_indices,std::vector<int> &output_indices);
-
+		Vector* forward(std::vector<int> input_indices,std::vector<int> output_indices);
+		Vector* forward(Vector* input,std::vector<int> output_indices);
+		Vector* forward(std::vector<int> input_indices);
+		Vector* forward(Vector* input);
+	
 		// int updateOutput(Vector* input, std::vector<int> &not_used);
 		int updateOutputDenseToDense(Vector* input);
 		int updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &output_indices);
@@ -99,6 +102,8 @@ class FlexSequential: public FlexLayer  {
 		int backward(Vector* output_grad);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(float alpha);
+
+		int reset();
 
 };
 

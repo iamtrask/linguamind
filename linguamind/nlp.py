@@ -430,10 +430,30 @@ class Term(_object):
     __swig_getmethods__["letters"] = _nlp.Term_letters_get
     if _newclass:
         letters = _swig_property(_nlp.Term_letters_get, _nlp.Term_letters_set)
-    __swig_setmethods__["cn"] = _nlp.Term_cn_set
-    __swig_getmethods__["cn"] = _nlp.Term_cn_get
+    __swig_setmethods__["parent"] = _nlp.Term_parent_set
+    __swig_getmethods__["parent"] = _nlp.Term_parent_get
     if _newclass:
-        cn = _swig_property(_nlp.Term_cn_get, _nlp.Term_cn_set)
+        parent = _swig_property(_nlp.Term_parent_get, _nlp.Term_parent_set)
+    __swig_setmethods__["left"] = _nlp.Term_left_set
+    __swig_getmethods__["left"] = _nlp.Term_left_get
+    if _newclass:
+        left = _swig_property(_nlp.Term_left_get, _nlp.Term_left_set)
+    __swig_setmethods__["right"] = _nlp.Term_right_set
+    __swig_getmethods__["right"] = _nlp.Term_right_get
+    if _newclass:
+        right = _swig_property(_nlp.Term_right_get, _nlp.Term_right_set)
+    __swig_setmethods__["count"] = _nlp.Term_count_set
+    __swig_getmethods__["count"] = _nlp.Term_count_get
+    if _newclass:
+        count = _swig_property(_nlp.Term_count_get, _nlp.Term_count_set)
+    __swig_setmethods__["binary"] = _nlp.Term_binary_set
+    __swig_getmethods__["binary"] = _nlp.Term_binary_get
+    if _newclass:
+        binary = _swig_property(_nlp.Term_binary_get, _nlp.Term_binary_set)
+    __swig_setmethods__["output"] = _nlp.Term_output_set
+    __swig_getmethods__["output"] = _nlp.Term_output_get
+    if _newclass:
+        output = _swig_property(_nlp.Term_output_get, _nlp.Term_output_set)
 
     def __init__(self):
         this = _nlp.new_Term()
@@ -486,6 +506,18 @@ class Vocab(_object):
     __swig_getmethods__["unigram_table"] = _nlp.Vocab_unigram_table_get
     if _newclass:
         unigram_table = _swig_property(_nlp.Vocab_unigram_table_get, _nlp.Vocab_unigram_table_set)
+    __swig_setmethods__["tree"] = _nlp.Vocab_tree_set
+    __swig_getmethods__["tree"] = _nlp.Vocab_tree_get
+    if _newclass:
+        tree = _swig_property(_nlp.Vocab_tree_get, _nlp.Vocab_tree_set)
+    __swig_setmethods__["paths"] = _nlp.Vocab_paths_set
+    __swig_getmethods__["paths"] = _nlp.Vocab_paths_get
+    if _newclass:
+        paths = _swig_property(_nlp.Vocab_paths_get, _nlp.Vocab_paths_set)
+    __swig_setmethods__["codes"] = _nlp.Vocab_codes_set
+    __swig_getmethods__["codes"] = _nlp.Vocab_codes_get
+    if _newclass:
+        codes = _swig_property(_nlp.Vocab_codes_get, _nlp.Vocab_codes_set)
 
     def sort(self, min_count: 'int') -> "void":
         return _nlp.Vocab_sort(self, min_count)
@@ -507,6 +539,27 @@ class Vocab(_object):
 
     def InitUnigramTable(self) -> "void":
         return _nlp.Vocab_InitUnigramTable(self)
+
+    def createBinaryTree(self) -> "void":
+        return _nlp.Vocab_createBinaryTree(self)
+
+    def getPathSize(self, i: 'int') -> "int":
+        return _nlp.Vocab_getPathSize(self, i)
+
+    def getCodeSize(self, i: 'int') -> "int":
+        return _nlp.Vocab_getCodeSize(self, i)
+
+    def getPath(self, i: 'int', j: 'int') -> "int":
+        return _nlp.Vocab_getPath(self, i, j)
+
+    def getCode(self, i: 'int', j: 'int') -> "bool":
+        return _nlp.Vocab_getCode(self, i, j)
+
+    def getPathReference(self, i: 'int') -> "std::vector< int,std::allocator< int > > &":
+        return _nlp.Vocab_getPathReference(self, i)
+
+    def getCodeReference(self, i: 'int') -> "Vector *":
+        return _nlp.Vocab_getCodeReference(self, i)
     __swig_destroy__ = _nlp.delete_Vocab
     __del__ = lambda self: None
 Vocab_swigregister = _nlp.Vocab_swigregister

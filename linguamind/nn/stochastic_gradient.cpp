@@ -1,6 +1,6 @@
 #include "stochastic_gradient.h"
 
-StochasticGradientWorker::StochasticGradientWorker(FlexSequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers) {
+StochasticGradientWorker::StochasticGradientWorker(FlexSequential* mlp, MSECriterion* criterion, TrainingGenerator* training_generator,float alpha, int iterations, int worker_id, int num_workers) {
 	
 	this->alpha = alpha;
 	this->iterations = iterations;
@@ -16,12 +16,12 @@ StochasticGradientWorker::StochasticGradientWorker(FlexSequential* mlp, MSECrite
 		this->criterion = criterion;
 	}
 
-	long batch_size_per_thread = training_generator->size / (long)num_workers;
+	long batch_size_per_thread = training_generator->getSize() / (long)num_workers;
 
 	if(worker_id != num_workers - 1) {
 		this->training_generator = training_generator->getCopyForSection(worker_id * batch_size_per_thread,(worker_id+1)*batch_size_per_thread);
 	} else {
-		this->training_generator = training_generator->getCopyForSection(worker_id * batch_size_per_thread,training_generator->size);
+		this->training_generator = training_generator->getCopyForSection(worker_id * batch_size_per_thread,training_generator->getSize());
 	}
 
 }
@@ -33,16 +33,17 @@ void StochasticGradientWorker::train() {
 	Vector* target_values = this->training_generator->getTargetValuesReference();
 
 	for(int iter=0; iter<this->iterations; iter++) {
-
-		while(this->training_generator->has_next) {
+		
+		while(this->training_generator->hasNext()) {
 		
 			this->mlp->backward(this->criterion->backward(this->mlp->forward(input_indices,output_indices),target_values,output_indices));
 
 			for(int i=0; i<(int)this->mlp->layers.size(); i++) {
 				this->mlp->get(i)->accGradParameters(this->alpha);
 			}
-			this->training_generator->next();
 
+			this->training_generator->next();
+			if(this->training_generator->shouldReset()) this->mlp->reset(); // run this after next() so that the reset happens before training
 		}
 
 		this->training_generator->reset();
@@ -76,9 +77,9 @@ void *TrainModelThread(void *sgd_ptr) {
 	pthread_exit(NULL);
 }
 
-float StochasticGradient::train(CBOW* training_generator, float alpha, int iterations, int num_threads) {
+float StochasticGradient::train(TrainingGenerator* training_generator, float alpha, int iterations, int num_threads) {
 
-	if(training_generator->minimum_input_dimensionality > this->mlp->get(0)->getInputDim()) throw std::runtime_error("ERROR: input layer too small for training example generator. Are you modeling order? Dont't forget to increase your input dimensionality by the size of your window.");
+	// if(training_generator->minimum_input_dimensionality > this->mlp->get(0)->getInputDim()) throw std::runtime_error("ERROR: input layer too small for training example generator. Are you modeling order? Dont't forget to increase your input dimensionality by the size of your window.");
 
 	float error = -1;
 	unsigned long long seed = 0;

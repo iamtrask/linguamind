@@ -1,17 +1,23 @@
 #include "hierarchical_layers.h"
 
-LinearTree::LinearTree(int input_dim, int output_dim) {
+LinearTree::LinearTree(int input_dim, int output_dim, int k) {
 
-	this->init(input_dim, output_dim);
+	this->init(input_dim, output_dim, k);
 
 }
-void LinearTree::init(int input_dim, int output_dim) {
+void LinearTree::init(int input_dim, int output_dim, int k) {
 
-	this->sparse_output = true;
-	this->sparse_input = false;
+	this->k = k;
 
 	this->input_dim = input_dim; // embedding dim
 	this->output_dim = output_dim; // output vocab
+
+	this->input_must_be_sparse = false;
+	this->output_must_be_sparse = true;
+
+	this->mandatory_identical_input_output_sparsity = false;
+
+	this->contains_layers = false;
 
 	this->weights = new Matrix(output_dim, input_dim);
 	this->weights->zero();
@@ -22,15 +28,21 @@ void LinearTree::init(int input_dim, int output_dim) {
 	this->output = new Vector(this->output_dim);
 	this->output->zero();
 
-	for(int i=0; i<this->output_dim; i++) this->full_output_indices.push_back(i);
-
 	// this->createBinaryTree();
 }
 
-Layer* LinearTree::duplicateWithSameWeights() {
 
+int LinearTree::destroy(bool dont_destroy_weights) {
+	// TODO
+	return 0;
+}
+
+FlexLayer* LinearTree::duplicateWithSameWeights() {
+	// TODO
 	return NULL;
 }
+
+
 
 bool LinearTree::comparePairs(const std::pair<float, int32_t> &l,
                          const std::pair<float, int32_t> &r) {
@@ -54,80 +66,161 @@ void LinearTree::dfs(int32_t k, int32_t node, float score,
     return;
   }
 
-  // float f = (wo_->dotRow(hidden, node - osz_));
   float f = this->sigmoid(input->dot(this->weights->get(node - this->output_dim)));
   tree[node].output = f;
-  // unsigned int temp_rand = rand_ * 902483 + 234;
-
-  // if(f > 1.0) f = 1.0;
-  // if(f < -1.0) f = -1.0;
-  // f = (f + 1) / 2;
-
-  // if(f > 0.5) loss_[depth] += f;
-  // if(f <= 0.5) loss_[depth] += (1 - f);
-  // nexamples_[depth] += 1;
 
   dfs(k, this->tree[node].left, score * (1.0 - f), heap, input, depth+1);
   dfs(k, this->tree[node].right, score * (f), heap, input, depth+1);
 
-  // if(f < 0.5) {
-  //   if(test) {
-  //     if(f <= 0.55) dfs(k, semantic_tree_->tree[node].left, score * (1.0 - f), heap, hidden, test, depth+1);
-  //     if (f >= 0.45) dfs(k, semantic_tree_->tree[node].right, score * (f), heap, hidden, test, depth+1);
-  //   } else {
-  //     if(f <= 0.55) dfs(k, semantic_tree_->tree[node].left, score * (1.0 - f), heap, hidden, test, depth+1);
-  //     if (f >= 0.45) dfs(k, semantic_tree_->tree[node].right, score * (f), heap, hidden, test, depth+1);
-  //   }
-  // } else {
-  //   if(test) {
-  //     if (f >= 0.45) dfs(k, semantic_tree_->tree[node].right, score * (f), heap, hidden, test, depth+1);
-  //     if(f <= 0.55) dfs(k, semantic_tree_->tree[node].left, score * (1.0 - f), heap, hidden, test, depth+1);
-  //   } else {
-  //     if (f >= 0.45) dfs(k, semantic_tree_->tree[node].right, score * (f), heap, hidden, test, depth+1);
-  //     if(f <= 0.55) dfs(k, semantic_tree_->tree[node].left, score * (1.0 - f), heap, hidden, test, depth+1);
-  //   }
-  // }
-  // if(temp_rand % 1000 > f * 1000) dfs(k, semantic_tree_->tree[node].left, score * (1.0 - f), heap, hidden);
-  
-  // temp_rand = temp_rand * 903917 + 11;
-  // dfs(k, tree[node].left, score * (1.0 - f), heap, hidden);
-
-  // if f is greater than 0, run this
-  // if(temp_rand % 1000 > f * 1000) dfs(k, semantic_tree_->tree[node].right, score * (f), heap, hidden);
-  
-  // temp_rand = temp_rand * 903917 + 11;
-  // dfs(k, tree[node].right, score * (f), heap, hidden);
 }
 
 int LinearTree::predict(Vector* input, std::vector<int> output_indices) {
-	this->updateOutput(input,output_indices);
+	
+	// TODO
+	this->updateOutputDenseToWeightedSparse(input,output_indices);
+	return 0;
 }
 
-int LinearTree::updateOutput(Vector* input, std::vector<int> &output_indices) {
+int LinearTree::updateOutputDenseToDense(Vector* input) {
+
+	throw std::runtime_error("Error: Linear Tree must have sparse output.");
+
+	return 0;
+}
+int LinearTree::updateOutputDenseToWeightedSparse(Vector* input, std::vector<int> &not_used) {\
+
+	this->input = input;
 
 	this->heap.clear();
 
-	int k = 2;
+	int k = this->k;
 	dfs(k, 2 * this->output_dim - 2, 1.0, heap, input, 0);
 
 	this->output_indices.clear();
 
+	for(int i=0; i < k; i++) {
+		this->output_indices.push_back(0);
+	}
+
 	for (int i=0; i<k; i++) {
-		this->output_indices.push_back(heap[i].second);
-		this->output->set(heap[i].second,heap[i].first);
+		this->output_indices[i] = heap[i].second;
+		this->output->set(i,heap[i].first);
+	}
+
+	return 0;
+}
+int LinearTree::updateOutputWeightedSparseToDense(Vector* input, std::vector<int> &sparse_input) {
+	
+	throw std::runtime_error("Error: Linear Tree must have sparse output.");
+
+	return 0;
+}
+int LinearTree::updateOutputWeightedSparseToWeightedSparse(Vector* input, std::vector<int> &sparse_input, std::vector<int> &sparse_output) {
+
+	throw std::runtime_error("TODO: Not yet implemented.");
+
+	return 0;
+}
+int LinearTree::updateOutputBinarySparseToDense(std::vector<int> &sparse_input) {
+	
+	throw std::runtime_error("Error: Linear Tree must have sparse output.");
+
+	return 0;
+}
+int LinearTree::updateOutputBinarySparseToWeightedSparse(std::vector<int> &sparse_input, std::vector<int> &sparse_output) {
+	
+	throw std::runtime_error("TODO: Not yet implemented.");
+
+	return 0;
+}
+
+int LinearTree::backward(Vector* output_grad) {
+
+	throw std::runtime_error("Error: backward called on non-compositional layer (doesn't have sub layers).");
+
+	return 0;
+}
+
+
+// NOTE: this also perform the "word2vec shortcut", skipping the derivative of sigmoid
+int LinearTree::updateInputGrad(Vector* output_grad) {
+	
+
+	int p;
+	float c, loss,pred;
+	int path_size;
+
+	this->output_grad = output_grad;
+
+	this->input_grad->zero(); // TODO: use Set for first iteration
+
+	for(int i=0; i < this->output_indices.size(); i++) {
+		
+		std::vector<int32_t> path = this->paths[this->output_indices[i]];
+		std::vector<bool> code = this->codes[this->output_indices[i]];
+
+		path_size = path.size();
+		
+		loss = this->output_grad->get(this->output_indices[i]);
+
+		for(int j=path_size-1; j >= 0; j--) {
+
+			c = (float)code[j];
+			p = (int)path[j];
+			pred = this->tree[p + this->output_dim].output;
+
+			if(c == 1) this->input_grad->addi(this->weights->get(p), -loss);
+			if(c == 0) this->input_grad->addi(this->weights->get(p), loss);
+
+			if(c == 1) {
+				loss *= pred;
+			} else {
+				loss *= (1 - pred);
+			}
+			
+
+		}
 	}
 
 	return 0;
 }
 
-int LinearTree::updateInputGrad(Vector* output_grad) {
-	
+// NOTE: this also perform the "word2vec shortcut", skipping the derivative of sigmoid
+int LinearTree::accGradParameters(float alpha) {
+
+	int p;
+	float c, loss,pred;
+	int path_size;
 
 
-	return 0;
-}
+	for(int i=0; i < this->output_indices.size(); i++) {
+		
+		std::vector<int32_t> path = this->paths[output_indices[i]];
+		std::vector<bool> code = this->codes[output_indices[i]];
 
-int LinearTree::accGradParameters(Vector* input, Vector* output_grad, float alpha) {
+		path_size = path.size();
+		
+		loss = this->output_grad->get(this->output_indices[i]);
+
+		for(int j=path_size-1; j >= 0; j--) {
+
+			c = (float)code[j];
+			p = (int)path[j];
+			pred = this->tree[p + this->output_dim].output;
+
+			// reversed the sign of alpha so that it's actually a subtraction
+			if(c == 1) this->weights->get(p)->addi(this->input,loss * alpha);
+			if(c == 0) this->weights->get(p)->addi(this->input,-loss * alpha);
+
+			if(c == 1) {
+				loss *= pred;
+			} else {
+				loss *= (1 - pred);
+			}
+			
+
+		}
+	}
 
 	return 0;
 }
@@ -196,9 +289,11 @@ bool LinearTree::getCode(int i, int j) {return this->codes[i][j];}
 int LinearTree::getPath(int i, int j) {return this->paths[i][j];}
 int LinearTree::getInputDim() { return this->input_dim;};
 int LinearTree::getOutputDim() { return this->output_dim;};
-bool LinearTree::hasSparseInput() {return this->sparse_input;};
-bool LinearTree::hasSparseOutput() {return this->sparse_output;}
+bool LinearTree::inputMustBeSparse() {return this->input_must_be_sparse;};
+bool LinearTree::outputMustBeSparse() {return this->output_must_be_sparse;}
+bool LinearTree::mandatoryIdenticalInputOutputSparsity() {return this->mandatory_identical_input_output_sparsity;}
+bool LinearTree::containsLayers(){ return this->contains_layers;}
 Vector* LinearTree::getOutput() {return this->output;}
-std::vector<int> LinearTree::getOutputIndices() {return this->output_indices;}
+std::vector<int> &LinearTree::getOutputIndices() {return this->output_indices;}
 Vector* LinearTree::getInputGrad() {return this->input_grad;}
-std::vector<int> LinearTree::getFullOutputIndices() {return this->full_output_indices;}
+int LinearTree::setOutputGrad(Vector* output_grad) {this->output_grad = output_grad; return 0;}

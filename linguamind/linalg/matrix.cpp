@@ -29,6 +29,37 @@ Matrix Matrix::zero() {
 	return *this;
 }
 
+
+void Matrix::matmulset(Vector* input, Vector* output) {
+	output->set(this->get(0),input->get(0));
+	for(int index=1; index < input->size; index++) {
+		output->addi(this->get(index),input->get(index));
+	}
+}
+
+void Matrix::matmuladd(Vector* input, Vector* output) {
+
+	for(int index=0; index < input->size; index++) {
+		output->addi(this->get(index),input->get(index));
+	}
+}
+
+void Matrix::Tmatmulset(Vector* input, Vector* output) {
+	
+	for(int index=0; index < input->size; index++) {
+		input->doti(index, output, this->get(index));
+	}
+
+}
+
+void Matrix::Tmatmuladd(Vector* input, Vector* output) {
+	
+	for(int index=0; index < input->size; index++) {
+		input->dotiadd(index, output, this->get(index));
+	}
+
+}
+
 Matrix Matrix::uniform(Seed* seed) {
 	for(int i=0; i < this->rows; i++) {
 		this->_data[i]->uniform(seed);
@@ -62,6 +93,18 @@ void Matrix::transpose() {
 
 	this->rows = cols;
 	this->cols = rows;
+}
+
+void Matrix::muli(float x) {
+	for(int i=0; i<this->rows; i++) {
+		this->_data[i]->muli(x);
+	}
+}
+
+void Matrix::subi(float x) {
+	for(int i=0; i<this->rows; i++) {
+		this->_data[i]->subi(x);
+	}
 }
 
 Matrix Matrix::operator*=(float x) const {

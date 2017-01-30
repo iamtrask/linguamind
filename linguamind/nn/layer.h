@@ -108,5 +108,7 @@ class FlexLayer {
 		virtual int backward(Vector* output_grad) = 0;
 		virtual int updateInputGrad(Vector* output_grad) = 0;
 		virtual int accGradParameters(float alpha) = 0;
+
+		virtual int reset() = 0;
 };
 #endif

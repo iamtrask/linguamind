@@ -24,7 +24,7 @@ Vocab::Vocab(Vocab* old) {
     this->vocab = (Term *) malloc(old->vocab_buffer_size * sizeof(Term));
 
     for(int i=0; i<old->size; i++) {
-        this->vocab[i].cn = old->vocab[i].cn;
+        this->vocab[i].count = old->vocab[i].count;
         this->vocab[i].letters = (char*)malloc(strlen(old->vocab[i].letters)+1);
         strcpy(this->vocab[i].letters,old->vocab[i].letters);
     }
@@ -61,14 +61,14 @@ void Vocab::InitUnigramTable() {
   double train_words_pow = 0;
   double d1, power = 0.75;
   this->unigram_table = (int *)malloc(this->unigram_table_size * sizeof(int));
-  for (a = 0; a < this->size; a++) train_words_pow += pow(this->vocab[a].cn, power);
+  for (a = 0; a < this->size; a++) train_words_pow += pow(this->vocab[a].count, power);
   i = 0;
-  d1 = pow(this->vocab[i].cn, power) / train_words_pow;
+  d1 = pow(this->vocab[i].count, power) / train_words_pow;
   for (a = 0; a < this->unigram_table_size; a++) {
     this->unigram_table[a] = i;
     if (a / (double)this->unigram_table_size > d1) {
       i++;
-      d1 += pow(this->vocab[i].cn, power) / train_words_pow;
+      d1 += pow(this->vocab[i].count, power) / train_words_pow;
     }
     if (i >= this->size) i = this->size - 1;
   }
@@ -104,7 +104,7 @@ int Vocab::addTerm(char* term) {
 
 // Used later for sorting by word counts
 int VocabCompare(const void *a, const void *b) {
-    return ((struct Term *)b)->cn - ((struct Term *)a)->cn;
+    return ((struct Term *)b)->count - ((struct Term *)a)->count;
 }
 
 // Sorts the vocabulary by frequency using word counts
@@ -118,7 +118,7 @@ void Vocab::sort(int min_count) {
   
   for (a = 0; a < size; a++) {
     // Words occuring less than min_count times will be discarded from the vocab
-    if ((this->vocab[a].cn < min_count) && (a != 0)) {
+    if ((this->vocab[a].count < min_count) && (a != 0)) {
       free(this->vocab[a].letters);
       this->size--;
     } else {
@@ -145,4 +145,69 @@ unsigned int Vocab::getTermHash(char* term) {
     }
     return (unsigned int) hash;
 }
+
+void Vocab::createBinaryTree() {
+  int redundancy = 1;
+  int n_labels = this->size;
+  
+  Vector* ptr;
+
+  int osz_ = n_labels * redundancy;
+    int redundancy_ = redundancy;
+    int n_labels_ = n_labels;
+
+  tree.resize(2 * osz_ - 1);
+  for (int32_t i = 0; i < 2 * osz_ - 1; i++) {
+      tree[i].parent = -1;
+      tree[i].left = -1;
+      tree[i].right = -1;
+      tree[i].count = 1e15;
+      tree[i].binary = false;
+      tree[i].output = -1;
+    }
+
+    int32_t leaf = osz_ - 1;
+    int32_t node = osz_;
+    
+    for (int32_t i = osz_; i < 2 * osz_ - 1; i++) {
+      int32_t mini[2];
+      mini[0] = 0;
+      mini[1] = 0;
+      for (int32_t j = 0; j < 2; j++) {
+        // if (leaf >= 0 && tree[leaf].count < tree[node].count) {
+        if(leaf >= 0) {
+          mini[j] = leaf--;
+        } else {
+          mini[j] = node++;
+        }
+      }
+      tree[i].left = mini[0];
+      tree[i].right = mini[1];
+      tree[i].count = tree[mini[0]].count + tree[mini[1]].count;
+      tree[mini[0]].parent = i;
+      tree[mini[1]].parent = i;
+      tree[mini[1]].binary = true;
+    }
+    for (int32_t i = 0; i < osz_; i++) {
+      std::vector<int32_t> path;
+      std::vector<bool> code;
+      int32_t j = i;
+      while (tree[j].parent != -1) {
+        path.push_back(tree[j].parent - osz_);
+        code.push_back(tree[j].binary);
+        j = tree[j].parent;
+      }
+      paths.push_back(path);
+      ptr = new Vector(code);
+      codes.push_back(ptr);
+      code.clear();
+    }
+}
+
+int Vocab::getCodeSize(int i) {return this->codes[i]->size;}
+int Vocab::getPathSize(int i) {return this->paths[i].size();}
+std::vector<int> &Vocab::getPathReference(int i) {return this->paths[i];}
+Vector* Vocab::getCodeReference(int i) {return this->codes[i];}
+bool Vocab::getCode(int i, int j) {return this->codes[i]->get(i);}
+int Vocab::getPath(int i, int j) {return this->paths[i][j];}
 

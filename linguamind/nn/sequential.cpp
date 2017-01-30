@@ -91,6 +91,13 @@ FlexSequential::FlexSequential(std::vector<FlexLayer*> layers) {
 
 }
 
+int FlexSequential::reset() {
+	for(int i=0; i<this->num_layers; i++) {
+		this->layers[i]->reset();
+	}
+	return 0;
+}
+
 int FlexSequential::destroy(bool dont_destroy_weights) {
 
 	this->input_indices.clear();
@@ -130,8 +137,23 @@ void FlexSequential::init(int input_dim, int output_dim) {
 
 }
 
-Vector* FlexSequential::forward(std::vector<int> &input_indices,std::vector<int> &output_indices) {
+Vector* FlexSequential::forward(std::vector<int> input_indices,std::vector<int> output_indices) {
 	this->updateOutputBinarySparseToWeightedSparse(input_indices, output_indices);
+	return this->output;
+}
+
+Vector* FlexSequential::forward(Vector* input,std::vector<int> output_indices) {
+	this->updateOutputDenseToWeightedSparse(input, output_indices);
+	return this->output;
+}
+
+Vector* FlexSequential::forward(std::vector<int> input_indices) {
+	this->updateOutputBinarySparseToDense(input_indices);
+	return this->output;
+}
+
+Vector* FlexSequential::forward(Vector* input) {
+	this->updateOutputDenseToDense(input);
 	return this->output;
 }
 
@@ -279,6 +301,7 @@ int FlexSequential::updateOutputDenseToWeightedSparse(Vector* seq_input, std::ve
 	}
 	
 	this->output = this->layers[this->num_layers-1]->getOutput();
+	this->output_indices = this->layers[this->num_layers-1]->getOutputIndices();
 
 	return 0;
 }
@@ -331,7 +354,6 @@ int FlexSequential::updateOutputWeightedSparseToDense(Vector* seq_input, std::ve
 	}
 	
 	this->output = input;
-
 	return 0;
 }
 
@@ -397,6 +419,7 @@ int FlexSequential::updateOutputWeightedSparseToWeightedSparse(Vector* seq_input
 	}
 
 	this->output = this->layers[this->num_layers-1]->getOutput();
+	this->output_indices = this->layers[this->num_layers-1]->getOutputIndices();
 
 	return 0;
 }
@@ -411,7 +434,7 @@ int FlexSequential::updateOutputBinarySparseToDense(std::vector<int> &input_indi
 
 	bool prev_layer_sparse = false;
 
-	if((this->layers[1]->inputMustBeSparse() || this->layers[0]->outputMustBeSparse())) {
+	if(this->num_layers > 1 && (this->layers[1]->inputMustBeSparse() || this->layers[0]->outputMustBeSparse())) {
 
 		this->layers[0]->updateOutputBinarySparseToWeightedSparse(input_indices, this->not_used);	
 		prev_layer_sparse = true;
@@ -520,6 +543,7 @@ int FlexSequential::updateOutputBinarySparseToWeightedSparse(std::vector<int> &i
 	} 
 
 	this->output = this->layers[this->num_layers-1]->getOutput();
+	this->output_indices = this->layers[this->num_layers-1]->getOutputIndices();
 	
 	return 0;
 }

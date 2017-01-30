@@ -565,8 +565,8 @@ class Vector(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, Vector, name)
     __repr__ = _swig_repr
 
-    def __init__(self, size: 'int'):
-        this = _linalg.new_Vector(size)
+    def __init__(self, *args):
+        this = _linalg.new_Vector(*args)
         try:
             self.this.append(this)
         except __builtin__.Exception:
@@ -600,6 +600,9 @@ class Vector(_object):
 
     def doti(self, i: 'int', x: 'Vector', y: 'Vector') -> "void":
         return _linalg.Vector_doti(self, i, x, y)
+
+    def dotiadd(self, i: 'int', x: 'Vector', y: 'Vector') -> "void":
+        return _linalg.Vector_dotiadd(self, i, x, y)
 
     def set(self, *args) -> "Vector":
         return _linalg.Vector_set(self, *args)
@@ -708,6 +711,24 @@ class Matrix(_object):
 
     def get(self, i: 'int') -> "Vector *":
         return _linalg.Matrix_get(self, i)
+
+    def matmulset(self, input: 'Vector', output: 'Vector') -> "void":
+        return _linalg.Matrix_matmulset(self, input, output)
+
+    def matmuladd(self, input: 'Vector', output: 'Vector') -> "void":
+        return _linalg.Matrix_matmuladd(self, input, output)
+
+    def Tmatmulset(self, input: 'Vector', output: 'Vector') -> "void":
+        return _linalg.Matrix_Tmatmulset(self, input, output)
+
+    def Tmatmuladd(self, input: 'Vector', output: 'Vector') -> "void":
+        return _linalg.Matrix_Tmatmuladd(self, input, output)
+
+    def muli(self, x: 'float') -> "void":
+        return _linalg.Matrix_muli(self, x)
+
+    def subi(self, x: 'float') -> "void":
+        return _linalg.Matrix_subi(self, x)
 
     def __imul__(self, *args) -> "Matrix":
         return _linalg.Matrix___imul__(self, *args)

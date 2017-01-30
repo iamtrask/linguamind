@@ -64,7 +64,7 @@ Vector* MSECriterion::backward(Vector* output, Vector* target) {
 	return this->grad;
 }
 
-Vector* MSECriterion::backward(Vector* output, Vector* target, std::vector<int> &output_indices) {
+Vector* MSECriterion::backward(Vector* output, Vector* target, std::vector<int> output_indices) {
 
 	// this->grad be the size of the whole output... 
 	if(this->grad->size != output->size) {

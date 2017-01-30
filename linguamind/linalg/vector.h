@@ -5,10 +5,15 @@
 #include <iostream>
 #include "seed.h"
 
+extern "C" {
+#include <cblas.h>
+}
+
 class Vector{
 
 	public:
 		Vector(int size);
+		Vector(std::vector<bool> data);
 
 		int destroy();
 		int size;
@@ -26,7 +31,8 @@ class Vector{
 
 		float dot(Vector* x);
 		void doti(int i, Vector* x, Vector* y);
-		
+		void dotiadd(int i, Vector* x, Vector* y);
+
 		Vector set(Vector* x);
 
 		Vector set(Vector* x, float a);

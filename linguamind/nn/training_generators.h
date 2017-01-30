@@ -9,6 +9,71 @@
 #include "criterion.h"
 #include "sequential.h"
 
+class TrainingGenerator {
+
+	public:
+		
+		TrainingGenerator() {
+    		
+  		}
+  		virtual ~TrainingGenerator() {
+
+		}
+
+		virtual TrainingGenerator* getCopyForSection(int starting, int ending) = 0;
+
+		virtual int next() = 0;
+		virtual bool hasNext() = 0;
+		virtual int reset() = 0;
+		virtual long getSize() = 0;
+		virtual long getI() = 0;
+
+		virtual bool shouldReset() = 0;
+		virtual std::vector<int> &getInputIndicesReference() = 0;
+		virtual std::vector<int> &getOutputIndicesReference() = 0;
+		virtual Vector* getTargetValuesReference() = 0;
+
+};
+
+class SupervisedBinarySparseToWeightedSparse: public TrainingGenerator {
+
+public:
+	SupervisedBinarySparseToWeightedSparse(std::vector<std::vector<int> > input_indices, Vocab* input_vocab, std::vector<std::vector<int> > output_indices, Vocab* output_vocab);
+
+	std::vector<std::vector<int> > input_indices;
+	Vocab* input_vocab;
+
+	std::vector<std::vector<int> > output_indices;
+	Vocab* output_vocab;
+
+	long size;
+
+	long section_start;
+	long section_end;
+
+	long i;
+	int pred_i;
+	int window_len;
+
+	bool has_next;
+
+	TrainingGenerator* getCopyForSection(int starting, int ending);
+
+	int next();
+	bool hasNext();
+	int reset();
+	long getSize();
+	long getI();
+
+	std::vector<int> &getInputIndicesReference();
+	std::vector<int> &getOutputIndicesReference();
+	Vector* getTargetValuesReference();
+
+	bool shouldReset();
+
+};
+
+
 class Sampler {
 	public:
 		Sampler(Vocab* vocab, int sample_size);
@@ -27,7 +92,7 @@ class Sampler {
 };
 
 
-class CBOW  {
+class CBOW: public TrainingGenerator {
 
 	public:
 		CBOW(std::vector<std::vector<int> > &window_indices,Vocab* vocab, Sampler* sampler, int window_left, int window_right, bool model_order);
@@ -59,12 +124,17 @@ class CBOW  {
 		unsigned long long seed;
 		bool has_next;
 
-		void next();
-		void reset();
-		CBOW* getCopyForSection(int starting, int ending);
+		int next();
+		bool hasNext();
+		int reset();
+		long getSize();
+		long getI();
+
+		TrainingGenerator* getCopyForSection(int starting, int ending);
 		std::vector<int> &getInputIndicesReference();
 		std::vector<int> &getOutputIndicesReference();
 		Vector* getTargetValuesReference();
+		bool shouldReset();
 
 };
 

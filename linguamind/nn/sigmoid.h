@@ -112,6 +112,8 @@ class FlexSigmoid: public FlexLayer {
 		int backward(Vector* output_grad);
 		int updateInputGrad(Vector* output_grad);
 		int accGradParameters(float alpha);
+
+		int reset();
 };
 
 #endif

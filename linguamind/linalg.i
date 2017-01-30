@@ -3,6 +3,7 @@
 
 %{
 #include <vector>
+#include <cblas.h>
 %}
 
 %include "std_vector.i"
@@ -15,6 +16,7 @@ namespace std {
 
 %{
 #define SWIG_FILE_WITH_INIT
+#include <cblas.h>
 #include "linalg/seed.h"
 #include "linalg/vector.h"
 #include "linalg/matrix.h"
@@ -72,6 +74,7 @@ class Vector{
 
 	public:
 		Vector(int size);
+		Vector(std::vector<bool> data);
 
 		int destroy();
 		int size;
@@ -89,6 +92,7 @@ class Vector{
 
 		float dot(Vector* x);
 		void doti(int i, Vector* x, Vector* y);
+		void dotiadd(int i, Vector* x, Vector* y);
 		
 		Vector set(Vector* x);
 
@@ -188,6 +192,13 @@ class Matrix {
 		// std::vector<float> get();
 		Vector* get(int i);
 		// Vector* set(int i, Vector* x);
+		void matmulset(Vector* input, Vector* output);
+		void matmuladd(Vector* input, Vector* output);
+		void Tmatmulset(Vector* input, Vector* output);
+		void Tmatmuladd(Vector* input, Vector* output);
+
+		void muli(float x);
+		void subi(float x);
 
 		Matrix operator*=(float x) const;
 		Matrix operator/=(float x) const;

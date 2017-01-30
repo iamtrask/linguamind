@@ -17,7 +17,7 @@ void Sigmoid::init(int dim) {
 	this->output = new Vector(this->output_dim);
 	this->output->zero();
 
-		this->expTable = (float *)malloc((EXP_TABLE_SIZE + 1) * sizeof(float));
+	this->expTable = (float *)malloc((EXP_TABLE_SIZE + 1) * sizeof(float));
 	for (int i = 0; i < EXP_TABLE_SIZE; i++) {
    		this->expTable[i] = exp((i / (float)EXP_TABLE_SIZE * 2 - 1) * MAX_EXP); // Precompute the exp() table
     	this->expTable[i] = this->expTable[i] / (this->expTable[i] + 1);                   // Precompute f(x) = x / (x + 1)
@@ -247,3 +247,4 @@ std::vector<int> &FlexSigmoid::getOutputIndices() {return this->output_indices;}
 Vector* FlexSigmoid::getInputGrad() {return this->input_grad;}
 int FlexSigmoid::setOutputGrad(Vector* output_grad) {this->output_grad = output_grad;};
 bool FlexSigmoid::mandatoryIdenticalInputOutputSparsity() {return this->mandatory_identical_input_output_sparsity;}
+int FlexSigmoid::reset(){return 0;}

@@ -12,11 +12,11 @@
 class StochasticGradientWorker{ 
 
 	public:
-		StochasticGradientWorker(FlexSequential* mlp, MSECriterion* criterion, CBOW* training_generator,float alpha, int iterations, int worker_id, int num_workers);
+		StochasticGradientWorker(FlexSequential* mlp, MSECriterion* criterion, TrainingGenerator* training_generator,float alpha, int iterations, int worker_id, int num_workers);
 
 		FlexSequential* mlp;
 		MSECriterion* criterion;
-		CBOW* training_generator;
+		TrainingGenerator* training_generator;
 
 		float alpha;
 		int iterations;
@@ -39,7 +39,7 @@ class StochasticGradient  {
 		std::vector<StochasticGradientWorker*> workers;
 
 
-		float train(CBOW* training_generator, float alpha, int iterations, int num_threads);
+		float train(TrainingGenerator* training_generator, float alpha, int iterations, int num_threads);
 };
 
 void *TrainModelThread(void *sgd);

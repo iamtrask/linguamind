@@ -433,3 +433,4 @@ std::vector<int> &FlexLinear::getOutputIndices() {return this->output_indices;}
 Vector* FlexLinear::getInputGrad() {return this->input_grad;}
 int FlexLinear::setOutputGrad(Vector* output_grad) {this->output_grad = output_grad;};
 bool FlexLinear::mandatoryIdenticalInputOutputSparsity() {return this->mandatory_identical_input_output_sparsity;}
+int FlexLinear::reset() {return 0;}

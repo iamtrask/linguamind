@@ -13,6 +13,12 @@ Vector::Vector(int size) {
 
 }
 
+Vector::Vector(std::vector<bool> data) {
+	this->size = data.size();
+	this->_data = new float[this->size];
+	for(int i=0; i<this->size; i++) this->_data[i] = (float)data[i];
+}
+
 int Vector::destroy() {
 	delete this->_data;
 	this->size = 0;
@@ -60,12 +66,11 @@ float Vector::get(int i) {
 void Vector::set(int i, float x) {
 	
 	if(i >= this->size) throw std::runtime_error("OutOfBounds: Vector isn't that big.");
-
-	if(i < this->size) {
-		this->_data[i] = x;
-	} else {
-		// throw error
-	}
+	
+	this->_data[i] = x;
+	
+	
+	
 }
 
 float Vector::dot(Vector* x) {
@@ -83,12 +88,18 @@ void Vector::doti(int i, Vector* x, Vector* y) {
 	
 	if(x->size != y->size) throw std::runtime_error("Vector::dot(Vector* x): Vectors not the same size");
 	if(i >= this->size) throw std::runtime_error("IndexOutOfBounds: Vector isn't that big.");
+	
+	this->_data[i] = x->dot(y);
+		// this->_data[i] = cblas_sdot(this->size, x->_data, 1, y->_data, 1);	
+}
 
-	if(i < this->size) {
-		this->_data[i] = x->dot(y);
-	} else {
-		this->_data[i] = -1;
-	}
+void Vector::dotiadd(int i, Vector* x, Vector* y) {
+	
+	if(x->size != y->size) throw std::runtime_error("Vector::dot(Vector* x): Vectors not the same size");
+	if(i >= this->size) throw std::runtime_error("IndexOutOfBounds: Vector isn't that big.");
+
+	this->_data[i] += x->dot(y);
+		// this->_data[i] = cblas_sdot(this->size, x->_data, 1, y->_data, 1);
 }
 
 Vector Vector::set(Vector* x) {

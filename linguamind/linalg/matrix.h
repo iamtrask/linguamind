@@ -25,6 +25,13 @@ class Matrix {
 		// std::vector<float> get();
 		Vector* get(int i);
 		// Vector* set(int i, Vector* x);
+		void matmulset(Vector* input, Vector* output);
+		void matmuladd(Vector* input, Vector* output);
+		void Tmatmulset(Vector* input, Vector* output);
+		void Tmatmuladd(Vector* input, Vector* output);
+
+		void muli(float x);
+		void subi(float x);
 
 		Matrix operator*=(float x) const;
 		Matrix operator/=(float x) const;
